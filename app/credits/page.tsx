@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
@@ -131,5 +131,12 @@ export default function Credits() {
         </p>
       </div>
     </div>
+ )
+}
+function CreditsContent() {
+  return (
+    <Suspense fallback={<div style={{background:'#0d0b08', minHeight:'100vh'}}/>}>
+      <CreditsContent />
+    </Suspense>
   )
 }
