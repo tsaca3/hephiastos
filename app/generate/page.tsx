@@ -35,12 +35,25 @@ export default function Generate() {
   const [picked, setPicked] = useState<number | null>(null)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) { router.push('/auth'); return }
-      supabase.rpc('deduct_credit', { user_id: session.user.id })
-    })
-    generateChapter(0, 0, [], 0, true)
-  }, [])
+  supabase.auth.getSession().then(async ({ data: { session } }) => {
+    if (!session) { router.push('/auth'); return }
+    
+    // Vérifier les crédits avant de commencer
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('credits')
+      .eq('id', session.user.id)
+      .single()
+    
+    if (!profile || profile.credits <= 0) {
+      router.push('/credits?noCredits=true')
+      return
+    }
+    
+    supabase.rpc('deduct_credit', { user_id: session.user.id })
+  })
+  generateChapter(0, 0, [], 0, true)
+}, [])
 
   const generateChapter = async (
     chapIdx: number,

@@ -77,6 +77,13 @@ function CreditsContent() {
             </span>
           </div>
         )}
+        {searchParams.get('noCredits') && (
+  <div style={{ background: 'rgba(232,68,90,0.06)', border: '1px solid rgba(232,68,90,0.2)', padding: '16px 24px', marginBottom: '32px', textAlign: 'center' }}>
+    <span style={{ color: '#e8445a', fontFamily: 'Cinzel, serif', fontSize: '0.75rem', letterSpacing: '2px' }}>
+      Vous n'avez plus de crédits — forgez-en pour continuer !
+    </span>
+  </div>
+)}
 
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <h1 style={{ fontFamily: 'Cinzel Decorative, serif', fontSize: '2.2rem', color: '#e8b84b', marginBottom: '12px' }}>
