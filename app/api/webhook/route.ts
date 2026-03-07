@@ -29,8 +29,12 @@ export async function POST(req: NextRequest) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
-    const priceId = session.line_items?.data[0]?.price?.id
     const userId = session.metadata?.userId
+
+    const expandedSession = await stripe.checkout.sessions.retrieve(session.id, {
+      expand: ['line_items']
+    })
+    const priceId = expandedSession.line_items?.data[0]?.price?.id
     const credits = CREDITS_MAP[priceId || ''] || 0
 
     if (userId && credits > 0) {

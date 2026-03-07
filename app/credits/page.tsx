@@ -29,19 +29,21 @@ function CreditsContent() {
   }, [])
 
   const handlePurchase = async (priceId: string) => {
-    setLoading(priceId)
-    try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId, userId })
-      })
-      const data = await res.json()
-      if (data.url) window.location.href = data.url
-    } catch (e) {
-      setLoading(null)
-    }
+  setLoading(priceId)
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    const currentUserId = session?.user.id
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ priceId, userId: currentUserId })
+    })
+    const data = await res.json()
+    if (data.url) window.location.href = data.url
+  } catch (e) {
+    setLoading(null)
   }
+}
 
   return (
     <div style={{ minHeight: '100vh', background: '#0d0b08', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
