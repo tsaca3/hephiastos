@@ -10,7 +10,7 @@ const PACKS = [
   { id: 'price_1T8NEmCzapu2pX6hwXhk8BsV', credits: 100, price: '35', pricePerCredit: '0.35' },
 ]
 
-export default function Credits() {
+function CreditsContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState<string | null>(null)
@@ -133,7 +133,7 @@ export default function Credits() {
     </div>
  )
 }
-function CreditsContent() {
+export default function Credits() {
   return (
     <Suspense fallback={<div style={{background:'#0d0b08', minHeight:'100vh'}}/>}>
       <CreditsContent />
