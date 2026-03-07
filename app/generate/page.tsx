@@ -80,29 +80,27 @@ export default function Generate() {
         })
       })
       const data = await res.json()
-      console.log('Réponse API:', data)
+      const newScore = isFirst ? currentScore : currentScore + (data.pts || 0)
+      if (!isFirst) setScore(newScore)
       setLoading(false)
-      typeText(data.text, async () => {
-        if (chapIdx < 9) {
-          setShowChoices(true)
-        } else {
-          setFinished(true)
-          setFinalText(data.text)
-          const finalScore = currentScore + (data.pts || 0)
-          const { data: { session } } = await supabase.auth.getSession()
-          if (session) {
-            await supabase.from('stories').insert({
-              user_id: session.user.id,
-              trame: 'Bal de Village',
-              score: finalScore,
-              outcome: OUTCOMES.find(o => finalScore >= o.min && finalScore <= o.max)?.title || '',
-              chapters: prevChoices
-            })
-          }
+
+      if (chapIdx >= 9) {
+        setFinished(true)
+        setFinalText(data.text)
+        setStoryText(data.text)
+        // Sauvegarder ici directement
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session) {
+          await supabase.from('stories').insert({
+            user_id: session.user.id,
+            trame: 'Bal de Village',
+            score: newScore,
+            outcome: OUTCOMES.find(o => newScore >= o.min && newScore <= o.max)?.title || '',
+            chapters: prevChoices
+          })
         }
-      })
-      if (!isFirst) {
-        setScore(prev => prev + (data.pts || 0))
+      } else {
+        typeText(data.text, () => setShowChoices(true))
       }
     } catch (e) {
       setLoading(false)
