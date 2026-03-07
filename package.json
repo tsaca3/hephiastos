@@ -1,0 +1,27 @@
+{
+  "name": "hephiastos",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
+    "@supabase/auth-ui-react": "^0.4.0",
+    "@supabase/auth-ui-shared": "^0.1.0",
+    "@supabase/supabase-js": "^2.0.0",
+    "@tailwindcss/postcss": "^4.2.1",
+    "next": "^15.0.0",
+    "postcss": "^8.5.8",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "tailwindcss": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.14",
+    "typescript": "5.9.3"
+  }
+}
