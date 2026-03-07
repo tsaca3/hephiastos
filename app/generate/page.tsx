@@ -82,11 +82,23 @@ export default function Generate() {
       const data = await res.json()
       console.log('Réponse API:', data)
       setLoading(false)
-      typeText(data.text, () => {
-        if (chapIdx < 9) setShowChoices(true)
-        else {
+      typeText(data.text, async () => {
+        if (chapIdx < 9) {
+          setShowChoices(true)
+        } else {
           setFinished(true)
           setFinalText(data.text)
+          const finalScore = currentScore + (data.pts || 0)
+          const { data: { session } } = await supabase.auth.getSession()
+          if (session) {
+            await supabase.from('stories').insert({
+              user_id: session.user.id,
+              trame: 'Bal de Village',
+              score: finalScore,
+              outcome: OUTCOMES.find(o => finalScore >= o.min && finalScore <= o.max)?.title || '',
+              chapters: prevChoices
+            })
+          }
         }
       })
       if (!isFirst) {
