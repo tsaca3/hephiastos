@@ -4,10 +4,10 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
 const PACKS = [
-  { id: 'price_1T8NClCzapu2pX6h2lFTVWtX', credits: 10, price: '5', pricePerCredit: '0.50' },
-  { id: 'price_1T8NDbCzapu2pX6h8c4t9uUU', credits: 20, price: '9', pricePerCredit: '0.45', popular: true },
-  { id: 'price_1T8NEACzapu2pX6h4DH5UI5C', credits: 50, price: '20', pricePerCredit: '0.40' },
-  { id: 'price_1T8NEmCzapu2pX6hwXhk8BsV', credits: 100, price: '35', pricePerCredit: '0.35' },
+  { id: 'price_1T8jf6Czapu2pX6hOplp2eN4', credits: 10, price: '5', pricePerCredit: '0.50' },
+  { id: 'price_1T8jfWCzapu2pX6h23jhIj7x', credits: 20, price: '9', pricePerCredit: '0.45' },
+  { id: 'price_1T8jgICzapu2pX6hRBmF94s5', credits: 50, price: '20', pricePerCredit: '0.40' },
+  { id: 'price_1T8jh3Czapu2pX6hvYvl0oV0', credits: 100, price: '35', pricePerCredit: '0.35' },
 ]
 
 function CreditsContent() {
