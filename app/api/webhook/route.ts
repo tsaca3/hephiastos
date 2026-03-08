@@ -10,10 +10,10 @@ const supabase = createClient(
 )
 
 const CREDITS_MAP: Record<string, number> = {
-  'price_1T8NClCzapu2pX6h2lFTVWtX': 10,
-  'price_1T8NDbCzapu2pX6h8c4t9uUU': 20,
-  'price_1T8NEACzapu2pX6h4DH5UI5C': 50,
-  'price_1T8NEmCzapu2pX6hwXhk8BsV': 100,
+  'price_1T8jf6Czapu2pX6hOplp2eN4': 10,
+  'price_1T8jfWCzapu2pX6h23jhIj7x': 20,
+  'price_1T8jgICzapu2pX6hRBmF94s5': 50,
+  'price_1T8jh3Czapu2pX6hvYvl0oV0': 100,
 }
 
 export async function POST(req: NextRequest) {
