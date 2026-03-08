@@ -50,7 +50,11 @@ export default function Generate() {
       return
     }
     
-    supabase.rpc('deduct_credit', { user_id: session.user.id })
+    await fetch('/api/deduct-credit', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ userId: session.user.id })
+})
   })
   generateChapter(0, 0, [], 0, true)
 }, [])
