@@ -28,6 +28,7 @@ export default function Generate() {
   const [storyText, setStoryText] = useState('')
   const [loading, setLoading] = useState(false)
   const [choices, setChoices] = useState<string[]>([])
+  const [chapterTexts, setChapterTexts] = useState<string[]>([])
   const [score, setScore] = useState(0)
   const [showChoices, setShowChoices] = useState(false)
   const [finished, setFinished] = useState(false)
@@ -35,34 +36,27 @@ export default function Generate() {
   const [picked, setPicked] = useState<number | null>(null)
 
   useEffect(() => {
-  supabase.auth.getSession().then(async ({ data: { session } }) => {
-    if (!session) { router.push('/auth'); return }
-    
-    // Vérifier les crédits avant de commencer
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('credits')
-      .eq('id', session.user.id)
-      .single()
-    
-    if (!profile || profile.credits <= 0) {
-      router.push('/credits?noCredits=true')
-      return
-    }
-    
-    await fetch('/api/deduct-credit', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ userId: session.user.id })
-})
-  })
-  generateChapter(0, 0, [], 0, true)
-}, [])
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!session) { router.push('/auth'); return }
+      const { data: profile } = await supabase
+        .from('profiles').select('credits').eq('id', session.user.id).single()
+      if (!profile || profile.credits <= 0) {
+        router.push('/credits?noCredits=true'); return
+      }
+      await fetch('/api/deduct-credit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: session.user.id })
+      })
+    })
+    generateChapter(0, 0, [], [], 0, true)
+  }, [])
 
   const generateChapter = async (
     chapIdx: number,
     choiceIdx: number,
     prevChoices: string[],
+    prevTexts: string[],
     currentScore: number,
     isFirst = false
   ) => {
@@ -86,13 +80,14 @@ export default function Generate() {
       const data = await res.json()
       const newScore = isFirst ? currentScore : currentScore + (data.pts || 0)
       if (!isFirst) setScore(newScore)
+      const newTexts = [...prevTexts, data.text]
+      setChapterTexts(newTexts)
       setLoading(false)
 
       if (chapIdx >= 9) {
         setFinished(true)
         setFinalText(data.text)
         setStoryText(data.text)
-        // Sauvegarder ici directement
         const { data: { session } } = await supabase.auth.getSession()
         if (session) {
           await fetch('/api/save-story', {
@@ -103,7 +98,8 @@ export default function Generate() {
               trame: 'Bal de Village',
               score: newScore,
               outcome: OUTCOMES.find(o => newScore >= o.min && newScore <= o.max)?.title || '',
-              chapters: prevChoices
+              chapters: prevChoices,
+              chapterTexts: newTexts
             })
           })
         }
@@ -116,21 +112,21 @@ export default function Generate() {
     }
   }
 
-const typeText = (text: string, cb: () => void) => {
-  let i = 0
-  const chars = Array.from(text)
-  setStoryText('')
-  const speed = Math.max(15, Math.floor(3000 / chars.length))
-  const iv = setInterval(() => {
-    if (i < chars.length) {
-      i++
-      setStoryText(chars.slice(0, i).join(''))
-    } else {
-      clearInterval(iv)
-      setTimeout(cb, 300)
-    }
-  }, speed)
-}
+  const typeText = (text: string, cb: () => void) => {
+    let i = 0
+    const chars = Array.from(text)
+    setStoryText('')
+    const speed = Math.max(15, Math.floor(3000 / chars.length))
+    const iv = setInterval(() => {
+      if (i < chars.length) {
+        i++
+        setStoryText(chars.slice(0, i).join(''))
+      } else {
+        clearInterval(iv)
+        setTimeout(cb, 300)
+      }
+    }, speed)
+  }
 
   const handleChoice = (choiceIdx: number) => {
     if (picked !== null) return
@@ -141,7 +137,7 @@ const typeText = (text: string, cb: () => void) => {
     setTimeout(() => {
       const nextChap = chapterIndex + 1
       setChapterIndex(nextChap)
-      generateChapter(nextChap, choiceIdx, newChoices, score)
+      generateChapter(nextChap, choiceIdx, newChoices, chapterTexts, score)
     }, 500)
   }
 
@@ -155,9 +151,7 @@ const typeText = (text: string, cb: () => void) => {
         borderBottom: '1px solid rgba(201,146,42,0.15)',
         background: 'rgba(13,11,8,0.97)', position: 'sticky', top: 0, zIndex: 10
       }}>
-        <span style={{ fontFamily: 'Cinzel Decorative, serif', fontSize: '1rem', color: '#e8b84b' }}>
-          Bal de Village
-        </span>
+        <span style={{ fontFamily: 'Cinzel Decorative, serif', fontSize: '1rem', color: '#e8b84b' }}>Bal de Village</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.6rem', letterSpacing: '2px', color: '#7a6a52', textTransform: 'uppercase' }}>
             Chapitre {Math.min(chapterIndex + 1, 10)} / 10
@@ -171,7 +165,6 @@ const typeText = (text: string, cb: () => void) => {
       </nav>
 
       <div style={{ maxWidth: '780px', margin: '0 auto', padding: '48px 40px' }}>
-
         <div style={{
           background: 'rgba(232,68,90,0.06)', border: '1px solid rgba(232,68,90,0.2)',
           padding: '12px 20px', marginBottom: '28px',
@@ -221,30 +214,30 @@ const typeText = (text: string, cb: () => void) => {
         )}
 
         {showChoices && !finished && (
-  <div>
-    <p style={{ fontFamily: 'Cinzel, serif', fontSize: '0.66rem', letterSpacing: '3px', textTransform: 'uppercase', color: '#c9922a', marginBottom: '12px' }}>
-      — Que faites-vous ? —
-    </p>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      {CHAPTERS[chapterIndex]?.choices.map((choice, i) => (
-        <button key={i} onClick={() => handleChoice(i)} style={{
-          background: picked === i ? 'rgba(201,146,42,0.06)' : 'rgba(255,255,255,0.013)',
-          border: picked === i ? '1px solid #c9922a' : '1px solid rgba(201,146,42,0.13)',
-          padding: '15px 20px', cursor: picked !== null ? 'default' : 'pointer',
-          display: 'flex', alignItems: 'center', gap: '11px',
-          fontFamily: 'Crimson Text, serif', fontSize: '1rem',
-          color: picked === i ? '#e8b84b' : '#e8dcc8', textAlign: 'left',
-          transition: 'all 0.3s', width: '100%'
-        }}>
-          <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.7rem', color: '#c9922a', fontWeight: 700, minWidth: '15px' }}>
-            {['A', 'B', 'C'][i]}
-          </span>
-          {choice}
-        </button>
-      ))}
-    </div>
-  </div>
-)}
+          <div>
+            <p style={{ fontFamily: 'Cinzel, serif', fontSize: '0.66rem', letterSpacing: '3px', textTransform: 'uppercase', color: '#c9922a', marginBottom: '12px' }}>
+              — Que faites-vous ? —
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {CHAPTERS[chapterIndex]?.choices.map((choice, i) => (
+                <button key={i} onClick={() => handleChoice(i)} style={{
+                  background: picked === i ? 'rgba(201,146,42,0.06)' : 'rgba(255,255,255,0.013)',
+                  border: picked === i ? '1px solid #c9922a' : '1px solid rgba(201,146,42,0.13)',
+                  padding: '15px 20px', cursor: picked !== null ? 'default' : 'pointer',
+                  display: 'flex', alignItems: 'center', gap: '11px',
+                  fontFamily: 'Crimson Text, serif', fontSize: '1rem',
+                  color: picked === i ? '#e8b84b' : '#e8dcc8', textAlign: 'left',
+                  transition: 'all 0.3s', width: '100%'
+                }}>
+                  <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.7rem', color: '#c9922a', fontWeight: 700, minWidth: '15px' }}>
+                    {['A', 'B', 'C'][i]}
+                  </span>
+                  {choice}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {finished && (
           <div>
@@ -288,7 +281,7 @@ const typeText = (text: string, cb: () => void) => {
             </div>
 
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <button onClick={() => router.push('/generate')} style={{
+              <button onClick={() => window.location.href = '/generate'} style={{
                 background: 'linear-gradient(135deg,#8b2020,#a82828)', color: '#f5d06e',
                 border: 'none', padding: '14px 32px', fontFamily: 'Cinzel, serif',
                 fontSize: '0.76rem', letterSpacing: '3px', textTransform: 'uppercase', cursor: 'pointer'
