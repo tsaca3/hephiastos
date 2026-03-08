@@ -107,14 +107,27 @@ export default function Compte() {
                     {new Date(story.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontFamily: 'Cinzel, serif', fontSize: '0.7rem', color: OUTCOME_COLORS[story.outcome] || '#e8b84b', marginBottom: '4px' }}>
-                    {story.outcome}
-                  </p>
-                  <p style={{ fontFamily: 'Cinzel, serif', fontSize: '0.55rem', color: '#7a6a52', letterSpacing: '1px' }}>
-                    Score : {story.score}
-                  </p>
-                </div>
+               <div style={{ textAlign: 'right' }}>
+  <p style={{ fontFamily: 'Cinzel, serif', fontSize: '0.7rem', color: OUTCOME_COLORS[story.outcome] || '#e8b84b', marginBottom: '4px' }}>
+    {story.outcome}
+  </p>
+  <p style={{ fontFamily: 'Cinzel, serif', fontSize: '0.55rem', color: '#7a6a52', letterSpacing: '1px' }}>
+    Score : {story.score}
+  </p>
+  <button onClick={() => exportPDF(story)} style={{
+    background: 'transparent', border: '1px solid rgba(201,146,42,0.2)',
+    color: '#c9922a', padding: '8px 16px', fontFamily: 'Cinzel, serif',
+    fontSize: '0.55rem', letterSpacing: '2px', textTransform: 'uppercase',
+    cursor: 'pointer', marginTop: '8px'
+  }}>📄 Exporter PDF</button>
+</div>
+```
+
+Puis :
+```
+git add .
+git commit -m "Export PDF histoires"
+git push
               </div>
             ))}
           </div>
@@ -122,4 +135,57 @@ export default function Compte() {
       </div>
     </div>
   )
+}
+const exportPDF = async (story: any) => {
+  const { jsPDF } = await import('jspdf')
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' })
+  
+  const pageW = 210
+  const margin = 20
+  const maxW = pageW - margin * 2
+  let y = 30
+
+  const addText = (text: string, fontSize: number, color: [number,number,number], bold = false) => {
+    doc.setFontSize(fontSize)
+    doc.setTextColor(...color)
+    if (bold) doc.setFont('helvetica', 'bold')
+    else doc.setFont('helvetica', 'normal')
+    const lines = doc.splitTextToSize(text, maxW)
+    lines.forEach((line: string) => {
+      if (y > 270) { doc.addPage(); y = 20 }
+      doc.text(line, margin, y)
+      y += fontSize * 0.5
+    })
+    y += 4
+  }
+
+  // Page de titre
+  doc.setFillColor(13, 11, 8)
+  doc.rect(0, 0, 210, 297, 'F')
+  addText('HéphIAstos', 28, [232, 184, 75], true)
+  addText(story.trame, 18, [201, 146, 42])
+  addText(`${story.outcome} — Score : ${story.score}`, 12, [122, 106, 82])
+  addText(new Date(story.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }), 10, [122, 106, 82])
+  
+  y += 10
+  doc.setDrawColor(201, 146, 42)
+  doc.setLineWidth(0.3)
+  doc.line(margin, y, pageW - margin, y)
+  y += 15
+
+  // Chapitres
+  const texts = story.chapter_texts || []
+  const choices = story.chapters || []
+  
+  texts.forEach((text: string, i: number) => {
+    if (y > 250) { doc.addPage(); doc.setFillColor(13,11,8); doc.rect(0,0,210,297,'F'); y = 20 }
+    addText(`Chapitre ${i + 1}`, 13, [232, 184, 75], true)
+    addText(text, 10, [232, 220, 200])
+    if (choices[i]) {
+      addText(`› ${choices[i]}`, 9, [201, 146, 42])
+    }
+    y += 6
+  })
+
+  doc.save(`hephiastos-${story.trame.replace(/ /g,'-')}-${story.id.slice(0,8)}.pdf`)
 }
