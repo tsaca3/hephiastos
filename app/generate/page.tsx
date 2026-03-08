@@ -91,12 +91,16 @@ export default function Generate() {
         // Sauvegarder ici directement
         const { data: { session } } = await supabase.auth.getSession()
         if (session) {
-          await supabase.from('stories').insert({
-            user_id: session.user.id,
-            trame: 'Bal de Village',
-            score: newScore,
-            outcome: OUTCOMES.find(o => newScore >= o.min && newScore <= o.max)?.title || '',
-            chapters: prevChoices
+          await fetch('/api/save-story', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: session.user.id,
+              trame: 'Bal de Village',
+              score: newScore,
+              outcome: OUTCOMES.find(o => newScore >= o.min && newScore <= o.max)?.title || '',
+              chapters: prevChoices
+            })
           })
         }
       } else {
