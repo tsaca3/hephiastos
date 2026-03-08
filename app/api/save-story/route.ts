@@ -9,7 +9,7 @@ const supabase = createClient(
 export async function POST(req: NextRequest) {
   try {
     const { userId, trame, score, outcome, chapters } = await req.json()
-    
+    console.log('Save story called:', { userId, trame, score, outcome })
     const { error } = await supabase.from('stories').insert({
       user_id: userId,
       trame,
