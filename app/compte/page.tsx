@@ -121,13 +121,8 @@ export default function Compte() {
     cursor: 'pointer', marginTop: '8px'
   }}>📄 Exporter PDF</button>
 </div>
-```
 
-Puis :
-```
-git add .
-git commit -m "Export PDF histoires"
-git push
+
               </div>
             ))}
           </div>
