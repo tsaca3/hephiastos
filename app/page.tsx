@@ -31,7 +31,7 @@ export default function Home() {
       <nav style={{
         padding: '0 40px', height: '66px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: 'linear-gradient(to right, #ffaa33, #ff6600, #cc3300)',
+        background: 'linear-gradient(to left, #ffaa33, #ff6600, #cc3300)',
         boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
         position: 'sticky', top: 0, zIndex: 10
       }}>
