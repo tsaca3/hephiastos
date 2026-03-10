@@ -31,12 +31,17 @@ export default function Home() {
       <nav style={{
         padding: '0 40px', height: '66px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: 'linear-gradient(135deg, #cc4400, #ff6b1a, #cc4400)',
+        background: 'linear-gradient(to right, #ffaa33, #ff6600, #cc3300)',
         boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
         position: 'sticky', top: 0, zIndex: 10
       }}>
-        {/* LOGO */}
-        <img src="/logo.png" alt="HéphIAstos" style={{ height: '48px', cursor: 'pointer' }} onClick={() => router.push('/')} />
+        {/* LOGO HAUT GAUCHE — quasiment aussi grand que le bandeau */}
+        <img
+          src="/logo.png"
+          alt="HéphIAstos"
+          style={{ height: '60px', cursor: 'pointer' }}
+          onClick={() => router.push('/')}
+        />
         
         {/* MENUS */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
@@ -52,10 +57,19 @@ export default function Home() {
             fontFamily: 'Cinzel, serif', fontSize: '0.65rem', letterSpacing: '2px',
             textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
           }}>Mon Compte</span>
+
+          {/* PASTILLE CRÉDITS — noir, chiffre bleu + diamant, sans le mot "crédits" */}
           <span style={{
-            fontFamily: 'Cinzel, serif', fontSize: '0.65rem', letterSpacing: '2px',
-            textTransform: 'uppercase', color: '#000', fontWeight: 700
-          }}>💎 {credits} crédits</span>
+            display: 'flex', alignItems: 'center', gap: '4px',
+            background: '#000', borderRadius: '999px',
+            padding: '4px 12px',
+            fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
+            fontWeight: 700, color: '#4db8ff',
+            boxShadow: '0 0 8px rgba(77,184,255,0.3)'
+          }}>
+            {credits} 💎
+          </span>
+
           <button onClick={logout} style={{
             background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(0,0,0,0.3)',
             color: '#000', padding: '6px 14px', fontFamily: 'Cinzel, serif',
@@ -66,27 +80,45 @@ export default function Home() {
       </nav>
 
       {/* HERO */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 66px)', padding: '40px' }}>
-        <img src="/logo.png" alt="HéphIAstos" style={{ width: '260px', marginBottom: '40px', filter: 'drop-shadow(0 0 40px rgba(255,107,26,0.4))' }} />
-        <h1 style={{
-          fontFamily: 'Cinzel Decorative, serif',
-          fontSize: 'clamp(2rem, 5vw, 4rem)',
-          background: 'linear-gradient(135deg, #ff6b1a, #e8b84b, #ff6b1a)',
-          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-          marginBottom: '16px', textAlign: 'center'
-        }}>Forgez votre histoire !</h1>
-        <p style={{
-          color: '#7a6a52', fontStyle: 'italic', fontSize: '1.1rem',
-          marginBottom: '48px', textAlign: 'center'
-        }}>Bienvenue, {user.email}</p>
-        <button onClick={() => router.push('/catalogue')} style={{
-          background: 'linear-gradient(135deg, #cc4400, #ff6b1a)',
-          color: '#000', border: 'none', padding: '16px 48px',
-          fontFamily: 'Cinzel, serif', fontSize: '0.8rem',
-          letterSpacing: '3px', textTransform: 'uppercase',
-          cursor: 'pointer', fontWeight: 700,
-          boxShadow: '0 4px 20px rgba(255,107,26,0.4)'
-        }}>⚒ Choisir une trame</button>
+      <div style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        justifyContent: 'center', minHeight: 'calc(100vh - 66px)',
+        padding: '20px 40px 80px'   /* padding-top réduit, padding-bottom pour descendre le bloc texte */
+      }}>
+        {/* LOGO CENTRAL — plus grand, collé au bandeau */}
+        <img
+          src="/logo.png"
+          alt="HéphIAstos"
+          style={{
+            width: '340px',
+            marginBottom: '20px',        /* espace réduit vers le texte */
+            marginTop: '-20px',          /* remonte légèrement vers le bandeau */
+            filter: 'drop-shadow(0 0 50px rgba(255,107,26,0.5))'
+          }}
+        />
+
+        {/* BLOC TEXTE + BOUTON — légèrement décalé vers le bas */}
+        <div style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <h1 style={{
+            fontFamily: 'Cinzel Decorative, serif',
+            fontSize: 'clamp(2rem, 5vw, 4rem)',
+            background: 'linear-gradient(135deg, #ff6b1a, #e8b84b, #ff6b1a)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            marginBottom: '16px', textAlign: 'center'
+          }}>Forgez votre histoire !</h1>
+          <p style={{
+            color: '#7a6a52', fontStyle: 'italic', fontSize: '1.1rem',
+            marginBottom: '48px', textAlign: 'center'
+          }}>Bienvenue, {user.email}</p>
+          <button onClick={() => router.push('/catalogue')} style={{
+            background: 'linear-gradient(135deg, #cc4400, #ff6b1a)',
+            color: '#000', border: 'none', padding: '16px 48px',
+            fontFamily: 'Cinzel, serif', fontSize: '0.8rem',
+            letterSpacing: '3px', textTransform: 'uppercase',
+            cursor: 'pointer', fontWeight: 700,
+            boxShadow: '0 4px 20px rgba(255,107,26,0.4)'
+          }}>⚒ Choisir une trame</button>
+        </div>
       </div>
     </div>
   )
