@@ -37,7 +37,7 @@ export default function Home() {
       }}>
         {/* LOGO HAUT GAUCHE — quasiment aussi grand que le bandeau */}
         <img
-          src="/logo.png"
+          src="/logo_icon.png"
           alt="HéphIAstos"
           style={{ height: '60px', cursor: 'pointer' }}
           onClick={() => router.push('/')}
