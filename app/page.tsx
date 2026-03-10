@@ -26,7 +26,7 @@ export default function Home() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
-
+      
       {/* NAV BANDEAU ORANGE FEU */}
       <nav style={{
         padding: '0 40px', height: '66px',
@@ -35,12 +35,9 @@ export default function Home() {
         boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
         position: 'sticky', top: 0, zIndex: 10
       }}>
-        {/* NOM DANS LA NAV */}
-        <span style={{
-          fontFamily: 'Cinzel Decorative, serif', fontSize: '1.1rem',
-          color: '#000', cursor: 'pointer', fontWeight: 700
-        }} onClick={() => router.push('/')}>HéphIAstos</span>
-
+        {/* LOGO */}
+        <img src="/logo.png" alt="HéphIAstos" style={{ height: '48px', cursor: 'pointer' }} onClick={() => router.push('/')} />
+        
         {/* MENUS */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
           <span onClick={() => router.push('/catalogue')} style={{
@@ -69,14 +66,8 @@ export default function Home() {
       </nav>
 
       {/* HERO */}
-      <div style={{
-        display: 'flex', flexDirection: 'column', alignItems: 'center',
-        justifyContent: 'center', minHeight: 'calc(100vh - 66px)', padding: '40px'
-      }}>
-        <img src="/logo.png" alt="HéphIAstos" style={{
-          width: '420px', marginBottom: '40px',
-          filter: 'drop-shadow(0 0 60px rgba(255,107,26,0.6))'
-        }} />
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 66px)', padding: '40px' }}>
+        <img src="/logo.png" alt="HéphIAstos" style={{ width: '260px', marginBottom: '40px', filter: 'drop-shadow(0 0 40px rgba(255,107,26,0.4))' }} />
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
           fontSize: 'clamp(2rem, 5vw, 4rem)',
