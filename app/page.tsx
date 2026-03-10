@@ -90,8 +90,8 @@ export default function Home() {
           src="/logo.png"
           alt="HéphIAstos"
           style={{
-            width: '340px',
-            marginBottom: '20px',        /* espace réduit vers le texte */
+            width: '420px',
+            marginBottom: '40px',        /* espace réduit vers le texte */
             marginTop: '-20px',          /* remonte légèrement vers le bandeau */
             filter: 'drop-shadow(0 0 50px rgba(255,107,26,0.5))'
           }}
@@ -106,7 +106,7 @@ export default function Home() {
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
             marginBottom: '16px', textAlign: 'center'
           }}>Forgez votre histoire !</h1>
-          <p style={{
+          <p style={{<img src="/logo.png"
             color: '#7a6a52', fontStyle: 'italic', fontSize: '1.1rem',
             marginBottom: '48px', textAlign: 'center'
           }}>Bienvenue, {user.email}</p>
