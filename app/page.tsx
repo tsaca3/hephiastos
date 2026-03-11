@@ -36,10 +36,10 @@ export default function Home() {
         position: 'sticky', top: 0, zIndex: 10
       }}>
         {/* LOGO */}
-        <img src="/logo.png" alt="HéphIAstos" style={{ height: '96px', cursor: 'pointer' }} onClick={() => router.push('/')} />
+        <img src="/logo-icon.png" alt="HéphIAstos" style={{ height: '96px', cursor: 'pointer' }} onClick={() => router.push('/')} />
         
         {/* MENUS */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '56px' }}>
           <span onClick={() => router.push('/catalogue')} style={{
             fontFamily: 'Cinzel, serif', fontSize: '0.65rem', letterSpacing: '2px',
             textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
