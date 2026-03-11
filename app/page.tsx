@@ -41,11 +41,11 @@ export default function Home() {
         {/* MENUS */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '56px' }}>
           <span onClick={() => router.push('/catalogue')} style={{
-            fontFamily: 'Cinzel, serif', fontSize: '0.75rem', letterSpacing: '2px',
+            fontFamily: 'Cinzel, serif', fontSize: '1rem', letterSpacing: '2px',
             textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
           }}>Les Trames</span>
           <span onClick={() => router.push('/credits')} style={{
-            fontFamily: 'Cinzel, serif', fontSize: '0.85rem', letterSpacing: '2px',
+            fontFamily: 'Cinzel, serif', fontSize: '1rem', letterSpacing: '2px',
             textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
           }}>Forge de Crédits</span>
           <span onClick={() => router.push('/compte')} style={{
@@ -53,18 +53,18 @@ export default function Home() {
             textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
           }}>Mon Compte</span>
           <span onClick={() => router.push('/forge')} style={{
-           fontFamily: 'Cinzel, serif', fontSize: '1.1rem', letterSpacing: '2px',
+           fontFamily: 'Cinzel, serif', fontSize: '1rem', letterSpacing: '2px',
             textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
           }}>Ma Forge</span>
           <span onClick={() => router.push('/conditions')} style={{
-            fontFamily: 'Cinzel, serif', fontSize: '1.25rem', letterSpacing: '2px',
+            fontFamily: 'Cinzel, serif', fontSize: '1rem', letterSpacing: '2px',
             textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
           }}>Conditions Générales</span>
 {/* PASTILLE CRÉDITS — noir, chiffre bleu + diamant, sans le mot "crédits" */}
           <span style={{
             display: 'flex', alignItems: 'center', gap: '4px',
             background: '#000', borderRadius: '999px',
-            padding: '46x 16px',
+            padding: '92x 32px',
             fontFamily: 'Cinzel, serif', fontSize: '0.95rem',
             fontWeight: 700, color: '#4db8ff',
             boxShadow: '0 0 8px rgba(77,184,255,0.3)'
