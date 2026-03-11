@@ -65,7 +65,7 @@ export default function Home() {
             display: 'flex', alignItems: 'center', gap: '4px',
             background: '#000', borderRadius: '999px',
             padding: '92x 32px',
-            fontFamily: 'Cinzel, serif', fontSize: '0.95rem',
+            fontFamily: 'Cinzel, serif', fontSize: '1.2rem',
             fontWeight: 700, color: '#4db8ff',
             boxShadow: '0 0 20px rgba(77,184,255,0.3)'
           }}>
