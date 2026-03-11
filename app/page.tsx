@@ -67,7 +67,7 @@ export default function Home() {
             padding: '92x 32px',
             fontFamily: 'Cinzel, serif', fontSize: '0.95rem',
             fontWeight: 700, color: '#4db8ff',
-            boxShadow: '0 0 8px rgba(77,184,255,0.3)'
+            boxShadow: '0 0 20px rgba(77,184,255,0.3)'
           }}>
             {credits} 💎
           </span>
