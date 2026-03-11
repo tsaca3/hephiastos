@@ -75,7 +75,7 @@ export default function Home() {
 
       {/* HERO */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 66px)', padding: '40px' }}>
-        <img src="/logo.png" alt="HéphIAstos" style={{ width: 'min(1040px, 90vw)', marginBottom: '40px', filter: 'drop-shadow(0 0 40px rgba(255,107,26,0.4))' }} />
+        <img src="/logo.png" alt="HéphIAstos" style={{ width: 'min(520px, 90vw)', marginBottom: '40px', filter: 'drop-shadow(0 0 40px rgba(255,107,26,0.4))' }} />
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
           fontSize: 'clamp(2rem, 5vw, 4rem)',
