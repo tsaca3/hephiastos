@@ -62,15 +62,16 @@ export default function Home() {
           }}>Conditions Générales</span>
 {/* PASTILLE CRÉDITS — noir, chiffre bleu + diamant, sans le mot "crédits" */}
           <span style={{
-            display: 'flex', alignItems: 'center', gap: '4px',
-            background: '#000', borderRadius: '999px',
-            padding: '92x 32px',
-            fontFamily: 'Cinzel, serif', fontSize: '1.2rem',
-            fontWeight: 700, color: '#4db8ff',
-            boxShadow: '0 0 20px rgba(77,184,255,0.3)'
-          }}>
-            {credits} 💎
-          </span>
+  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+  background: '#000', borderRadius: '999px',
+  padding: '9px 20px',          // ← corrigé (était '92x 32px')
+  fontFamily: 'Cinzel, serif', fontSize: '1.2rem',
+  fontWeight: 700, color: '#4db8ff',
+  boxShadow: '0 0 20px rgba(77,184,255,0.3)',
+  minWidth: '80px', height: '40px'   // taille minimale garantie
+}}>
+  {credits} 💎
+</span>
 
           <button onClick={logout} style={{
             background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(0,0,0,0.3)',
