@@ -70,7 +70,7 @@ export default function Home() {
   boxShadow: '0 0 20px rgba(77,184,255,0.3)',
   minWidth: '80px', height: '40px'   // taille minimale garantie
 }}>
-  {credits} 💎
+  {credits} <img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} />
 </span>
 
           <button onClick={logout} style={{
