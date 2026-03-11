@@ -31,7 +31,7 @@ export default function Home() {
       <nav style={{
         padding: '0 40px', height: '66px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: 'linear-gradient(to left, #cc3300, #ff6600, #ffaa33)',
+        background: 'linear-gradient(to top, #ff6600, #ffaa33)',
         boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
         position: 'sticky', top: 0, zIndex: 10
       }}>
@@ -52,12 +52,20 @@ export default function Home() {
             fontFamily: 'Cinzel, serif', fontSize: '0.65rem', letterSpacing: '2px',
             textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
           }}>Mon Compte</span>
+          <span onClick={() => router.push('/forge')} style={{
+           fontFamily: 'Cinzel, serif', fontSize: '0.65rem', letterSpacing: '2px',
+            textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
+          }}>Ma Forge</span>
+          <span onClick={() => router.push('/conditions')} style={{
+            fontFamily: 'Cinzel, serif', fontSize: '0.65rem', letterSpacing: '2px',
+            textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
+          }}>Conditions Générales</span>
 {/* PASTILLE CRÉDITS — noir, chiffre bleu + diamant, sans le mot "crédits" */}
           <span style={{
             display: 'flex', alignItems: 'center', gap: '4px',
             background: '#000', borderRadius: '999px',
-            padding: '4px 12px',
-            fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
+            padding: '46x 16px',
+            fontFamily: 'Cinzel, serif', fontSize: '0.95rem',
             fontWeight: 700, color: '#4db8ff',
             boxShadow: '0 0 8px rgba(77,184,255,0.3)'
           }}>
