@@ -101,7 +101,7 @@ useEffect(() => {
         <p style={{
           color: '#7a6a52', fontStyle: 'italic', fontSize: '1.4rem',
           marginBottom: '48px', textAlign: 'center'
-        }}>Bienvenue, {user.email}</p>
+        }}>Bienvenue, {pseudo}</p>
         <button onClick={() => router.push('/catalogue')} style={{
           background: 'linear-gradient(135deg, #cc4400, #ff6b1a)',
           color: '#000', border: 'none', padding: '16px 48px',
