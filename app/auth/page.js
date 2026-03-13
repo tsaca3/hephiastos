@@ -29,7 +29,7 @@ export default function AuthPage() {
       <div style={{
         position: 'fixed', top: 0, left: 0, right: 0,
         height: '66px',
-        background: 'linear-gradient(to left, #ffaa33, #ff6600, #cc3300)',
+        background: 'linear-gradient(to top, #ffaa33, #ff6600)',
         boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
         display: 'flex', alignItems: 'center',
         padding: '0 40px', zIndex: 10
@@ -54,24 +54,15 @@ export default function AuthPage() {
             src="/logo.png"
             alt="HéphIAstos"
             style={{
-              width: '160px',
+              width: '220px',
               filter: 'drop-shadow(0 0 30px rgba(255,107,26,0.5))'
             }}
           />
         </div>
 
-        {/* ACCROCHE */}
-        <h1 style={{
-          fontFamily: 'Cinzel Decorative, serif',
-          fontSize: '1.6rem',
-          color: '#e8b84b',
-          textAlign: 'center',
-          marginBottom: '8px'
-        }}>HéphIAstos</h1>
-
         <p style={{
           fontFamily: 'Cinzel, serif',
-          fontSize: '0.6rem',
+          fontSize: '0.8rem',
           letterSpacing: '3px',
           textTransform: 'uppercase',
           color: '#7a6a52',
@@ -82,7 +73,7 @@ export default function AuthPage() {
         {/* PHRASE ÉPIQUE */}
         <p style={{
           fontFamily: 'Crimson Text, serif',
-          fontSize: '1rem',
+          fontSize: '1.15rem',
           fontStyle: 'italic',
           color: '#cc7700',
           textAlign: 'center',
@@ -137,13 +128,13 @@ export default function AuthPage() {
               },
               label: {
                 fontFamily: 'Cinzel, serif',
-                fontSize: '0.7rem',
+                fontSize: '0.85rem',
                 letterSpacing: '2px',
                 textTransform: 'uppercase',
               },
               anchor: {
                 fontFamily: 'Cinzel, serif',
-                fontSize: '0.65rem',
+                fontSize: '0.8rem',
                 letterSpacing: '1px',
               }
             }
