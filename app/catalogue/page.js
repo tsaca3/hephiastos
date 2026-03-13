@@ -94,6 +94,7 @@ export default function Catalogue() {
           gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '40px'
         }}>
+
           {trames.map(trame => (
             <div
               key={trame.id}
