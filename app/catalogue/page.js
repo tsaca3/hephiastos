@@ -47,8 +47,8 @@ export default function Catalogue() {
         position: 'sticky', top: 0, zIndex: 10
       }}>
         <img src="/logo_icon.png" alt="HéphIAstos" style={{ height: '58px', cursor: 'pointer' }} onClick={() => router.push('/')} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
-          <span onClick={() => router.push('/catalogue')} style={{ ...menuStyle, color: '#ff6b1a' }}>Les Trames</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '56px' }}>
+          <span onClick={() => router.push('/catalogue')} style={{ ...menuStyle, color: '#555555' }}>Les Trames</span>
           <span onClick={() => router.push('/credits')} style={menuStyle}>Forge de Crédits</span>
           <span onClick={() => router.push('/compte')} style={menuStyle}>Mon Compte</span>
           <span onClick={() => router.push('/forge')} style={menuStyle}>Ma Forge</span>
@@ -59,7 +59,7 @@ export default function Catalogue() {
             fontFamily: 'Cinzel, serif', fontSize: '1.2rem', fontWeight: 700, color: '#4db8ff',
             boxShadow: '0 0 20px rgba(77,184,255,0.3)', minWidth: '80px', height: '40px'
           }}>
-            {credits} 💎
+            {credits} <img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} />
           </span>
           <button onClick={logout} style={{
             background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(0,0,0,0.3)',
