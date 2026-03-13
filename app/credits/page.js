@@ -4,10 +4,10 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
 const PACKS = [
-  { id: 'price_1T8jf6Czapu2pX6hOplp2eN4', credits: 10, price: '5', pricePerCredit: '0.50', image: '/packs/pack-10.png', nom: 'L\'Étincelle' },
-  { id: 'price_1T8jfWCzapu2pX6h23jhIj7x', credits: 20, price: '9', pricePerCredit: '0.45', image: '/packs/pack-20.png', nom: 'La Flamme' },
-  { id: 'price_1T8jgICzapu2pX6hRBmF94s5', credits: 50, price: '20', pricePerCredit: '0.40', image: '/packs/pack-50.png', nom: 'Le Brasier' },
-  { id: 'price_1T8jh3Czapu2pX6hvYvl0oV0', credits: 100, price: '35', pricePerCredit: '0.35', image: '/packs/pack-100.png', nom: 'La Forge' },
+  { id: 'price_1T8jf6Czapu2pX6hOplp2eN4', credits: 10, price: '5', pricePerCredit: '0.50', image: '/packs/pack-10.png', nom: 'Pack 10 crédits de forge' },
+  { id: 'price_1T8jfWCzapu2pX6h23jhIj7x', credits: 20, price: '9', pricePerCredit: '0.45', image: '/packs/pack-20.png', nom: 'Pack 20 crédits de forge' },
+  { id: 'price_1T8jgICzapu2pX6hRBmF94s5', credits: 50, price: '20', pricePerCredit: '0.40', image: '/packs/pack-50.png', nom: 'Pack 50 crédits de forge' },
+  { id: 'price_1T8jh3Czapu2pX6hvYvl0oV0', credits: 100, price: '35', pricePerCredit: '0.35', image: '/packs/pack-100.png', nom: 'Pack 100 crédits de forge' },
 ]
 
 function CreditsContent() {
@@ -66,7 +66,7 @@ function CreditsContent() {
         <img src="/logo_icon.png" alt="HéphIAstos" style={{ height: '58px', cursor: 'pointer' }} onClick={() => router.push('/')} />
         <div style={{ display: 'flex', alignItems: 'center', gap: '56px' }}>
           <span onClick={() => router.push('/catalogue')} style={menuStyle}>Les Trames</span>
-          <span onClick={() => router.push('/credits')} style={{ ...menuStyle, color: '#555555' }}>Forge de Crédits</span>
+          <span onClick={() => router.push('/credits')} style={{ ...menuStyle, color: '#555555' }}>La Bourse aux Crédits</span>
           <span onClick={() => router.push('/compte')} style={menuStyle}>Mon Compte</span>
           <span onClick={() => router.push('/forge')} style={menuStyle}>Ma Forge</span>
           <span onClick={() => router.push('/conditions')} style={menuStyle}>Conditions Générales</span>
@@ -117,7 +117,7 @@ function CreditsContent() {
             padding: '16px 24px', marginBottom: '40px', textAlign: 'center'
           }}>
             <span style={{ color: '#e8445a', fontFamily: 'Cinzel, serif', fontSize: '0.75rem', letterSpacing: '2px' }}>
-              Vous n'avez plus de crédits — forgez-en pour continuer !
+              Vous n'avez plus de crédits — Rendez-vous à la Bourse !
             </span>
           </div>
         )}
@@ -129,13 +129,13 @@ function CreditsContent() {
           background: 'linear-gradient(135deg, #ff6b1a, #e8b84b, #ff6b1a)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
           textAlign: 'center', marginBottom: '12px'
-        }}>Forge de Crédits</h1>
+        }}>La Bourse aux Crédits</h1>
 
         <p style={{
           fontFamily: 'Cinzel, serif', fontSize: '0.75rem', letterSpacing: '3px',
           textTransform: 'uppercase', color: '#7a6a52',
           textAlign: 'center', marginBottom: '60px'
-        }}>Chaque crédit forge une histoire unique</p>
+        }}>Echanger vos piécettes en Crédits de forge - Choisissez votre pack</p>
 
         {/* GRILLE PACKS */}
         <div style={{
