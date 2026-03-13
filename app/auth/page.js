@@ -29,7 +29,7 @@ export default function AuthPage() {
       <div style={{
         position: 'fixed', top: 0, left: 0, right: 0,
         height: '66px',
-        background: 'linear-gradient(to top, #ffaa33, #ff6600)',
+        background: 'linear-gradient(to top, #ff6600, #ffaa33)',
         boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
         display: 'flex', alignItems: 'center',
         padding: '0 40px', zIndex: 10
@@ -54,7 +54,7 @@ export default function AuthPage() {
             src="/logo.png"
             alt="HéphIAstos"
             style={{
-              width: '220px',
+              width: '440px',
               filter: 'drop-shadow(0 0 30px rgba(255,107,26,0.5))'
             }}
           />
