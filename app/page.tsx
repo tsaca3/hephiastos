@@ -13,11 +13,11 @@ useEffect(() => {
   supabase.auth.getSession().then(({ data: { session } }) => {
     if (!session) { router.push('/auth'); return }
     setUser(session.user)
-    supabase.from('profiles').select('credits, pseudo').eq('id', session.user.id).single()
+    supabase.from('profiles').select('credits, username').eq('id', session.user.id).single()
       .then(({ data }) => {
         if (data) {
           setCredits(data.credits)
-          setPseudo(data.pseudo || session.user.email)
+          setPseudo(data.username || session.user.email)
         }
       })
   })

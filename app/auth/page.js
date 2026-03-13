@@ -40,7 +40,7 @@ export default function AuthPage() {
     if (pseudo.length < 3) { setError('Le pseudo doit faire au moins 3 caractères.'); setLoading(false); return }
 
     // Vérifier si le pseudo est déjà pris
-    const { data: existing } = await supabase.from('profiles').select('id').eq('pseudo', pseudo.trim()).single()
+    const { data: existing } = await supabase.from('profiles').select('id').eq('username', pseudo.trim()).single()
     if (existing) { setError('Ce pseudo est déjà pris, choisissez-en un autre.'); setLoading(false); return }
 
     const { data, error } = await supabase.auth.signUp({ email, password })
@@ -50,7 +50,7 @@ export default function AuthPage() {
     if (data.user) {
       await supabase.from('profiles').upsert({
         id: data.user.id,
-        pseudo: pseudo.trim(),
+        username: pseudo.trim(),
         credits: 100
       })
     }
