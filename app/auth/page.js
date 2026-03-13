@@ -133,7 +133,7 @@ export default function AuthPage() {
           borderTop: '1px solid rgba(201,146,42,0.2)', borderBottom: '1px solid rgba(201,146,42,0.2)',
           padding: '12px 0'
         }}>
-          Chaque grande histoire commence par une étincelle.<br />La vôtre commence ici.
+          Chaque grande histoire commence par une étincelle. La vôtre commence ici.<br />
         </p>
 
         {/* MESSAGES */}
