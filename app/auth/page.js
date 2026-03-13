@@ -14,10 +14,11 @@ export default function AuthPage() {
   const [success, setSuccess] = useState('')
 
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (session) router.push('/')
-    })
-  }, [])
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (!session) router.push('/auth')  // redirige vers auth si PAS connecté
+    // sinon on reste sur la page actuelle, on ne fait rien
+  })
+}, [])
 
   const handleLogin = async () => {
     setLoading(true); setError('')
