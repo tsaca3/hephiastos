@@ -4,18 +4,24 @@ import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 
 export default function Home() {
-  const [user, setUser] = useState<any>(null)
-  const [credits, setCredits] = useState<number>(0)
-  const router = useRouter()
+const [user, setUser] = useState<any>(null)
+const [credits, setCredits] = useState<number>(0)
+const [pseudo, setPseudo] = useState<string>('')
+const router = useRouter()
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) { router.push('/auth'); return }
-      setUser(session.user)
-      supabase.from('profiles').select('credits').eq('id', session.user.id).single()
-        .then(({ data }) => { if (data) setCredits(data.credits) })
-    })
-  }, [])
+useEffect(() => {
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (!session) { router.push('/auth'); return }
+    setUser(session.user)
+    supabase.from('profiles').select('credits, pseudo').eq('id', session.user.id).single()
+      .then(({ data }) => {
+        if (data) {
+          setCredits(data.credits)
+          setPseudo(data.pseudo || session.user.email)
+        }
+      })
+  })
+}, [])
 
   const logout = async () => {
     await supabase.auth.signOut()
@@ -93,7 +99,7 @@ export default function Home() {
           marginBottom: '16px', textAlign: 'center'
         }}>Forgez votre histoire !</h1>
         <p style={{
-          color: '#7a6a52', fontStyle: 'italic', fontSize: '1.1rem',
+          color: '#7a6a52', fontStyle: 'italic', fontSize: '1.4rem',
           marginBottom: '48px', textAlign: 'center'
         }}>Bienvenue, {user.email}</p>
         <button onClick={() => router.push('/catalogue')} style={{
