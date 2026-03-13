@@ -44,12 +44,12 @@ export default function AuthPage() {
         background: '#0d0800',
         border: '1px solid rgba(201,146,42,0.35)',
         boxShadow: '0 0 60px rgba(255,107,26,0.15), 0 0 120px rgba(255,107,26,0.05)',
-        padding: '48px 40px',
+        padding: '0px 40px 48px',
         marginTop: '66px'
       }}>
 
         {/* LOGO */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0px' }}>
           <img
             src="/logo.png"
             alt="HéphIAstos"
