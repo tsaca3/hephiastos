@@ -14,10 +14,17 @@ export default function AuthPage() {
   const [success, setSuccess] = useState('')
 
   useEffect(() => {
+  // Vérification initiale
   supabase.auth.getSession().then(({ data: { session } }) => {
-    if (!session) router.push('/auth')  // redirige vers auth si PAS connecté
-    // sinon on reste sur la page actuelle, on ne fait rien
+    if (session) router.push('/')
   })
+
+  // Écoute la connexion en temps réel
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN') router.push('/')
+  })
+
+  return () => subscription.unsubscribe()
 }, [])
 
   const handleLogin = async () => {
