@@ -1,0 +1,29 @@
+[
+  {
+    "id": "1",
+    "titre": "Bal de village",
+    "description": "Une aventure sombre dans les entrailles d'une cité souterraine où la magie et le fer se mêlent.",
+    "genre": "Romantasy",
+    "chapitres": 10,
+    "credits": 1,
+    "image": "/trames/bal-de-village.jpg"
+  },
+  {
+    "id": "2",
+    "titre": "Prochainement disponible",
+    "description": "",
+    "genre": "",
+    "chapitres":"",
+    "credits":"",
+    "image": "/trames/à-voir.jpg"
+  },
+  {
+    "id": "3",
+    "titre": "Prochainement disponible",
+    "description": "",
+    "genre": "",
+    "chapitres":"",
+    "credits":"",
+    "image": "/trames/à-voir.jpg"
+  }
+]
