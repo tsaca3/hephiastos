@@ -16,7 +16,7 @@ export const metadata = {
   title: "HéphIAstos",
   description: "Forgez votre histoire !",
   icons: {
-    icon: '/logo_icon.png',
+    icon: '/favicon.ico',
   }
 };
 
