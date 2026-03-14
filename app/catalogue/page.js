@@ -236,9 +236,13 @@ export default function Catalogue() {
           textAlign: 'center', marginBottom: '60px'
         }}>Choisissez votre aventure</p>
 
-        {/* GRILLE */}
+        {/* GRILLE 4 COLONNES comme les packs */}
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '40px'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: '40px',
+          maxWidth: '1200px',
+          margin: '0 auto'
         }}>
           {trames.map(trame => {
             const dejaAjoutee = forgeIds.includes(trame.id)
@@ -271,39 +275,45 @@ export default function Catalogue() {
                   }}>⚒ Dans votre forge</div>
                 )}
 
-                {/* IMAGE — hauteur réduite */}
-                <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', maxHeight: '200px' }}>
-  <img
-    src={trame.image}
-    alt={trame.titre}
-    style={{
-      width: '100%', height: '100%', objectFit: 'cover',
-      transition: 'transform 0.3s ease',
-      transform: hover === trame.id ? 'scale(1.05)' : 'scale(1)',
-      filter: dejaAjoutee ? 'brightness(0.6)' : 'brightness(1)'
-    }}
-  />
-</div>
+                {/* IMAGE CARRÉE */}
+                <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden' }}>
+                  <img
+                    src={trame.image}
+                    alt={trame.titre}
+                    style={{
+                      width: '100%', height: '100%', objectFit: 'cover',
+                      transition: 'transform 0.3s ease',
+                      transform: hover === trame.id ? 'scale(1.05)' : 'scale(1)',
+                      filter: dejaAjoutee ? 'brightness(0.6)' : 'brightness(1)'
+                    }}
+                  />
+                </div>
 
                 {/* INFOS */}
-                <div style={{ padding: '20px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                    <span style={{
-                      fontFamily: 'Cinzel, serif', fontSize: '0.6rem', letterSpacing: '2px',
-                      textTransform: 'uppercase', color: '#ff6b1a',
-                      border: '1px solid rgba(255,107,26,0.4)', padding: '3px 8px'
-                    }}>{trame.genre}</span>
-                    <span style={{
-                      fontFamily: 'Cinzel, serif', fontSize: '0.6rem',
-                      textTransform: 'uppercase', color: '#7a6a52'
-                    }}>⚒ {trame.chapitres} chapitres</span>
-                  </div>
+                <div style={{ padding: '20px', textAlign: 'center' }}>
 
+                  {/* GENRE */}
+                  <span style={{
+                    fontFamily: 'Cinzel, serif', fontSize: '0.6rem', letterSpacing: '2px',
+                    textTransform: 'uppercase', color: '#ff6b1a',
+                    border: '1px solid rgba(255,107,26,0.4)', padding: '3px 8px',
+                    display: 'inline-block', marginBottom: '12px'
+                  }}>{trame.genre}</span>
+
+                  {/* TITRE */}
                   <h2 style={{
                     fontFamily: 'Cinzel Decorative, serif', fontSize: '1rem',
-                    color: '#e8b84b', marginBottom: '10px', lineHeight: '1.4'
+                    color: '#e8b84b', marginBottom: '8px', lineHeight: '1.4'
                   }}>{trame.titre}</h2>
 
+                  {/* CHAPITRES */}
+                  <p style={{
+                    fontFamily: 'Cinzel, serif', fontSize: '0.6rem',
+                    textTransform: 'uppercase', color: '#7a6a52',
+                    letterSpacing: '1px', marginBottom: '12px'
+                  }}>⚒ {trame.chapitres} chapitres</p>
+
+                  {/* DESCRIPTION */}
                   <p style={{
                     fontFamily: 'Crimson Text, serif', fontSize: '0.95rem',
                     color: '#a89880', lineHeight: '1.6', marginBottom: '16px',
@@ -311,46 +321,49 @@ export default function Catalogue() {
                     WebkitBoxOrient: 'vertical', overflow: 'hidden'
                   }}>{trame.description}</p>
 
+                  {/* PRIX */}
                   <div style={{
                     borderTop: '1px solid rgba(201,146,42,0.2)',
-                    paddingTop: '12px',
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                    borderBottom: '1px solid rgba(201,146,42,0.2)',
+                    padding: '10px 0', marginBottom: '16px'
                   }}>
-                    {/* PRIX avec logo diamond */}
                     <span style={{
-                      fontFamily: 'Cinzel, serif', fontSize: '1rem', fontWeight: 700,
+                      fontFamily: 'Cinzel, serif', fontSize: '1.4rem', fontWeight: 700,
                       color: trame.credits === 0 ? '#7ec87e' : '#4db8ff',
-                      display: 'flex', alignItems: 'center', gap: '4px'
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
                     }}>
                       {trame.credits === 0 ? 'Gratuite' : (
                         <>
                           {trame.credits}
-                          <img src="/diamond.png" alt="crédits" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
+                          <img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} />
                         </>
                       )}
                     </span>
-
-                    <button
-                      onClick={() => handleAjouter(trame)}
-                      disabled={dejaAjoutee}
-                      style={{
-                        padding: '8px 16px',
-                        background: dejaAjoutee
-                          ? 'transparent'
-                          : hover === trame.id
-                            ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
-                            : 'transparent',
-                        border: `1px solid ${dejaAjoutee ? 'rgba(100,100,100,0.3)' : 'rgba(201,146,42,0.3)'}`,
-                        color: dejaAjoutee ? '#555' : hover === trame.id ? '#000' : '#c9922a',
-                        fontFamily: 'Cinzel, serif', fontSize: '0.6rem',
-                        letterSpacing: '2px', textTransform: 'uppercase',
-                        cursor: dejaAjoutee ? 'not-allowed' : 'pointer', fontWeight: 700,
-                        transition: 'all 0.3s ease'
-                      }}
-                    >
-                      {dejaAjoutee ? '⚒ Dans la forge' : '+ Ajouter'}
-                    </button>
                   </div>
+
+                  {/* BOUTON */}
+                  <button
+                    onClick={() => handleAjouter(trame)}
+                    disabled={dejaAjoutee}
+                    style={{
+                      width: '100%', padding: '12px',
+                      background: dejaAjoutee
+                        ? 'transparent'
+                        : hover === trame.id
+                          ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
+                          : 'transparent',
+                      border: `1px solid ${dejaAjoutee ? 'rgba(100,100,100,0.3)' : 'rgba(201,146,42,0.3)'}`,
+                      color: dejaAjoutee ? '#555' : hover === trame.id ? '#000' : '#c9922a',
+                      fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
+                      letterSpacing: '2px', textTransform: 'uppercase',
+                      cursor: dejaAjoutee ? 'not-allowed' : 'pointer', fontWeight: 700,
+                      transition: 'all 0.3s ease',
+                      boxShadow: hover === trame.id && !dejaAjoutee ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
+                    }}
+                  >
+                    {dejaAjoutee ? '⚒ Dans la forge' : '⚒ Ajouter à ma forge'}
+                  </button>
+
                 </div>
               </div>
             )
