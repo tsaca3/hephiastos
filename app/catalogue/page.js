@@ -159,7 +159,7 @@ export default function Catalogue() {
           background: message.type === 'success' ? 'rgba(126,200,126,0.15)' : 'rgba(232,68,90,0.15)',
           border: `1px solid ${message.type === 'success' ? 'rgba(126,200,126,0.4)' : 'rgba(232,68,90,0.4)'}`,
           padding: '12px 32px', zIndex: 100,
-          fontFamily: 'Cinzel, serif', fontSize: '0.9rem', letterSpacing: '2px',  // +2px
+          fontFamily: 'Cinzel, serif', fontSize: '0.9rem', letterSpacing: '2px',
           color: message.type === 'success' ? '#7ec87e' : '#e8445a'
         }}>
           {message.text}
@@ -179,14 +179,14 @@ export default function Catalogue() {
             boxShadow: '0 0 60px rgba(255,107,26,0.15)'
           }}>
             <h2 style={{
-              fontFamily: 'Cinzel Decorative, serif', fontSize: '1.35rem',  // +2px
+              fontFamily: 'Cinzel Decorative, serif', fontSize: '1.35rem',
               color: '#e8b84b', marginBottom: '16px', textAlign: 'center'
             }}>{popup.titre}</h2>
 
             {popup.credits > 0 ? (
               <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                 <p style={{
-                  fontFamily: 'Crimson Text, serif', fontSize: '1.25rem',  // +2px
+                  fontFamily: 'Crimson Text, serif', fontSize: '1.25rem',
                   color: '#a89880', lineHeight: '1.6', marginBottom: '12px'
                 }}>
                   Cette trame coûte{' '}
@@ -196,7 +196,7 @@ export default function Catalogue() {
                   </span>
                 </p>
                 <p style={{
-                  fontFamily: 'Crimson Text, serif', fontSize: '1.25rem',  // +2px
+                  fontFamily: 'Crimson Text, serif', fontSize: '1.25rem',
                   color: '#a89880', lineHeight: '1.6'
                 }}>
                   Votre solde :{' '}
@@ -211,7 +211,7 @@ export default function Catalogue() {
                 </p>
                 {credits < popup.credits && (
                   <p style={{
-                    fontFamily: 'Cinzel, serif', fontSize: '0.9rem',  // +2px
+                    fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
                     letterSpacing: '1px', color: '#e8445a', marginTop: '8px'
                   }}>
                     Crédits insuffisants !
@@ -220,7 +220,7 @@ export default function Catalogue() {
               </div>
             ) : (
               <p style={{
-                fontFamily: 'Crimson Text, serif', fontSize: '1.25rem',  // +2px
+                fontFamily: 'Crimson Text, serif', fontSize: '1.25rem',
                 color: '#a89880', textAlign: 'center', marginBottom: '32px', lineHeight: '1.6'
               }}>
                 Cette trame est <span style={{ color: '#7ec87e', fontWeight: 700 }}>gratuite</span>.<br />
@@ -232,7 +232,7 @@ export default function Catalogue() {
               <button onClick={() => setPopup(null)} style={{
                 padding: '12px 32px',
                 background: 'transparent', border: '1px solid rgba(201,146,42,0.3)',
-                color: '#7a6a52', fontFamily: 'Cinzel, serif', fontSize: '0.9rem',  // +2px
+                color: '#7a6a52', fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
                 letterSpacing: '2px', textTransform: 'uppercase', cursor: 'pointer'
               }}>Non</button>
               <button
@@ -244,7 +244,7 @@ export default function Catalogue() {
                     ? 'rgba(100,100,100,0.2)'
                     : 'linear-gradient(135deg, #cc4400, #ff6b1a)',
                   border: 'none', color: credits < popup.credits ? '#555' : '#000',
-                  fontFamily: 'Cinzel, serif', fontSize: '0.9rem',  // +2px
+                  fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
                   letterSpacing: '2px', textTransform: 'uppercase',
                   cursor: credits < popup.credits ? 'not-allowed' : 'pointer',
                   fontWeight: 700,
@@ -258,29 +258,28 @@ export default function Catalogue() {
       )}
 
       {/* CONTENU */}
-      <div style={{ padding: '20px 80px' }}>
+      <div style={{ padding: '20px 20px' }}>
 
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
-          fontSize: 'clamp(1.7rem, 3vw, 2.7rem)',  // +2px
+          fontSize: 'clamp(1.7rem, 3vw, 2.7rem)',
           background: 'linear-gradient(135deg, #ff6b1a, #e8b84b, #ff6b1a)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
           textAlign: 'center', marginBottom: '12px'
         }}>Les Trames</h1>
 
         <p style={{
-          fontFamily: 'Cinzel, serif', fontSize: '0.9rem', letterSpacing: '3px',  // +2px
+          fontFamily: 'Cinzel, serif', fontSize: '0.9rem', letterSpacing: '3px',
           textTransform: 'uppercase', color: '#7a6a52',
           textAlign: 'center', marginBottom: '30px'
         }}>Choisissez votre aventure</p>
 
-        {/* GRILLE */}
+        {/* GRILLE — flex centré */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
+          display: 'flex',
+          flexWrap: 'wrap',
           gap: '24px',
-          maxWidth: '1200px',
-          margin: '0 auto'
+          justifyContent: 'center'
         }}>
           {trames.map(trame => {
             const dejaAjoutee = forgeIds.includes(trame.id)
@@ -291,6 +290,8 @@ export default function Catalogue() {
                 onMouseEnter={() => setHover(trame.id)}
                 onMouseLeave={() => setHover(null)}
                 style={{
+                  width: 'calc(25% - 18px)',
+                  minWidth: '220px',
                   background: '#0d0800',
                   border: hover === trame.id && !nonDisponible
                     ? '1px solid rgba(255,107,26,0.6)'
@@ -310,7 +311,7 @@ export default function Catalogue() {
                     position: 'absolute', top: '12px', right: '12px', zIndex: 2,
                     background: 'rgba(0,0,0,0.85)', border: '1px solid rgba(201,146,42,0.4)',
                     padding: '4px 10px',
-                    fontFamily: 'Cinzel, serif', fontSize: '0.7rem',  // +2px
+                    fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
                     letterSpacing: '1px', textTransform: 'uppercase', color: '#e8b84b'
                   }}>✦ Bientôt disponible</div>
                 )}
@@ -321,7 +322,7 @@ export default function Catalogue() {
                     position: 'absolute', top: '12px', right: '12px', zIndex: 2,
                     background: 'rgba(0,0,0,0.85)', border: '1px solid rgba(255,107,26,0.4)',
                     padding: '4px 10px',
-                    fontFamily: 'Cinzel, serif', fontSize: '0.7rem',  // +2px
+                    fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
                     letterSpacing: '1px', textTransform: 'uppercase', color: '#ff6b1a'
                   }}>⚒ Dans votre forge</div>
                 )}
@@ -344,25 +345,25 @@ export default function Catalogue() {
                 <div style={{ padding: '20px', textAlign: 'center' }}>
 
                   <span style={{
-                    fontFamily: 'Cinzel, serif', fontSize: '0.75rem', letterSpacing: '2px',  // +2px
+                    fontFamily: 'Cinzel, serif', fontSize: '0.75rem', letterSpacing: '2px',
                     textTransform: 'uppercase', color: '#ff6b1a',
                     border: '1px solid rgba(255,107,26,0.4)', padding: '3px 8px',
                     display: 'inline-block', marginBottom: '12px'
                   }}>{trame.genre}</span>
 
                   <h2 style={{
-                    fontFamily: 'Cinzel Decorative, serif', fontSize: '1.15rem',  // +2px
+                    fontFamily: 'Cinzel Decorative, serif', fontSize: '1.15rem',
                     color: '#e8b84b', marginBottom: '8px', lineHeight: '1.4'
                   }}>{trame.titre}</h2>
 
                   <p style={{
-                    fontFamily: 'Cinzel, serif', fontSize: '0.75rem',  // +2px
+                    fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
                     textTransform: 'uppercase', color: '#7a6a52',
                     letterSpacing: '1px', marginBottom: '12px'
                   }}>⚒ {trame.chapitres} chapitres</p>
 
                   <p style={{
-                    fontFamily: 'Crimson Text, serif', fontSize: '1.1rem',  // +2px
+                    fontFamily: 'Crimson Text, serif', fontSize: '1.1rem',
                     color: '#a89880', lineHeight: '1.6', marginBottom: '16px',
                     display: '-webkit-box', WebkitLineClamp: 3,
                     WebkitBoxOrient: 'vertical', overflow: 'hidden'
@@ -374,7 +375,7 @@ export default function Catalogue() {
                     padding: '10px 0', marginBottom: '16px'
                   }}>
                     <span style={{
-                      fontFamily: 'Cinzel, serif', fontSize: '1.6rem', fontWeight: 700,  // +2px
+                      fontFamily: 'Cinzel, serif', fontSize: '1.6rem', fontWeight: 700,
                       color: trame.credits === 0 ? '#7ec87e' : '#4db8ff',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
                     }}>
@@ -399,7 +400,7 @@ export default function Catalogue() {
                           : 'transparent',
                       border: `1px solid ${dejaAjoutee || nonDisponible ? 'rgba(100,100,100,0.3)' : 'rgba(201,146,42,0.3)'}`,
                       color: dejaAjoutee || nonDisponible ? '#555' : hover === trame.id ? '#000' : '#c9922a',
-                      fontFamily: 'Cinzel, serif', fontSize: '0.85rem',  // +2px
+                      fontFamily: 'Cinzel, serif', fontSize: '0.85rem',
                       letterSpacing: '2px', textTransform: 'uppercase',
                       cursor: dejaAjoutee || nonDisponible ? 'not-allowed' : 'pointer',
                       fontWeight: 700, transition: 'all 0.3s ease',
