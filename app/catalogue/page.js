@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 
-// Liste des fichiers JSON de trames — ajoutez vos trames ici
 const TRAMES_FILES = [
   '/trames/trame-1.json',
   '/trames/trame-2.json',
@@ -14,32 +13,32 @@ export default function Catalogue() {
   const [credits, setCredits] = useState(0)
   const [trames, setTrames] = useState([])
   const [hover, setHover] = useState(null)
-  const [forgeIds, setForgeIds] = useState([]) // trames déjà dans la forge
-  const [popup, setPopup] = useState(null) // trame en attente de confirmation
+  const [forgeIds, setForgeIds] = useState([])
+  const [popup, setPopup] = useState(null)
   const [loading, setLoading] = useState(null)
-  const [message, setMessage] = useState(null) // message feedback
+  const [message, setMessage] = useState(null)
   const router = useRouter()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) { router.push('/auth'); return }
       setUser(session.user)
-
-      // Crédits
       supabase.from('profiles').select('credits').eq('id', session.user.id).single()
         .then(({ data }) => { if (data) setCredits(data.credits) })
-
-      // Trames déjà dans la forge
       supabase.from('forge').select('trame_id').eq('user_id', session.user.id)
         .then(({ data }) => {
           if (data) setForgeIds(data.map(d => d.trame_id))
         })
     })
 
-    // Charger tous les fichiers JSON
-    Promise.all(TRAMES_FILES.map(f => fetch(f).then(r => r.json())))
-      .then(data => setTrames(data))
-      .catch(err => console.error('Erreur chargement trames:', err))
+    Promise.all(
+      TRAMES_FILES.map(f =>
+        fetch(f)
+          .then(r => r.ok ? r.json() : null)
+          .catch(() => null)
+      )
+    )
+    .then(data => setTrames(data.filter(Boolean)))
   }, [])
 
   const logout = async () => {
@@ -53,12 +52,10 @@ export default function Catalogue() {
   }
 
   const handleAjouter = (trame) => {
-    // Déjà dans la forge
     if (forgeIds.includes(trame.id)) {
       showMessage('Cette trame est déjà dans votre forge !', 'error')
       return
     }
-    // Ouvrir popup
     setPopup(trame)
   }
 
@@ -66,15 +63,14 @@ export default function Catalogue() {
     if (!popup) return
     setLoading(popup.id)
 
-    // Trame payante → Stripe
     if (popup.credits > 0) {
       try {
         const { data: { session } } = await supabase.auth.getSession()
         const res = await fetch('/api/checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            priceId: popup.priceId, 
+          body: JSON.stringify({
+            priceId: popup.priceId,
             userId: session.user.id,
             trameId: popup.id,
             trameTitre: popup.titre
@@ -90,7 +86,6 @@ export default function Catalogue() {
       return
     }
 
-    // Trame gratuite → ajout direct
     const { data: { session } } = await supabase.auth.getSession()
     const { error } = await supabase.from('forge').insert({
       user_id: session.user.id,
@@ -187,7 +182,8 @@ export default function Catalogue() {
                 fontFamily: 'Crimson Text, serif', fontSize: '1.1rem',
                 color: '#a89880', textAlign: 'center', marginBottom: '32px', lineHeight: '1.6'
               }}>
-                Cette trame coûte <span style={{ color: '#4db8ff', fontWeight: 700 }}>{popup.credits} 💎</span>.<br />
+                Cette trame coûte <span style={{ color: '#4db8ff', fontWeight: 700 }}>{popup.credits}</span>
+                <img src="/diamond.png" alt="crédits" style={{ height: '16px', width: '16px', objectFit: 'contain', verticalAlign: 'middle', margin: '0 4px' }} />.<br />
                 Vous serez redirigé vers le paiement sécurisé.
               </p>
             ) : (
@@ -275,8 +271,8 @@ export default function Catalogue() {
                   }}>⚒ Dans votre forge</div>
                 )}
 
-                {/* IMAGE */}
-                <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden' }}>
+                {/* IMAGE — hauteur réduite */}
+                <div style={{ width: '100%', height: '120px', overflow: 'hidden' }}>
                   <img
                     src={trame.image}
                     alt={trame.titre}
@@ -320,11 +316,18 @@ export default function Catalogue() {
                     paddingTop: '12px',
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                   }}>
+                    {/* PRIX avec logo diamond */}
                     <span style={{
                       fontFamily: 'Cinzel, serif', fontSize: '1rem', fontWeight: 700,
-                      color: trame.credits === 0 ? '#7ec87e' : '#4db8ff'
+                      color: trame.credits === 0 ? '#7ec87e' : '#4db8ff',
+                      display: 'flex', alignItems: 'center', gap: '4px'
                     }}>
-                      {trame.credits === 0 ? 'Gratuite' : `${trame.credits} 💎`}
+                      {trame.credits === 0 ? 'Gratuite' : (
+                        <>
+                          {trame.credits}
+                          <img src="/diamond.png" alt="crédits" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
+                        </>
+                      )}
                     </span>
 
                     <button
