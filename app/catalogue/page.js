@@ -258,7 +258,7 @@ export default function Catalogue() {
       )}
 
       {/* CONTENU */}
-      <div style={{ padding: '60px 80px' }}>
+      <div style={{ padding: '20px 80px' }}>
 
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
@@ -277,8 +277,8 @@ export default function Catalogue() {
         {/* GRILLE */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(6, 1fr)',
-          gap: '40px',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: '24px',
           maxWidth: '1200px',
           margin: '0 auto'
         }}>
