@@ -52,6 +52,7 @@ export default function Catalogue() {
   }
 
   const handleAjouter = (trame) => {
+    if (!trame.disponible) return
     if (forgeIds.includes(trame.id)) {
       showMessage('Cette trame est déjà dans votre forge !', 'error')
       return
@@ -63,30 +64,37 @@ export default function Catalogue() {
     if (!popup) return
     setLoading(popup.id)
 
+    const { data: { session } } = await supabase.auth.getSession()
+
+    // Trame payante → déduire les crédits
     if (popup.credits > 0) {
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-        const res = await fetch('/api/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            priceId: popup.priceId,
-            userId: session.user.id,
-            trameId: popup.id,
-            trameTitre: popup.titre
-          })
-        })
-        const data = await res.json()
-        if (data.url) window.location.href = data.url
-      } catch (e) {
-        showMessage('Erreur lors du paiement.', 'error')
+      if (credits < popup.credits) {
+        showMessage('Crédits insuffisants — rendez-vous à la Bourse aux Crédits !', 'error')
+        setLoading(null)
+        setPopup(null)
+        return
       }
-      setLoading(null)
-      setPopup(null)
-      return
+
+      const res = await fetch('/api/deduct-credit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: session.user.id,
+          amount: popup.credits
+        })
+      })
+
+      if (!res.ok) {
+        showMessage('Erreur lors de la déduction des crédits.', 'error')
+        setLoading(null)
+        setPopup(null)
+        return
+      }
+
+      setCredits(prev => prev - popup.credits)
     }
 
-    const { data: { session } } = await supabase.auth.getSession()
+    // Ajouter à la forge
     const { error } = await supabase.from('forge').insert({
       user_id: session.user.id,
       trame_id: popup.id,
@@ -178,14 +186,40 @@ export default function Catalogue() {
             }}>{popup.titre}</h2>
 
             {popup.credits > 0 ? (
-              <p style={{
-                fontFamily: 'Crimson Text, serif', fontSize: '1.1rem',
-                color: '#a89880', textAlign: 'center', marginBottom: '32px', lineHeight: '1.6'
-              }}>
-                Cette trame coûte <span style={{ color: '#4db8ff', fontWeight: 700 }}>{popup.credits}</span>
-                <img src="/diamond.png" alt="crédits" style={{ height: '16px', width: '16px', objectFit: 'contain', verticalAlign: 'middle', margin: '0 4px' }} />.<br />
-                Vous serez redirigé vers le paiement sécurisé.
-              </p>
+              <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                <p style={{
+                  fontFamily: 'Crimson Text, serif', fontSize: '1.1rem',
+                  color: '#a89880', lineHeight: '1.6', marginBottom: '12px'
+                }}>
+                  Cette trame coûte{' '}
+                  <span style={{ color: '#4db8ff', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    {popup.credits}
+                    <img src="/diamond.png" alt="crédits" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
+                  </span>
+                </p>
+                <p style={{
+                  fontFamily: 'Crimson Text, serif', fontSize: '1.1rem',
+                  color: '#a89880', lineHeight: '1.6'
+                }}>
+                  Votre solde :{' '}
+                  <span style={{
+                    fontWeight: 700,
+                    color: credits >= popup.credits ? '#7ec87e' : '#e8445a',
+                    display: 'inline-flex', alignItems: 'center', gap: '4px'
+                  }}>
+                    {credits}
+                    <img src="/diamond.png" alt="crédits" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
+                  </span>
+                </p>
+                {credits < popup.credits && (
+                  <p style={{
+                    fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
+                    letterSpacing: '1px', color: '#e8445a', marginTop: '8px'
+                  }}>
+                    Crédits insuffisants !
+                  </p>
+                )}
+              </div>
             ) : (
               <p style={{
                 fontFamily: 'Crimson Text, serif', fontSize: '1.1rem',
@@ -203,15 +237,21 @@ export default function Catalogue() {
                 color: '#7a6a52', fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
                 letterSpacing: '2px', textTransform: 'uppercase', cursor: 'pointer'
               }}>Non</button>
-              <button onClick={confirmerAjout} disabled={loading === popup.id} style={{
-                padding: '12px 32px',
-                background: 'linear-gradient(135deg, #cc4400, #ff6b1a)',
-                border: 'none', color: '#000',
-                fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
-                letterSpacing: '2px', textTransform: 'uppercase',
-                cursor: 'pointer', fontWeight: 700,
-                boxShadow: '0 4px 20px rgba(255,107,26,0.4)'
-              }}>
+              <button
+                onClick={confirmerAjout}
+                disabled={loading === popup.id || credits < popup.credits}
+                style={{
+                  padding: '12px 32px',
+                  background: credits < popup.credits
+                    ? 'rgba(100,100,100,0.2)'
+                    : 'linear-gradient(135deg, #cc4400, #ff6b1a)',
+                  border: 'none', color: credits < popup.credits ? '#555' : '#000',
+                  fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
+                  letterSpacing: '2px', textTransform: 'uppercase',
+                  cursor: credits < popup.credits ? 'not-allowed' : 'pointer',
+                  fontWeight: 700,
+                  boxShadow: credits >= popup.credits ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
+                }}>
                 {loading === popup.id ? '...' : 'Oui'}
               </button>
             </div>
@@ -236,7 +276,7 @@ export default function Catalogue() {
           textAlign: 'center', marginBottom: '60px'
         }}>Choisissez votre aventure</p>
 
-        {/* GRILLE 4 COLONNES comme les packs */}
+        {/* GRILLE */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(4, 1fr)',
@@ -246,6 +286,7 @@ export default function Catalogue() {
         }}>
           {trames.map(trame => {
             const dejaAjoutee = forgeIds.includes(trame.id)
+            const nonDisponible = !trame.disponible
             return (
               <div
                 key={trame.id}
@@ -253,19 +294,31 @@ export default function Catalogue() {
                 onMouseLeave={() => setHover(null)}
                 style={{
                   background: '#0d0800',
-                  border: hover === trame.id
+                  border: hover === trame.id && !nonDisponible
                     ? '1px solid rgba(255,107,26,0.6)'
                     : '1px solid rgba(201,146,42,0.2)',
                   transition: 'all 0.3s ease',
-                  boxShadow: hover === trame.id
+                  boxShadow: hover === trame.id && !nonDisponible
                     ? '0 0 30px rgba(255,107,26,0.2)'
                     : '0 0 10px rgba(0,0,0,0.5)',
-                  transform: hover === trame.id ? 'translateY(-4px)' : 'translateY(0)',
-                  position: 'relative'
+                  transform: hover === trame.id && !nonDisponible ? 'translateY(-4px)' : 'translateY(0)',
+                  position: 'relative',
+                  opacity: nonDisponible ? 0.7 : 1
                 }}
               >
+                {/* BADGE BIENTÔT DISPONIBLE */}
+                {nonDisponible && (
+                  <div style={{
+                    position: 'absolute', top: '12px', right: '12px', zIndex: 2,
+                    background: 'rgba(0,0,0,0.85)', border: '1px solid rgba(201,146,42,0.4)',
+                    padding: '4px 10px',
+                    fontFamily: 'Cinzel, serif', fontSize: '0.55rem',
+                    letterSpacing: '1px', textTransform: 'uppercase', color: '#e8b84b'
+                  }}>✦ Bientôt disponible</div>
+                )}
+
                 {/* BADGE DÉJÀ DANS LA FORGE */}
-                {dejaAjoutee && (
+                {dejaAjoutee && !nonDisponible && (
                   <div style={{
                     position: 'absolute', top: '12px', right: '12px', zIndex: 2,
                     background: 'rgba(0,0,0,0.85)', border: '1px solid rgba(255,107,26,0.4)',
@@ -283,8 +336,8 @@ export default function Catalogue() {
                     style={{
                       width: '100%', height: '100%', objectFit: 'cover',
                       transition: 'transform 0.3s ease',
-                      transform: hover === trame.id ? 'scale(1.05)' : 'scale(1)',
-                      filter: dejaAjoutee ? 'brightness(0.6)' : 'brightness(1)'
+                      transform: hover === trame.id && !nonDisponible ? 'scale(1.05)' : 'scale(1)',
+                      filter: dejaAjoutee || nonDisponible ? 'brightness(0.5)' : 'brightness(1)'
                     }}
                   />
                 </div>
@@ -292,7 +345,6 @@ export default function Catalogue() {
                 {/* INFOS */}
                 <div style={{ padding: '20px', textAlign: 'center' }}>
 
-                  {/* GENRE */}
                   <span style={{
                     fontFamily: 'Cinzel, serif', fontSize: '0.6rem', letterSpacing: '2px',
                     textTransform: 'uppercase', color: '#ff6b1a',
@@ -300,20 +352,17 @@ export default function Catalogue() {
                     display: 'inline-block', marginBottom: '12px'
                   }}>{trame.genre}</span>
 
-                  {/* TITRE */}
                   <h2 style={{
                     fontFamily: 'Cinzel Decorative, serif', fontSize: '1rem',
                     color: '#e8b84b', marginBottom: '8px', lineHeight: '1.4'
                   }}>{trame.titre}</h2>
 
-                  {/* CHAPITRES */}
                   <p style={{
                     fontFamily: 'Cinzel, serif', fontSize: '0.6rem',
                     textTransform: 'uppercase', color: '#7a6a52',
                     letterSpacing: '1px', marginBottom: '12px'
                   }}>⚒ {trame.chapitres} chapitres</p>
 
-                  {/* DESCRIPTION */}
                   <p style={{
                     fontFamily: 'Crimson Text, serif', fontSize: '0.95rem',
                     color: '#a89880', lineHeight: '1.6', marginBottom: '16px',
@@ -321,7 +370,6 @@ export default function Catalogue() {
                     WebkitBoxOrient: 'vertical', overflow: 'hidden'
                   }}>{trame.description}</p>
 
-                  {/* PRIX */}
                   <div style={{
                     borderTop: '1px solid rgba(201,146,42,0.2)',
                     borderBottom: '1px solid rgba(201,146,42,0.2)',
@@ -341,27 +389,27 @@ export default function Catalogue() {
                     </span>
                   </div>
 
-                  {/* BOUTON */}
                   <button
                     onClick={() => handleAjouter(trame)}
-                    disabled={dejaAjoutee}
+                    disabled={dejaAjoutee || nonDisponible}
                     style={{
                       width: '100%', padding: '12px',
-                      background: dejaAjoutee
+                      background: dejaAjoutee || nonDisponible
                         ? 'transparent'
                         : hover === trame.id
                           ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
                           : 'transparent',
-                      border: `1px solid ${dejaAjoutee ? 'rgba(100,100,100,0.3)' : 'rgba(201,146,42,0.3)'}`,
-                      color: dejaAjoutee ? '#555' : hover === trame.id ? '#000' : '#c9922a',
+                      border: `1px solid ${dejaAjoutee || nonDisponible ? 'rgba(100,100,100,0.3)' : 'rgba(201,146,42,0.3)'}`,
+                      color: dejaAjoutee || nonDisponible ? '#555' : hover === trame.id ? '#000' : '#c9922a',
                       fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
                       letterSpacing: '2px', textTransform: 'uppercase',
-                      cursor: dejaAjoutee ? 'not-allowed' : 'pointer', fontWeight: 700,
-                      transition: 'all 0.3s ease',
-                      boxShadow: hover === trame.id && !dejaAjoutee ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
+                      cursor: dejaAjoutee || nonDisponible ? 'not-allowed' : 'pointer',
+                      fontWeight: 700, transition: 'all 0.3s ease',
+                      boxShadow: hover === trame.id && !dejaAjoutee && !nonDisponible
+                        ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
                     }}
                   >
-                    {dejaAjoutee ? '⚒ Dans la forge' : '⚒ Ajouter à ma forge'}
+                    {dejaAjoutee ? '⚒ Dans la forge' : nonDisponible ? '✦ Bientôt disponible' : '⚒ Ajouter à ma forge'}
                   </button>
 
                 </div>

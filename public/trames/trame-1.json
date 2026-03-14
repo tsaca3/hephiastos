@@ -1,10 +1,11 @@
 {
   "id": "trame-1",
-  "titre": "La Forge des Ombres",
-  "description": "Une aventure sombre dans les entrailles d'une cité souterraine.",
-  "genre": "JDR",
-  "chapitres": 6,
+  "titre": "Bal de village",
+  "description": "Une romance au coeur de l'époque médiévale",
+  "genre": "Romantasy",
+  "chapitres": 10,
   "credits": 0,
   "priceId": null,
-  "image": "/trames/images/trame-1.jpeg"
+  "image": "/trames/images/trame-1.jpeg",
+  "disponible": true
 }
