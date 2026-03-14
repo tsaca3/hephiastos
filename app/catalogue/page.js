@@ -271,7 +271,7 @@ export default function Catalogue() {
         <p style={{
           fontFamily: 'Cinzel, serif', fontSize: '0.9rem', letterSpacing: '3px',  // +2px
           textTransform: 'uppercase', color: '#7a6a52',
-          textAlign: 'center', marginBottom: '60px'
+          textAlign: 'center', marginBottom: '30px'
         }}>Choisissez votre aventure</p>
 
         {/* GRILLE */}
