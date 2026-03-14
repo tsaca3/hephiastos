@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation'
 const TRAMES_FILES = [
   '/trames/trame-1.json',
   '/trames/trame-2.json',
-  '/trames/trame-3.json',
 ]
 
 export default function Catalogue() {
