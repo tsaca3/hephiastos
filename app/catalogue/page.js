@@ -274,12 +274,12 @@ export default function Catalogue() {
           textAlign: 'center', marginBottom: '30px'
         }}>Choisissez votre aventure</p>
 
-        {/* GRILLE — flex centré */}
+        {/* GRILLE — flex aligné à gauche */}
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
           gap: '24px',
-          justifyContent: 'center'
+          justifyContent: 'flex-start'
         }}>
           {trames.map(trame => {
             const dejaAjoutee = forgeIds.includes(trame.id)
@@ -290,8 +290,8 @@ export default function Catalogue() {
                 onMouseEnter={() => setHover(trame.id)}
                 onMouseLeave={() => setHover(null)}
                 style={{
-                  width: 'calc(25% - 18px)',
-                  minWidth: '220px',
+                  width: '280px',
+                  minWidth: '280px',
                   background: '#0d0800',
                   border: hover === trame.id && !nonDisponible
                     ? '1px solid rgba(255,107,26,0.6)'
