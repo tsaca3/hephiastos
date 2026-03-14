@@ -277,7 +277,7 @@ export default function Catalogue() {
         {/* GRILLE */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridTemplateColumns: 'repeat(6, 1fr)',
           gap: '40px',
           maxWidth: '1200px',
           margin: '0 auto'
