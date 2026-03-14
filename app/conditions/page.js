@@ -92,7 +92,7 @@ export default function Conditions() {
           fontFamily: 'Cinzel, serif', fontSize: '0.75rem', letterSpacing: '3px',
           textTransform: 'uppercase', color: '#7a6a52',
           textAlign: 'center', marginBottom: '16px'
-        }}>En vigueur au 1er janvier 2025</p>
+        }}>En vigueur au 14 mars 2026</p>
 
         <p style={{
           fontFamily: 'Crimson Text, serif', fontSize: '1rem', fontStyle: 'italic',
