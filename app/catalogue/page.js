@@ -272,18 +272,18 @@ export default function Catalogue() {
                 )}
 
                 {/* IMAGE — hauteur réduite */}
-                <div style={{ width: '100%', height: '120px', overflow: 'hidden' }}>
-                  <img
-                    src={trame.image}
-                    alt={trame.titre}
-                    style={{
-                      width: '100%', height: '100%', objectFit: 'cover',
-                      transition: 'transform 0.3s ease',
-                      transform: hover === trame.id ? 'scale(1.05)' : 'scale(1)',
-                      filter: dejaAjoutee ? 'brightness(0.6)' : 'brightness(1)'
-                    }}
-                  />
-                </div>
+                <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden', maxHeight: '200px' }}>
+  <img
+    src={trame.image}
+    alt={trame.titre}
+    style={{
+      width: '100%', height: '100%', objectFit: 'cover',
+      transition: 'transform 0.3s ease',
+      transform: hover === trame.id ? 'scale(1.05)' : 'scale(1)',
+      filter: dejaAjoutee ? 'brightness(0.6)' : 'brightness(1)'
+    }}
+  />
+</div>
 
                 {/* INFOS */}
                 <div style={{ padding: '20px' }}>
