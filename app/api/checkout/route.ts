@@ -13,6 +13,11 @@ export async function POST(req: NextRequest) {
       line_items: [{ price: priceId, quantity: 1 }],
       mode: 'payment',
       metadata: { userId },
+      custom_text: {
+        submit: {
+          message: 'En finalisant cet achat, vous confirmez avoir lu et accepté les Conditions Générales d\'Utilisation de HéphIAstos.'
+        }
+      },
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/credits?success=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/credits?cancelled=true`,
     })
