@@ -57,28 +57,9 @@ export default function Generer() {
     const newPreviousChoices = [...previousChoices, choice.text]
 
     try {
-      // Déduire 1 crédit
       const { data: { session } } = await supabase.auth.getSession()
 
-      if (credits < 1) {
-        showMessage('Crédits insuffisants !', 'error')
-        setGenerating(false)
-        return
-      }
-
-      const resCredit = await fetch('/api/deduct-credit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: session.user.id, amount: 1 })
-      })
-      if (!resCredit.ok) {
-        showMessage('Erreur lors de la déduction des crédits.', 'error')
-        setGenerating(false)
-        return
-      }
-      setCredits(prev => prev - 1)
-
-      // Générer le texte — avec context et choiceText
+      // Générer le texte
       const genRes = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -102,8 +83,8 @@ export default function Generer() {
       setScore(newScore)
       setPreviousChoices(newPreviousChoices)
 
-      // Sauvegarder
-      await fetch('/api/save-story', {
+      // Sauvegarder — créer ou mettre à jour
+      const saveRes = await fetch('/api/save-story', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -112,9 +93,16 @@ export default function Generer() {
           score: newScore,
           outcome: '',
           chapters: newPreviousChoices,
-          chapterTexts: newChapterTexts
+          chapterTexts: newChapterTexts,
+          storyId: storyId  // null au premier chapitre, id ensuite
         })
       })
+      const saveData = await saveRes.json()
+
+      // Garder l'id de l'histoire pour les chapitres suivants
+      if (!storyId && saveData.storyId) {
+        setStoryId(saveData.storyId)
+      }
 
       // Dernier chapitre ?
       const isLast = chapterIndex === trame.chapitres_data.length - 1
@@ -184,7 +172,7 @@ export default function Generer() {
       {/* MESSAGE FEEDBACK */}
       {message && (
         <div style={{
-          position: 'fixed', top: '80px', left: '50%', transform: 'translateX(-50%)',
+          position: 'fixed', top: '80px', right: '40px',
           background: message.type === 'success' ? 'rgba(126,200,126,0.15)' : 'rgba(232,68,90,0.15)',
           border: `1px solid ${message.type === 'success' ? 'rgba(126,200,126,0.4)' : 'rgba(232,68,90,0.4)'}`,
           padding: '12px 32px', zIndex: 100,
@@ -386,18 +374,6 @@ export default function Generer() {
                     </button>
                   ))}
                 </div>
-
-                <p style={{
-                  fontFamily: 'Cinzel, serif', fontSize: '0.65rem',
-                  letterSpacing: '1px', color: '#7a6a52',
-                  textAlign: 'center', marginTop: '16px'
-                }}>
-                  Chaque choix coûte{' '}
-                  <span style={{ color: '#4db8ff' }}>1</span>
-                  <img src="/diamond.png" alt="crédit" style={{ height: '12px', width: '12px', objectFit: 'contain', verticalAlign: 'middle', margin: '0 2px' }} />
-                  — Solde actuel : <span style={{ color: '#4db8ff' }}>{credits}</span>
-                  <img src="/diamond.png" alt="crédit" style={{ height: '12px', width: '12px', objectFit: 'contain', verticalAlign: 'middle', margin: '0 2px' }} />
-                </p>
               </div>
             )}
           </div>
