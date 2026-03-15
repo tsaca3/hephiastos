@@ -123,16 +123,22 @@ export default function Conditions() {
         {/* ARTICLE 3 */}
         <h2 style={sectionTitleStyle}>Article 3 — Crédits de forge et paiements</h2>
         <p style={textStyle}>
-        L'utilisation des trames narratives requiert des crédits de forge, acquis via la Bourse aux Crédits. Les crédits sont vendus en packs et débités au moment de la génération d'une histoire.
+          L'utilisation des trames narratives et la génération d'histoires requièrent des crédits de forge, acquis via la Bourse aux Crédits. Les crédits sont vendus en packs et débités au moment de leur utilisation.
         </p>
         <p style={textStyle}>
-        Les paiements sont traités par Stripe, prestataire de paiement sécurisé. HéphIAstos ne stocke aucune donnée bancaire. Les crédits achetés sont crédités instantanément sur le compte de l'utilisateur.
+          Les paiements sont traités par Stripe, prestataire de paiement sécurisé. HéphIAstos ne stocke aucune donnée bancaire. Les crédits achetés sont crédités instantanément sur le compte de l'utilisateur.
         </p>
         <p style={textStyle}>
-       Les crédits de forge sont <strong style={{color: '#e8b84b'}}>non remboursables</strong> dès leur achat. En finalisant son achat, l'utilisateur reconnaît expressément que la livraison des crédits est immédiate et renonce à tout droit de rétractation, conformément à l'article 16m de la directive européenne 2011/83/UE relative aux droits des consommateurs.
+          L'utilisateur dispose d'un droit de rétractation de <strong style={{color: '#e8b84b'}}>14 jours</strong> à compter de la date d'achat. Ce droit s'applique au prorata des crédits non utilisés — seuls les crédits n'ayant pas été utilisés pour acquérir une trame ou générer une histoire sont remboursables. Les crédits déjà utilisés sont définitivement consommés et ne donnent droit à aucun remboursement.
         </p>
         <p style={textStyle}>
-        Les crédits non utilisés ne peuvent faire l'objet d'aucun remboursement, ni d'aucun échange contre des espèces ou tout autre bien ou service en dehors de la plateforme HéphIAstos.
+          À titre d'exemple : un pack de 100 crédits acheté le 1er mars, dont 10 ont été utilisés avant le 12 mars — une demande de remboursement formulée le 12 mars donnera droit au remboursement de 90 crédits au prorata du prix payé.
+        </p>
+        <p style={textStyle}>
+          Pour exercer ce droit, l'utilisateur doit adresser sa demande à <span style={{color: '#ff6b1a'}}>contact@hephiastos.store</span> dans les 14 jours suivant l'achat, en précisant la date d'achat et le pack concerné. Le remboursement sera effectué dans un délai de 14 jours suivant la réception de la demande, par le même moyen de paiement que celui utilisé lors de l'achat.
+        </p>
+        <p style={textStyle}>
+          Passé le délai de 14 jours suivant la date d'achat, les crédits restants ne sont plus remboursables en aucun cas.
         </p>
 
         {/* ARTICLE 4 */}
@@ -230,7 +236,7 @@ export default function Conditions() {
           fontFamily: 'Cinzel, serif', fontSize: '0.6rem', letterSpacing: '1px',
           color: '#7a6a52', textAlign: 'center', marginTop: '40px'
         }}>
-          © 2025 HéphIAstos — Tous droits réservés
+          © 2026 HéphIAstos — Tous droits réservés
         </p>
 
       </div>
