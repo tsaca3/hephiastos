@@ -23,7 +23,6 @@ export default function Compte() {
         day: '2-digit', month: 'long', year: 'numeric'
       }))
 
-      // Profil
       supabase.from('profiles').select('credits, username').eq('id', session.user.id).single()
         .then(({ data }) => {
           if (data) {
@@ -32,11 +31,9 @@ export default function Compte() {
           }
         })
 
-      // Nombre de trames
       supabase.from('forge').select('id', { count: 'exact' }).eq('user_id', session.user.id)
         .then(({ count }) => { if (count !== null) setNbTrames(count) })
 
-      // Nombre d'histoires
       supabase.from('stories').select('id', { count: 'exact' }).eq('user_id', session.user.id)
         .then(({ count }) => { if (count !== null) setNbHistoires(count) })
     })
@@ -63,7 +60,6 @@ export default function Compte() {
 
   const handleSupprimerCompte = async () => {
     try {
-      // Supprimer les données de l'utilisateur
       await supabase.from('forge').delete().eq('user_id', user.id)
       await supabase.from('stories').delete().eq('user_id', user.id)
       await supabase.from('profiles').delete().eq('id', user.id)
@@ -93,6 +89,13 @@ export default function Compte() {
   const valueStyle = {
     fontFamily: 'Crimson Text, serif', fontSize: '1.2rem',
     color: '#e8dcc8', marginBottom: '20px'
+  }
+
+  const sectionTitleStyle = {
+    fontFamily: 'Cinzel, serif', fontSize: '0.85rem', letterSpacing: '3px',
+    textTransform: 'uppercase', color: '#e8b84b',
+    marginBottom: '24px', paddingBottom: '12px',
+    borderBottom: '1px solid rgba(201,146,42,0.2)'
   }
 
   if (!user) return null
@@ -195,7 +198,7 @@ export default function Compte() {
       )}
 
       {/* CONTENU */}
-      <div style={{ maxWidth: '700px', margin: '0 auto', padding: '60px 40px' }}>
+      <div style={{ padding: '60px 40px' }}>
 
         {/* TITRE */}
         <h1 style={{
@@ -212,131 +215,130 @@ export default function Compte() {
           textAlign: 'center', marginBottom: '60px'
         }}>Forgeron de légende</p>
 
-        {/* SECTION INFOS */}
-        <div style={sectionStyle}>
-          <h2 style={{
-            fontFamily: 'Cinzel, serif', fontSize: '0.85rem', letterSpacing: '3px',
-            textTransform: 'uppercase', color: '#e8b84b',
-            marginBottom: '24px', paddingBottom: '12px',
-            borderBottom: '1px solid rgba(201,146,42,0.2)'
-          }}>Informations personnelles</h2>
+        {/* MOSAÏQUE 2 COLONNES */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '32px',
+          alignItems: 'start'
+        }}>
 
-          <span style={labelStyle}>Pseudo</span>
-          <p style={valueStyle}>{pseudo}</p>
+          {/* COLONNE GAUCHE */}
+          <div>
 
-          <span style={labelStyle}>Email</span>
-          <p style={valueStyle}>{user.email}</p>
+            {/* SECTION INFOS */}
+            <div style={sectionStyle}>
+              <h2 style={sectionTitleStyle}>Informations personnelles</h2>
 
-          <span style={labelStyle}>Membre depuis</span>
-          <p style={{ ...valueStyle, marginBottom: '0' }}>{dateInscription}</p>
-        </div>
+              <span style={labelStyle}>Pseudo</span>
+              <p style={valueStyle}>{pseudo}</p>
 
-        {/* SECTION MOT DE PASSE */}
-        <div style={sectionStyle}>
-          <h2 style={{
-            fontFamily: 'Cinzel, serif', fontSize: '0.85rem', letterSpacing: '3px',
-            textTransform: 'uppercase', color: '#e8b84b',
-            marginBottom: '16px', paddingBottom: '12px',
-            borderBottom: '1px solid rgba(201,146,42,0.2)'
-          }}>Sécurité</h2>
-          <p style={{
-            fontFamily: 'Crimson Text, serif', fontSize: '1rem',
-            color: '#7a6a52', fontStyle: 'italic', marginBottom: '20px'
-          }}>
-            Vous recevrez un email pour réinitialiser votre mot de passe.
-          </p>
-          <button
-            onClick={handleResetPassword}
-            onMouseEnter={() => setHover('reset')}
-            onMouseLeave={() => setHover(null)}
-            style={{
-              padding: '12px 32px',
-              background: hover === 'reset'
-                ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
-                : 'transparent',
-              border: '1px solid rgba(201,146,42,0.3)',
-              color: hover === 'reset' ? '#000' : '#c9922a',
-              fontFamily: 'Cinzel, serif', fontSize: '0.8rem',
-              letterSpacing: '2px', textTransform: 'uppercase',
-              cursor: 'pointer', fontWeight: 700, transition: 'all 0.3s ease'
-            }}>
-            Changer mon mot de passe
-          </button>
-        </div>
+              <span style={labelStyle}>Email</span>
+              <p style={valueStyle}>{user.email}</p>
 
-        {/* SECTION STATISTIQUES */}
-        <div style={sectionStyle}>
-          <h2 style={{
-            fontFamily: 'Cinzel, serif', fontSize: '0.85rem', letterSpacing: '3px',
-            textTransform: 'uppercase', color: '#e8b84b',
-            marginBottom: '24px', paddingBottom: '12px',
-            borderBottom: '1px solid rgba(201,146,42,0.2)'
-          }}>Ma Forge en chiffres</h2>
-
-          <div style={{ display: 'flex', gap: '40px' }}>
-            <div style={{ textAlign: 'center', flex: 1 }}>
-              <p style={{
-                fontFamily: 'Cinzel Decorative, serif', fontSize: '3rem',
-                color: '#ff6b1a', marginBottom: '8px', lineHeight: 1
-              }}>{nbTrames}</p>
-              <p style={{
-                fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
-                letterSpacing: '2px', textTransform: 'uppercase', color: '#7a6a52'
-              }}>Trames possédées</p>
+              <span style={labelStyle}>Membre depuis</span>
+              <p style={{ ...valueStyle, marginBottom: '0' }}>{dateInscription}</p>
             </div>
+
+            {/* DANGER ZONE */}
             <div style={{
-              width: '1px', background: 'rgba(201,146,42,0.2)'
-            }} />
-            <div style={{ textAlign: 'center', flex: 1 }}>
+              ...sectionStyle,
+              border: '1px solid rgba(232,68,90,0.2)',
+              marginBottom: '0'
+            }}>
+              <h2 style={{
+                ...sectionTitleStyle,
+                color: '#e8445a',
+                borderBottom: '1px solid rgba(232,68,90,0.15)'
+              }}>Zone de danger</h2>
               <p style={{
-                fontFamily: 'Cinzel Decorative, serif', fontSize: '3rem',
-                color: '#ff6b1a', marginBottom: '8px', lineHeight: 1
-              }}>{nbHistoires}</p>
-              <p style={{
-                fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
-                letterSpacing: '2px', textTransform: 'uppercase', color: '#7a6a52'
-              }}>Histoires forgées</p>
+                fontFamily: 'Crimson Text, serif', fontSize: '1rem',
+                color: '#7a6a52', fontStyle: 'italic', marginBottom: '20px'
+              }}>
+                La suppression de votre compte est définitive et irréversible. Toutes vos trames et histoires seront perdues.
+              </p>
+              <button
+                onClick={() => setPopupSupprimer(true)}
+                onMouseEnter={() => setHover('supprimer')}
+                onMouseLeave={() => setHover(null)}
+                style={{
+                  padding: '12px 32px',
+                  background: hover === 'supprimer'
+                    ? 'linear-gradient(135deg, #8b0000, #e8445a)'
+                    : 'transparent',
+                  border: '1px solid rgba(232,68,90,0.3)',
+                  color: hover === 'supprimer' ? '#fff' : '#e8445a',
+                  fontFamily: 'Cinzel, serif', fontSize: '0.8rem',
+                  letterSpacing: '2px', textTransform: 'uppercase',
+                  cursor: 'pointer', fontWeight: 700, transition: 'all 0.3s ease'
+                }}>
+                Supprimer mon compte
+              </button>
             </div>
+
+          </div>
+
+          {/* COLONNE DROITE */}
+          <div>
+
+            {/* SECTION MOT DE PASSE */}
+            <div style={sectionStyle}>
+              <h2 style={sectionTitleStyle}>Sécurité</h2>
+              <p style={{
+                fontFamily: 'Crimson Text, serif', fontSize: '1rem',
+                color: '#7a6a52', fontStyle: 'italic', marginBottom: '20px'
+              }}>
+                Vous recevrez un email pour réinitialiser votre mot de passe.
+              </p>
+              <button
+                onClick={handleResetPassword}
+                onMouseEnter={() => setHover('reset')}
+                onMouseLeave={() => setHover(null)}
+                style={{
+                  padding: '12px 32px',
+                  background: hover === 'reset'
+                    ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
+                    : 'transparent',
+                  border: '1px solid rgba(201,146,42,0.3)',
+                  color: hover === 'reset' ? '#000' : '#c9922a',
+                  fontFamily: 'Cinzel, serif', fontSize: '0.8rem',
+                  letterSpacing: '2px', textTransform: 'uppercase',
+                  cursor: 'pointer', fontWeight: 700, transition: 'all 0.3s ease'
+                }}>
+                Changer mon mot de passe
+              </button>
+            </div>
+
+            {/* SECTION STATISTIQUES */}
+            <div style={{ ...sectionStyle, marginBottom: '0' }}>
+              <h2 style={sectionTitleStyle}>Ma Forge en chiffres</h2>
+              <div style={{ display: 'flex', gap: '40px' }}>
+                <div style={{ textAlign: 'center', flex: 1 }}>
+                  <p style={{
+                    fontFamily: 'Cinzel Decorative, serif', fontSize: '3rem',
+                    color: '#ff6b1a', marginBottom: '8px', lineHeight: 1
+                  }}>{nbTrames}</p>
+                  <p style={{
+                    fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
+                    letterSpacing: '2px', textTransform: 'uppercase', color: '#7a6a52'
+                  }}>Trames possédées</p>
+                </div>
+                <div style={{ width: '1px', background: 'rgba(201,146,42,0.2)' }} />
+                <div style={{ textAlign: 'center', flex: 1 }}>
+                  <p style={{
+                    fontFamily: 'Cinzel Decorative, serif', fontSize: '3rem',
+                    color: '#ff6b1a', marginBottom: '8px', lineHeight: 1
+                  }}>{nbHistoires}</p>
+                  <p style={{
+                    fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
+                    letterSpacing: '2px', textTransform: 'uppercase', color: '#7a6a52'
+                  }}>Histoires forgées</p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
-
-        {/* DANGER ZONE */}
-        <div style={{
-          ...sectionStyle,
-          border: '1px solid rgba(232,68,90,0.2)',
-          marginBottom: '0'
-        }}>
-          <h2 style={{
-            fontFamily: 'Cinzel, serif', fontSize: '0.85rem', letterSpacing: '3px',
-            textTransform: 'uppercase', color: '#e8445a',
-            marginBottom: '16px', paddingBottom: '12px',
-            borderBottom: '1px solid rgba(232,68,90,0.15)'
-          }}>Zone de danger</h2>
-          <p style={{
-            fontFamily: 'Crimson Text, serif', fontSize: '1rem',
-            color: '#7a6a52', fontStyle: 'italic', marginBottom: '20px'
-          }}>
-            La suppression de votre compte est définitive et irréversible. Toutes vos trames et histoires seront perdues.
-          </p>
-          <button
-            onClick={() => setPopupSupprimer(true)}
-            onMouseEnter={() => setHover('supprimer')}
-            onMouseLeave={() => setHover(null)}
-            style={{
-              padding: '12px 32px',
-              background: hover === 'supprimer'
-                ? 'linear-gradient(135deg, #8b0000, #e8445a)'
-                : 'transparent',
-              border: '1px solid rgba(232,68,90,0.3)',
-              color: hover === 'supprimer' ? '#fff' : '#e8445a',
-              fontFamily: 'Cinzel, serif', fontSize: '0.8rem',
-              letterSpacing: '2px', textTransform: 'uppercase',
-              cursor: 'pointer', fontWeight: 700, transition: 'all 0.3s ease'
-            }}>
-            Supprimer mon compte
-          </button>
-        </div>
-
       </div>
     </div>
   )
