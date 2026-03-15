@@ -56,7 +56,6 @@ export default function Forge() {
     if (!popup) return
     setLoading(popup.trame_id)
 
-    // Vérifier les crédits
     if (credits < 1) {
       showMessage('Crédits insuffisants — rendez-vous à la Bourse aux Crédits !', 'error')
       setLoading(null)
@@ -64,7 +63,6 @@ export default function Forge() {
       return
     }
 
-    // Déduire 1 crédit
     const { data: { session } } = await supabase.auth.getSession()
     const res = await fetch('/api/deduct-credit', {
       method: 'POST',
@@ -330,60 +328,65 @@ export default function Forge() {
                     transform: hover === trame.id ? 'translateY(-4px)' : 'translateY(0)'
                   }}
                 >
-                  {/* IMAGE */}
-                  {trame.image && (
-                    <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden' }}>
+                  {/* TITRE + DATE + ICÔNE IMAGE */}
+                  <div style={{ padding: '24px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+
+                    {/* TEXTE */}
+                    <div style={{ flex: 1 }}>
+                      <h3 style={{
+                        fontFamily: 'Cinzel Decorative, serif', fontSize: '1rem',
+                        color: '#e8b84b', marginBottom: '8px', lineHeight: '1.4'
+                      }}>{trame.trame_titre}</h3>
+                      <p style={{
+                        fontFamily: 'Cinzel, serif', fontSize: '0.65rem',
+                        color: '#7a6a52', letterSpacing: '1px',
+                        textTransform: 'uppercase', marginBottom: '0'
+                      }}>Ajoutée le {formatDate(trame.added_at)}</p>
+                    </div>
+
+                    {/* ICÔNE IMAGE */}
+                    {trame.image && (
                       <img
                         src={trame.image}
                         alt={trame.trame_titre}
                         style={{
-                          width: '100%', height: '100%', objectFit: 'cover',
-                          transition: 'transform 0.3s ease',
-                          transform: hover === trame.id ? 'scale(1.05)' : 'scale(1)'
+                          width: '60px', height: '60px',
+                          objectFit: 'cover',
+                          border: '1px solid rgba(201,146,42,0.3)',
+                          flexShrink: 0
                         }}
                       />
-                    </div>
-                  )}
+                    )}
+                  </div>
 
-                  <div style={{ padding: '24px' }}>
-                    <h3 style={{
-                      fontFamily: 'Cinzel Decorative, serif', fontSize: '1rem',
-                      color: '#e8b84b', marginBottom: '8px', lineHeight: '1.4'
-                    }}>{trame.trame_titre}</h3>
-                    <p style={{
-                      fontFamily: 'Cinzel, serif', fontSize: '0.65rem',
-                      color: '#7a6a52', letterSpacing: '1px',
-                      textTransform: 'uppercase', marginBottom: '20px'
-                    }}>Ajoutée le {formatDate(trame.added_at)}</p>
-
-                    <div style={{
-                      borderTop: '1px solid rgba(201,146,42,0.2)',
-                      paddingTop: '16px',
-                      display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                  {/* CRÉDIT + BOUTON */}
+                  <div style={{
+                    borderTop: '1px solid rgba(201,146,42,0.2)',
+                    padding: '16px 24px',
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                  }}>
+                    <span style={{
+                      fontFamily: 'Cinzel, serif', fontSize: '0.85rem',
+                      color: '#4db8ff', fontWeight: 700,
+                      display: 'flex', alignItems: 'center', gap: '4px'
                     }}>
-                      <span style={{
-                        fontFamily: 'Cinzel, serif', fontSize: '0.85rem',
-                        color: '#4db8ff', fontWeight: 700,
-                        display: 'flex', alignItems: 'center', gap: '4px'
+                      1 <img src="/diamond.png" alt="crédit" style={{ height: '14px', objectFit: 'contain' }} />
+                    </span>
+                    <button
+                      onClick={() => handleForger(trame)}
+                      style={{
+                        padding: '8px 20px',
+                        background: hover === trame.id
+                          ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
+                          : 'transparent',
+                        border: '1px solid rgba(201,146,42,0.3)',
+                        color: hover === trame.id ? '#000' : '#c9922a',
+                        fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
+                        letterSpacing: '2px', textTransform: 'uppercase',
+                        cursor: 'pointer', fontWeight: 700, transition: 'all 0.3s ease'
                       }}>
-                        1 <img src="/diamond.png" alt="crédit" style={{ height: '14px', objectFit: 'contain' }} />
-                      </span>
-                      <button
-                        onClick={() => handleForger(trame)}
-                        style={{
-                          padding: '8px 20px',
-                          background: hover === trame.id
-                            ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
-                            : 'transparent',
-                          border: '1px solid rgba(201,146,42,0.3)',
-                          color: hover === trame.id ? '#000' : '#c9922a',
-                          fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
-                          letterSpacing: '2px', textTransform: 'uppercase',
-                          cursor: 'pointer', fontWeight: 700, transition: 'all 0.3s ease'
-                        }}>
-                        ⚒ Forger
-                      </button>
-                    </div>
+                      ⚒ Forger
+                    </button>
                   </div>
                 </div>
               ))}
