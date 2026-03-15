@@ -350,7 +350,7 @@ export default function Forge() {
                         src={trame.image}
                         alt={trame.trame_titre}
                         style={{
-                          width: '60px', height: '60px',
+                          width: '80px', height: '80px',
                           objectFit: 'cover',
                           border: '1px solid rgba(201,146,42,0.3)',
                           flexShrink: 0
