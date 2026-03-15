@@ -74,9 +74,13 @@ export default function Forge() {
   }
 
   const telechargerPDF = (story) => {
-    const doc = new jsPDF()
-    const date = new Date(story.created_at).toLocaleDateString('fr-FR')
-    const filename = `${story.trame}_${pseudo}_${date.replace(/\//g, '-')}.pdf`
+  const doc = new jsPDF()
+  const date = new Date(story.created_at)
+  const dateStr = date.toLocaleDateString('fr-FR').replace(/\//g, '-')
+  const heureStr = date.toLocaleTimeString('fr-FR', { 
+    hour: '2-digit', minute: '2-digit', second: '2-digit' 
+  }).replace(/:/g, '-')
+  const filename = `${story.trame}_${pseudo}_${dateStr}_${heureStr}.pdf`
 
     // Style forge
     doc.setFillColor(13, 8, 0)
