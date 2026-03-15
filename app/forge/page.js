@@ -21,7 +21,6 @@ export default function Forge() {
       if (!session) { router.push('/auth'); return }
       setUser(session.user)
 
-      // Profil
       supabase.from('profiles').select('credits, username').eq('id', session.user.id).single()
         .then(({ data }) => {
           if (data) {
@@ -30,11 +29,9 @@ export default function Forge() {
           }
         })
 
-      // Trames de la forge
       supabase.from('forge').select('*').eq('user_id', session.user.id)
         .then(({ data }) => { if (data) setTrames(data) })
 
-      // Histoires générées
       supabase.from('stories').select('*').eq('user_id', session.user.id)
         .order('created_at', { ascending: false })
         .then(({ data }) => { if (data) setStories(data) })
@@ -59,48 +56,58 @@ export default function Forge() {
     if (!popup) return
     setLoading(popup.trame_id)
 
-    // Vérifier les crédits (coût fixe = 1 crédit par génération)
-    const coutGeneration = 1
-    if (credits < coutGeneration) {
+    // Vérifier les crédits
+    if (credits < 1) {
       showMessage('Crédits insuffisants — rendez-vous à la Bourse aux Crédits !', 'error')
       setLoading(null)
       setPopup(null)
       return
     }
 
+    // Déduire 1 crédit
+    const { data: { session } } = await supabase.auth.getSession()
+    const res = await fetch('/api/deduct-credit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: session.user.id, amount: 1 })
+    })
+
+    if (!res.ok) {
+      showMessage('Erreur lors de la déduction des crédits.', 'error')
+      setLoading(null)
+      setPopup(null)
+      return
+    }
+
+    setCredits(prev => prev - 1)
     setLoading(null)
     setPopup(null)
     router.push(`/generer/${popup.trame_id}`)
   }
 
   const telechargerPDF = (story) => {
-  const doc = new jsPDF()
-  const date = new Date(story.created_at)
-  const dateStr = date.toLocaleDateString('fr-FR').replace(/\//g, '-')
-  const heureStr = date.toLocaleTimeString('fr-FR', { 
-    hour: '2-digit', minute: '2-digit', second: '2-digit' 
-  }).replace(/:/g, '-')
-  const filename = `${story.trame}_${pseudo}_${dateStr}_${heureStr}.pdf`
+    const doc = new jsPDF()
+    const date = new Date(story.created_at)
+    const dateStr = date.toLocaleDateString('fr-FR').replace(/\//g, '-')
+    const heureStr = date.toLocaleTimeString('fr-FR', {
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    }).replace(/:/g, '-')
+    const filename = `${story.trame}_${pseudo}_${dateStr}_${heureStr}.pdf`
 
-    // Style forge
     doc.setFillColor(13, 8, 0)
     doc.rect(0, 0, 210, 297, 'F')
 
-    // Titre
     doc.setTextColor(232, 184, 75)
     doc.setFontSize(20)
     doc.text(story.trame || 'Histoire', 105, 25, { align: 'center' })
 
-    // Sous-titre
     doc.setTextColor(168, 152, 128)
     doc.setFontSize(11)
-    doc.text(`Par ${pseudo} — ${date}`, 105, 35, { align: 'center' })
+    doc.text(`Par ${pseudo} — ${dateStr}`, 105, 35, { align: 'center' })
 
-    // Ligne décorative
     doc.setDrawColor(201, 146, 42)
     doc.line(20, 40, 190, 40)
 
-    // Contenu chapitres
     doc.setTextColor(232, 220, 200)
     doc.setFontSize(11)
     let y = 55
@@ -179,7 +186,7 @@ export default function Forge() {
       {/* MESSAGE FEEDBACK */}
       {message && (
         <div style={{
-          position: 'fixed', top: '80px', left: '50%', transform: 'translateX(-50%)',
+          position: 'fixed', top: '80px', right: '40px',
           background: message.type === 'success' ? 'rgba(126,200,126,0.15)' : 'rgba(232,68,90,0.15)',
           border: `1px solid ${message.type === 'success' ? 'rgba(126,200,126,0.4)' : 'rgba(232,68,90,0.4)'}`,
           padding: '12px 32px', zIndex: 100,
@@ -261,7 +268,6 @@ export default function Forge() {
       {/* CONTENU */}
       <div style={{ padding: '60px 40px' }}>
 
-        {/* TITRE PAGE */}
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
           fontSize: 'clamp(1.7rem, 3vw, 2.7rem)',
@@ -276,15 +282,14 @@ export default function Forge() {
           textAlign: 'center', marginBottom: '60px'
         }}>Forge de {pseudo}</p>
 
-        {/* ===== SECTION 1 : MES TRAMES ===== */}
+        {/* SECTION 1 : MES TRAMES */}
         <div style={{
           borderBottom: '1px solid rgba(201,146,42,0.2)',
           paddingBottom: '60px', marginBottom: '60px'
         }}>
           <h2 style={{
             fontFamily: 'Cinzel, serif', fontSize: '1.1rem', letterSpacing: '3px',
-            textTransform: 'uppercase', color: '#e8b84b',
-            marginBottom: '8px'
+            textTransform: 'uppercase', color: '#e8b84b', marginBottom: '8px'
           }}>⚒ Mes Trames</h2>
           <p style={{
             fontFamily: 'Crimson Text, serif', fontSize: '1rem',
@@ -325,6 +330,21 @@ export default function Forge() {
                     transform: hover === trame.id ? 'translateY(-4px)' : 'translateY(0)'
                   }}
                 >
+                  {/* IMAGE */}
+                  {trame.image && (
+                    <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden' }}>
+                      <img
+                        src={trame.image}
+                        alt={trame.trame_titre}
+                        style={{
+                          width: '100%', height: '100%', objectFit: 'cover',
+                          transition: 'transform 0.3s ease',
+                          transform: hover === trame.id ? 'scale(1.05)' : 'scale(1)'
+                        }}
+                      />
+                    </div>
+                  )}
+
                   <div style={{ padding: '24px' }}>
                     <h3 style={{
                       fontFamily: 'Cinzel Decorative, serif', fontSize: '1rem',
@@ -371,7 +391,7 @@ export default function Forge() {
           )}
         </div>
 
-        {/* ===== SECTION 2 : MES HISTOIRES ===== */}
+        {/* SECTION 2 : MES HISTOIRES */}
         <div>
           <h2 style={{
             fontFamily: 'Cinzel, serif', fontSize: '1.1rem', letterSpacing: '3px',
@@ -456,7 +476,6 @@ export default function Forge() {
             </div>
           )}
         </div>
-
       </div>
     </div>
   )
