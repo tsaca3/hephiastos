@@ -11,6 +11,7 @@ const TRAMES_FILES = [
 export default function Catalogue() {
   const [user, setUser] = useState(null)
   const [credits, setCredits] = useState(0)
+  const [pseudo, setPseudo] = useState('')
   const [trames, setTrames] = useState([])
   const [hover, setHover] = useState(null)
   const [forgeIds, setForgeIds] = useState([])
@@ -23,8 +24,13 @@ export default function Catalogue() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) { router.push('/auth'); return }
       setUser(session.user)
-      supabase.from('profiles').select('credits').eq('id', session.user.id).single()
-        .then(({ data }) => { if (data) setCredits(data.credits) })
+      supabase.from('profiles').select('credits, username').eq('id', session.user.id).single()
+        .then(({ data }) => {
+          if (data) {
+            setCredits(data.credits)
+            setPseudo(data.username || '')
+          }
+        })
       supabase.from('forge').select('trame_id').eq('user_id', session.user.id)
         .then(({ data }) => {
           if (data) setForgeIds(data.map(d => d.trame_id))
@@ -96,7 +102,8 @@ export default function Catalogue() {
     const { error } = await supabase.from('forge').insert({
       user_id: session.user.id,
       trame_id: popup.id,
-      trame_titre: popup.titre
+      trame_titre: popup.titre,
+      pseudo: pseudo
     })
 
     if (error) {
@@ -155,7 +162,7 @@ export default function Catalogue() {
       {/* MESSAGE FEEDBACK */}
       {message && (
         <div style={{
-          position: 'fixed', top: '80px', left: '50%', transform: 'translateX(-50%)',
+          position: 'fixed', top: '80px', right: '40px',
           background: message.type === 'success' ? 'rgba(126,200,126,0.15)' : 'rgba(232,68,90,0.15)',
           border: `1px solid ${message.type === 'success' ? 'rgba(126,200,126,0.4)' : 'rgba(232,68,90,0.4)'}`,
           padding: '12px 32px', zIndex: 100,
@@ -274,7 +281,7 @@ export default function Catalogue() {
           textAlign: 'center', marginBottom: '30px'
         }}>Choisissez votre aventure</p>
 
-        {/* GRILLE — flex aligné à gauche */}
+        {/* GRILLE */}
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
