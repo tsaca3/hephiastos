@@ -156,7 +156,7 @@ export default function Comment() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                 <span style={{
                   fontFamily: 'Cinzel Decorative, serif', fontSize: '3rem',
-                  color: 'rgba(255,107,26,0.5)',  // ← orange au lieu de brun
+                  color: '#ff6b1a',  // ← orange au lieu de brun
                   lineHeight: 1, fontWeight: 700
                 }}>{etape.num}</span>
                 <h2 style={{
@@ -232,7 +232,7 @@ export default function Comment() {
               {
                 titre: 'Forger une histoire',
                 valeur: '1+',
-                texte: 'Forger une histoire coûte des crédits selon la trame choisie. Les trames gratuites sont accessibles sans crédits supplémentaires.'
+                texte: 'Forger une histoire coûte entre 1 et plusieurs crédits selon la trame choisie et même si celle-ci est gratuite à ajouter dans sa forge.'
               },
               {
                 titre: 'Acheter des crédits',
