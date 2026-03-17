@@ -16,6 +16,7 @@ function CreditsContent() {
   const [loading, setLoading] = useState(null)
   const [userCredits, setUserCredits] = useState(0)
   const [hover, setHover] = useState(null)
+  const [accepted, setAccepted] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -31,6 +32,7 @@ function CreditsContent() {
   }
 
   const handlePurchase = async (priceId) => {
+    if (!accepted) return
     setLoading(priceId)
     try {
       const { data: { session } } = await supabase.auth.getSession()
@@ -134,8 +136,42 @@ function CreditsContent() {
         <p style={{
           fontFamily: 'Cinzel, serif', fontSize: '0.75rem', letterSpacing: '3px',
           textTransform: 'uppercase', color: '#7a6a52',
-          textAlign: 'center', marginBottom: '60px'
+          textAlign: 'center', marginBottom: '40px'
         }}>Echanger vos piécettes en Crédits de forge - Choisissez votre pack</p>
+
+        {/* CASE À COCHER */}
+        <div style={{
+          maxWidth: '1200px', margin: '0 auto 40px',
+          padding: '20px 24px',
+          border: '1px solid rgba(201,146,42,0.2)',
+          background: '#0d0800',
+          display: 'flex', alignItems: 'flex-start', gap: '16px'
+        }}>
+          <input
+            type="checkbox"
+            id="retractation"
+            checked={accepted}
+            onChange={e => setAccepted(e.target.checked)}
+            style={{
+              width: '18px', height: '18px',
+              marginTop: '3px', cursor: 'pointer',
+              accentColor: '#ff6b1a', flexShrink: 0
+            }}
+          />
+          <label htmlFor="retractation" style={{
+            fontFamily: 'Crimson Text, serif', fontSize: '1rem',
+            color: '#a89880', lineHeight: '1.6', cursor: 'pointer'
+          }}>
+            Je reconnais avoir lu et accepté les{' '}
+            <span
+              onClick={() => router.push('/conditions')}
+              style={{ color: '#ff6b1a', textDecoration: 'underline', cursor: 'pointer' }}
+            >
+              Conditions Générales d'Utilisation
+            </span>
+            , notamment que les crédits de forge sont <strong style={{ color: '#e8b84b' }}>non remboursables dès leur achat</strong>, la livraison étant immédiate et le contenu numérique immédiatement disponible.
+          </label>
+        </div>
 
         {/* GRILLE PACKS */}
         <div style={{
@@ -159,7 +195,8 @@ function CreditsContent() {
                 boxShadow: hover === pack.id
                   ? '0 0 30px rgba(255,107,26,0.2)'
                   : '0 0 10px rgba(0,0,0,0.5)',
-                transform: hover === pack.id ? 'translateY(-4px)' : 'translateY(0)'
+                transform: hover === pack.id ? 'translateY(-4px)' : 'translateY(0)',
+                opacity: !accepted ? 0.5 : 1
               }}
             >
               {/* IMAGE */}
@@ -170,7 +207,7 @@ function CreditsContent() {
                   style={{
                     width: '100%', height: '100%', objectFit: 'cover',
                     transition: 'transform 0.3s ease',
-                    transform: hover === pack.id ? 'scale(1.05)' : 'scale(1)'
+                    transform: hover === pack.id && accepted ? 'scale(1.05)' : 'scale(1)'
                   }}
                 />
               </div>
@@ -178,13 +215,11 @@ function CreditsContent() {
               {/* INFOS */}
               <div style={{ padding: '20px' }}>
 
-                {/* NOM DU PACK */}
                 <h2 style={{
                   fontFamily: 'Cinzel Decorative, serif', fontSize: '1rem',
                   color: '#e8b84b', marginBottom: '12px', textAlign: 'center'
                 }}>{pack.nom}</h2>
 
-                {/* CRÉDITS */}
                 <div style={{ textAlign: 'center', marginBottom: '8px' }}>
                   <span style={{
                     fontFamily: 'Cinzel, serif', fontSize: '2rem',
@@ -197,7 +232,6 @@ function CreditsContent() {
                   }}>crédits</span>
                 </div>
 
-                {/* PRIX */}
                 <div style={{
                   borderTop: '1px solid rgba(201,146,42,0.2)',
                   borderBottom: '1px solid rgba(201,146,42,0.2)',
@@ -212,22 +246,23 @@ function CreditsContent() {
                   }}>{pack.pricePerCredit}€ / crédit</span>
                 </div>
 
-                {/* BOUTON */}
                 <button
                   onClick={() => handlePurchase(pack.id)}
-                  disabled={loading === pack.id}
+                  disabled={loading === pack.id || !accepted}
                   style={{
                     width: '100%', padding: '12px',
-                    background: hover === pack.id
-                      ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
-                      : 'transparent',
+                    background: !accepted
+                      ? 'transparent'
+                      : hover === pack.id
+                        ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
+                        : 'transparent',
                     border: '1px solid rgba(201,146,42,0.3)',
-                    color: hover === pack.id ? '#000' : '#c9922a',
+                    color: !accepted ? '#555' : hover === pack.id ? '#000' : '#c9922a',
                     fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
                     letterSpacing: '2px', textTransform: 'uppercase',
-                    cursor: 'pointer', fontWeight: 700,
+                    cursor: !accepted ? 'not-allowed' : 'pointer', fontWeight: 700,
                     transition: 'all 0.3s ease',
-                    boxShadow: hover === pack.id ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
+                    boxShadow: hover === pack.id && accepted ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
                   }}
                 >
                   {loading === pack.id ? 'Forge en cours...' : '⚒ Forger'}
