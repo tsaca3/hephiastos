@@ -31,7 +31,7 @@ export default function Comment() {
   const faq = [
     {
       q: 'Puis-je forger plusieurs histoires avec la même trame ?',
-      r: 'Oui ! Une trame ajoutée à votre forge vous appartient pour toujours. Vous pouvez forger autant d\'histoires que vous voulez avec elle — chacune coûte 1 crédit et sera unique.'
+      r: 'Oui ! Une trame ajoutée à votre forge vous appartient pour toujours. Vous pouvez forger autant d\'histoires que vous voulez avec elle — chacune sera unique et différente.'
     },
     {
       q: 'Les histoires sont-elles vraiment uniques ?',
@@ -39,7 +39,7 @@ export default function Comment() {
     },
     {
       q: 'Qui possède les droits sur mon histoire ?',
-      r: 'Vous, entièrement. Les histoires que vous forgez vous appartiennent. Vous pouvez les publier, les partager ou les monétiser librement. HéphIAstos conserve uniquement une licence pour les utiliser à des fins promotionnelles anonymisées.'
+      r: 'Les histoires que vous forgez vous appartiennent. Vous pouvez les utiliser, les modifier, les publier ou les monétiser librement. En contrepartie, vous accordez à HéphIAstos une licence non-exclusive pour utiliser vos histoires à des fins promotionnelles, sous forme anonymisée uniquement.'
     },
     {
       q: 'Peut-on relire ses anciennes histoires ?',
@@ -47,7 +47,7 @@ export default function Comment() {
     },
     {
       q: 'Que se passe-t-il si je manque de crédits ?',
-      r: 'Rendez-vous à la Bourse aux Crédits pour acquérir un nouveau pack. Vous avez le choix entre 4 packs selon vos besoins, de 10 à 100 crédits.'
+      r: 'Rendez-vous à la Bourse aux Crédits pour acquérir un nouveau pack. Plus le pack choisi est grand, moins le prix à l\'unité est élevé — le pack 100 crédits revient à 0,35€ par crédit contre 0,50€ pour le pack 10 crédits.'
     },
   ]
 
@@ -66,11 +66,11 @@ export default function Comment() {
       }}>
         <img src="/logo_icon.png" alt="HéphIAstos" style={{ height: '58px', cursor: 'pointer' }} onClick={() => router.push('/')} />
         <div style={{ display: 'flex', alignItems: 'center', gap: '56px' }}>
+          <span onClick={() => router.push('/comment')} style={{ ...menuStyle, color: '#555555' }}>Comment ça marche ?</span>
           <span onClick={() => router.push('/catalogue')} style={menuStyle}>Les Trames</span>
           <span onClick={() => router.push('/credits')} style={menuStyle}>La Bourse aux Crédits</span>
           <span onClick={() => router.push('/compte')} style={menuStyle}>Mon Compte</span>
           <span onClick={() => router.push('/forge')} style={menuStyle}>Ma Forge</span>
-          <span onClick={() => router.push('/comment')} style={{ ...menuStyle, color: '#555555' }}>Comment ça marche ?</span>
           <span onClick={() => router.push('/conditions')} style={menuStyle}>Conditions Générales</span>
           <span style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
@@ -156,7 +156,8 @@ export default function Comment() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                 <span style={{
                   fontFamily: 'Cinzel Decorative, serif', fontSize: '3rem',
-                  color: 'rgba(255,107,26,0.2)', lineHeight: 1, fontWeight: 700
+                  color: 'rgba(255,107,26,0.5)',  // ← orange au lieu de brun
+                  lineHeight: 1, fontWeight: 700
                 }}>{etape.num}</span>
                 <h2 style={{
                   fontFamily: 'Cinzel, serif', fontSize: '1.1rem', letterSpacing: '2px',
@@ -210,25 +211,33 @@ export default function Comment() {
           <h2 style={{
             fontFamily: 'Cinzel, serif', fontSize: '1.1rem', letterSpacing: '3px',
             textTransform: 'uppercase', color: '#e8b84b',
-            textAlign: 'center', marginBottom: '40px'
+            textAlign: 'center', marginBottom: '16px'
           }}>💎 Comment fonctionnent les crédits ?</h2>
+
+          <p style={{
+            fontFamily: 'Crimson Text, serif', fontSize: '1.1rem', fontStyle: 'italic',
+            color: '#7a6a52', textAlign: 'center', marginBottom: '40px', lineHeight: '1.6'
+          }}>
+            Les crédits de forge sont la monnaie d'HéphIAstos. Ils s'achètent à la Bourse aux Crédits
+            et servent à acquérir des trames payantes et à forger des histoires.
+          </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
             {[
               {
                 titre: 'Crédits offerts',
-                valeur: '100',
-                texte: 'À l\'inscription, vous recevez 100 crédits offerts pour découvrir la plateforme.'
+                valeur: '3',
+                texte: 'À l\'inscription, vous recevez 3 crédits offerts pour découvrir la plateforme et forger vos premières histoires.'
               },
               {
                 titre: 'Forger une histoire',
-                valeur: '1',
-                texte: 'Chaque histoire forgée coûte 1 crédit, quel que soit le nombre de chapitres.'
+                valeur: '1+',
+                texte: 'Forger une histoire coûte des crédits selon la trame choisie. Les trames gratuites sont accessibles sans crédits supplémentaires.'
               },
               {
-                titre: 'Acquérir une trame',
-                valeur: '0 à X',
-                texte: 'Les trames gratuites sont accessibles sans crédits. Les trames premium requièrent des crédits.'
+                titre: 'Acheter des crédits',
+                valeur: '10→100',
+                texte: 'Choisissez votre pack à la Bourse aux Crédits. Plus le pack est grand, moins le crédit coûte cher à l\'unité.'
               }
             ].map((item, i) => (
               <div key={i} style={{
