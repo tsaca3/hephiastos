@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import Navbar from '@/app/components/Navbar'
 
 export default function Compte() {
   const [user, setUser] = useState(null)
@@ -70,11 +71,6 @@ export default function Compte() {
     }
   }
 
-  const menuStyle = {
-    fontFamily: 'Cinzel, serif', fontSize: '1rem', letterSpacing: '2px',
-    textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
-  }
-
   const sectionStyle = {
     background: '#0d0800',
     border: '1px solid rgba(201,146,42,0.2)',
@@ -103,42 +99,12 @@ export default function Compte() {
   return (
     <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
 
-      {/* BANDEAU */}
-      <nav style={{
-        padding: '0 40px', height: '66px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: 'linear-gradient(to top, #ff6600, #ffaa33)',
-        boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
-        position: 'sticky', top: 0, zIndex: 10
-      }}>
-        <img src="/logo_icon.png" alt="HéphIAstos" style={{ height: '58px', cursor: 'pointer' }} onClick={() => router.push('/')} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '56px' }}>
-          <span onClick={() => router.push('/catalogue')} style={menuStyle}>Les Trames</span>
-          <span onClick={() => router.push('/credits')} style={menuStyle}>La Bourse aux Crédits</span>
-          <span onClick={() => router.push('/compte')} style={{ ...menuStyle, color: '#555555' }}>Mon Compte</span>
-          <span onClick={() => router.push('/forge')} style={menuStyle}>Ma Forge</span>
-          <span onClick={() => router.push('/conditions')} style={menuStyle}>Conditions Générales</span>
-          <span style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-            background: '#000', borderRadius: '999px', padding: '9px 20px',
-            fontFamily: 'Cinzel, serif', fontSize: '1.2rem', fontWeight: 700, color: '#4db8ff',
-            boxShadow: '0 0 20px rgba(77,184,255,0.3)', minWidth: '80px', height: '40px'
-          }}>
-            {credits} <img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} />
-          </span>
-          <button onClick={logout} style={{
-            background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(0,0,0,0.3)',
-            color: '#000', padding: '6px 14px', fontFamily: 'Cinzel, serif',
-            fontSize: '0.6rem', letterSpacing: '2px', textTransform: 'uppercase',
-            cursor: 'pointer', fontWeight: 700
-          }}>Déconnexion</button>
-        </div>
-      </nav>
+      <Navbar credits={credits} onLogout={logout} activePage="compte" />
 
       {/* MESSAGE FEEDBACK */}
       {message && (
         <div style={{
-          position: 'fixed', top: '80px', left: '50%', transform: 'translateX(-50%)',
+          position: 'fixed', top: '80px', right: '40px',
           background: message.type === 'success' ? 'rgba(126,200,126,0.15)' : 'rgba(232,68,90,0.15)',
           border: `1px solid ${message.type === 'success' ? 'rgba(126,200,126,0.4)' : 'rgba(232,68,90,0.4)'}`,
           padding: '12px 32px', zIndex: 100,
@@ -200,7 +166,6 @@ export default function Compte() {
       {/* CONTENU */}
       <div style={{ padding: '60px 40px' }}>
 
-        {/* TITRE */}
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
           fontSize: 'clamp(1.7rem, 3vw, 2.7rem)',
@@ -225,22 +190,16 @@ export default function Compte() {
 
           {/* COLONNE GAUCHE */}
           <div>
-
-            {/* SECTION INFOS */}
             <div style={sectionStyle}>
               <h2 style={sectionTitleStyle}>Informations personnelles</h2>
-
               <span style={labelStyle}>Pseudo</span>
               <p style={valueStyle}>{pseudo}</p>
-
               <span style={labelStyle}>Email</span>
               <p style={valueStyle}>{user.email}</p>
-
               <span style={labelStyle}>Membre depuis</span>
               <p style={{ ...valueStyle, marginBottom: '0' }}>{dateInscription}</p>
             </div>
 
-            {/* DANGER ZONE */}
             <div style={{
               ...sectionStyle,
               border: '1px solid rgba(232,68,90,0.2)',
@@ -275,13 +234,10 @@ export default function Compte() {
                 Supprimer mon compte
               </button>
             </div>
-
           </div>
 
           {/* COLONNE DROITE */}
           <div>
-
-            {/* SECTION MOT DE PASSE */}
             <div style={sectionStyle}>
               <h2 style={sectionTitleStyle}>Sécurité</h2>
               <p style={{
@@ -309,7 +265,6 @@ export default function Compte() {
               </button>
             </div>
 
-            {/* SECTION STATISTIQUES */}
             <div style={{ ...sectionStyle, marginBottom: '0' }}>
               <h2 style={sectionTitleStyle}>Ma Forge en chiffres</h2>
               <div style={{ display: 'flex', gap: '40px' }}>
@@ -336,7 +291,6 @@ export default function Compte() {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>

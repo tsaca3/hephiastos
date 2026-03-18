@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useParams } from 'next/navigation'
+import Navbar from '@/app/components/Navbar'
 
 export default function Generer() {
   const [user, setUser] = useState(null)
@@ -59,7 +60,6 @@ export default function Generer() {
     try {
       const { data: { session } } = await supabase.auth.getSession()
 
-      // Générer le texte
       const genRes = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -83,7 +83,6 @@ export default function Generer() {
       setScore(newScore)
       setPreviousChoices(newPreviousChoices)
 
-      // Sauvegarder — créer ou mettre à jour
       const saveRes = await fetch('/api/save-story', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -94,17 +93,15 @@ export default function Generer() {
           outcome: '',
           chapters: newPreviousChoices,
           chapterTexts: newChapterTexts,
-          storyId: storyId  // null au premier chapitre, id ensuite
+          storyId: storyId
         })
       })
       const saveData = await saveRes.json()
 
-      // Garder l'id de l'histoire pour les chapitres suivants
       if (!storyId && saveData.storyId) {
         setStoryId(saveData.storyId)
       }
 
-      // Dernier chapitre ?
       const isLast = chapterIndex === trame.chapitres_data.length - 1
       if (isLast) {
         setFinished(true)
@@ -125,11 +122,6 @@ export default function Generer() {
     router.push('/auth')
   }
 
-  const menuStyle = {
-    fontFamily: 'Cinzel, serif', fontSize: '1rem', letterSpacing: '2px',
-    textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
-  }
-
   const totalChapters = trame?.chapitres_data?.length || 0
 
   if (!user || !trame) return null
@@ -137,37 +129,7 @@ export default function Generer() {
   return (
     <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
 
-      {/* BANDEAU */}
-      <nav style={{
-        padding: '0 40px', height: '66px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: 'linear-gradient(to top, #ff6600, #ffaa33)',
-        boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
-        position: 'sticky', top: 0, zIndex: 10
-      }}>
-        <img src="/logo_icon.png" alt="HéphIAstos" style={{ height: '58px', cursor: 'pointer' }} onClick={() => router.push('/')} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '56px' }}>
-          <span onClick={() => router.push('/catalogue')} style={menuStyle}>Les Trames</span>
-          <span onClick={() => router.push('/credits')} style={menuStyle}>La Bourse aux Crédits</span>
-          <span onClick={() => router.push('/compte')} style={menuStyle}>Mon Compte</span>
-          <span onClick={() => router.push('/forge')} style={{ ...menuStyle, color: '#555555' }}>Ma Forge</span>
-          <span onClick={() => router.push('/conditions')} style={menuStyle}>Conditions Générales</span>
-          <span style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-            background: '#000', borderRadius: '999px', padding: '9px 20px',
-            fontFamily: 'Cinzel, serif', fontSize: '1.2rem', fontWeight: 700, color: '#4db8ff',
-            boxShadow: '0 0 20px rgba(77,184,255,0.3)', minWidth: '80px', height: '40px'
-          }}>
-            {credits} <img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} />
-          </span>
-          <button onClick={logout} style={{
-            background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(0,0,0,0.3)',
-            color: '#000', padding: '6px 14px', fontFamily: 'Cinzel, serif',
-            fontSize: '0.6rem', letterSpacing: '2px', textTransform: 'uppercase',
-            cursor: 'pointer', fontWeight: 700
-          }}>Déconnexion</button>
-        </div>
-      </nav>
+      <Navbar credits={credits} onLogout={logout} activePage="forge" />
 
       {/* MESSAGE FEEDBACK */}
       {message && (

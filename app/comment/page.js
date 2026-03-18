@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import Navbar from '@/app/components/Navbar'
 
 export default function Comment() {
   const [user, setUser] = useState(null)
@@ -21,11 +22,6 @@ export default function Comment() {
   const logout = async () => {
     await supabase.auth.signOut()
     router.push('/auth')
-  }
-
-  const menuStyle = {
-    fontFamily: 'Cinzel, serif', fontSize: '1rem', letterSpacing: '2px',
-    textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
   }
 
   const faq = [
@@ -56,38 +52,7 @@ export default function Comment() {
   return (
     <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
 
-      {/* BANDEAU */}
-      <nav style={{
-        padding: '0 40px', height: '66px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: 'linear-gradient(to top, #ff6600, #ffaa33)',
-        boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
-        position: 'sticky', top: 0, zIndex: 10
-      }}>
-        <img src="/logo_icon.png" alt="HéphIAstos" style={{ height: '58px', cursor: 'pointer' }} onClick={() => router.push('/')} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '56px' }}>
-          <span onClick={() => router.push('/comment')} style={{ ...menuStyle, color: '#555555' }}>Comment ça marche ?</span>
-          <span onClick={() => router.push('/catalogue')} style={menuStyle}>Les Trames</span>
-          <span onClick={() => router.push('/credits')} style={menuStyle}>La Bourse aux Crédits</span>
-          <span onClick={() => router.push('/compte')} style={menuStyle}>Mon Compte</span>
-          <span onClick={() => router.push('/forge')} style={menuStyle}>Ma Forge</span>
-          <span onClick={() => router.push('/conditions')} style={menuStyle}>Conditions Générales</span>
-          <span style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-            background: '#000', borderRadius: '999px', padding: '9px 20px',
-            fontFamily: 'Cinzel, serif', fontSize: '1.2rem', fontWeight: 700, color: '#4db8ff',
-            boxShadow: '0 0 20px rgba(77,184,255,0.3)', minWidth: '80px', height: '40px'
-          }}>
-            {credits} <img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} />
-          </span>
-          <button onClick={logout} style={{
-            background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(0,0,0,0.3)',
-            color: '#000', padding: '6px 14px', fontFamily: 'Cinzel, serif',
-            fontSize: '0.6rem', letterSpacing: '2px', textTransform: 'uppercase',
-            cursor: 'pointer', fontWeight: 700
-          }}>Déconnexion</button>
-        </div>
-      </nav>
+      <Navbar credits={credits} onLogout={logout} activePage="comment" />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '60px 40px' }}>
 
@@ -151,13 +116,11 @@ export default function Comment() {
             gap: '60px', alignItems: 'center',
             marginBottom: '80px'
           }}>
-            {/* TEXTE */}
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                 <span style={{
                   fontFamily: 'Cinzel Decorative, serif', fontSize: '3rem',
-                  color: '#ff6b1a',  // ← orange au lieu de brun
-                  lineHeight: 1, fontWeight: 700
+                  color: '#ff6b1a', lineHeight: 1, fontWeight: 700
                 }}>{etape.num}</span>
                 <h2 style={{
                   fontFamily: 'Cinzel, serif', fontSize: '1.1rem', letterSpacing: '2px',
@@ -175,7 +138,6 @@ export default function Comment() {
               }}>{etape.texte}</p>
             </div>
 
-            {/* IMAGE */}
             <div style={{ flex: 1 }}>
               <div style={{
                 border: '1px solid rgba(201,146,42,0.2)',

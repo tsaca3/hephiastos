@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import Navbar from '@/app/components/Navbar'
 
 export default function Conditions() {
   const [user, setUser] = useState(null)
@@ -22,11 +23,6 @@ export default function Conditions() {
     router.push('/auth')
   }
 
-  const menuStyle = {
-    fontFamily: 'Cinzel, serif', fontSize: '1rem', letterSpacing: '2px',
-    textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
-  }
-
   const sectionTitleStyle = {
     fontFamily: 'Cinzel, serif', fontSize: '1rem', letterSpacing: '2px',
     textTransform: 'uppercase', color: '#e8b84b',
@@ -44,42 +40,11 @@ export default function Conditions() {
   return (
     <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
 
-      {/* BANDEAU */}
-      <nav style={{
-        padding: '0 40px', height: '66px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: 'linear-gradient(to top, #ff6600, #ffaa33)',
-        boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
-        position: 'sticky', top: 0, zIndex: 10
-      }}>
-        <img src="/logo_icon.png" alt="HéphIAstos" style={{ height: '58px', cursor: 'pointer' }} onClick={() => router.push('/')} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '56px' }}>
-          <span onClick={() => router.push('/catalogue')} style={menuStyle}>Les Trames</span>
-          <span onClick={() => router.push('/credits')} style={menuStyle}>La Bourse aux Crédits</span>
-          <span onClick={() => router.push('/compte')} style={menuStyle}>Mon Compte</span>
-          <span onClick={() => router.push('/forge')} style={menuStyle}>Ma Forge</span>
-          <span onClick={() => router.push('/conditions')} style={{ ...menuStyle, color: '#555555' }}>Conditions Générales</span>
-          <span style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-            background: '#000', borderRadius: '999px', padding: '9px 20px',
-            fontFamily: 'Cinzel, serif', fontSize: '1.2rem', fontWeight: 700, color: '#4db8ff',
-            boxShadow: '0 0 20px rgba(77,184,255,0.3)', minWidth: '80px', height: '40px'
-          }}>
-            {credits} <img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} />
-          </span>
-          <button onClick={logout} style={{
-            background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(0,0,0,0.3)',
-            color: '#000', padding: '6px 14px', fontFamily: 'Cinzel, serif',
-            fontSize: '0.6rem', letterSpacing: '2px', textTransform: 'uppercase',
-            cursor: 'pointer', fontWeight: 700
-          }}>Déconnexion</button>
-        </div>
-      </nav>
+      <Navbar credits={credits} onLogout={logout} activePage="conditions" />
 
       {/* CONTENU */}
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '60px 40px' }}>
 
-        {/* TITRE */}
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
           fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
@@ -102,7 +67,6 @@ export default function Conditions() {
           En utilisant HéphIAstos, vous acceptez les présentes conditions générales d'utilisation dans leur intégralité.
         </p>
 
-        {/* ARTICLE 1 */}
         <h2 style={sectionTitleStyle}>Article 1 — Présentation de la plateforme</h2>
         <p style={textStyle}>
           HéphIAstos est une plateforme de création narrative assistée par intelligence artificielle, accessible à l'adresse hephiastos.store. Elle permet aux utilisateurs de générer des histoires personnalisées à partir de trames narratives prédéfinies, en échange de crédits de forge.
@@ -111,7 +75,6 @@ export default function Conditions() {
           La plateforme est éditée et exploitée par HéphIAstos, domiciliée en Suisse, soumise au droit suisse, notamment à la Loi fédérale sur la protection des données (LPD) et au Code des obligations (CO).
         </p>
 
-        {/* ARTICLE 2 */}
         <h2 style={sectionTitleStyle}>Article 2 — Accès et inscription</h2>
         <p style={textStyle}>
           L'accès à HéphIAstos est ouvert à toute personne disposant d'une connexion internet. L'inscription est gratuite et nécessite la création d'un compte avec une adresse email valide et un pseudo unique.
@@ -120,7 +83,6 @@ export default function Conditions() {
           L'utilisateur est responsable de la confidentialité de ses identifiants de connexion et de toute activité effectuée depuis son compte. En cas de perte ou de compromission de ses accès, il doit contacter HéphIAstos dans les plus brefs délais.
         </p>
 
-        {/* ARTICLE 3 */}
         <h2 style={sectionTitleStyle}>Article 3 — Crédits de forge et paiements</h2>
         <p style={textStyle}>
           L'utilisation des trames narratives et la génération d'histoires requièrent des crédits de forge, acquis via la Bourse aux Crédits. Les crédits sont vendus en packs et débités au moment de leur utilisation.
@@ -135,7 +97,6 @@ export default function Conditions() {
           Les crédits non utilisés ne peuvent faire l'objet d'aucun remboursement, ni d'aucun échange contre des espèces ou tout autre bien ou service en dehors de la plateforme HéphIAstos.
         </p>
 
-        {/* ARTICLE 4 */}
         <h2 style={sectionTitleStyle}>Article 4 — Propriété intellectuelle et droits sur les histoires</h2>
         <p style={textStyle}>
           Les histoires générées sur HéphIAstos sont la propriété de l'utilisateur qui les a créées. L'utilisateur est libre de les utiliser, les modifier, les publier ou les monétiser librement, sans restriction de la part de HéphIAstos.
@@ -147,7 +108,6 @@ export default function Conditions() {
           Les trames narratives, l'interface, les textes, logos et éléments graphiques de la plateforme restent la propriété exclusive de HéphIAstos et sont protégés par le droit d'auteur suisse.
         </p>
 
-        {/* ARTICLE 5 */}
         <h2 style={sectionTitleStyle}>Article 5 — Utilisation acceptable</h2>
         <p style={textStyle}>
           L'utilisateur s'engage à utiliser HéphIAstos de manière licite et responsable. Sont notamment interdits :
@@ -163,7 +123,6 @@ export default function Conditions() {
           HéphIAstos se réserve le droit de suspendre ou supprimer tout compte ne respectant pas ces conditions, sans préavis ni remboursement.
         </p>
 
-        {/* ARTICLE 6 */}
         <h2 style={sectionTitleStyle}>Article 6 — Protection des données personnelles</h2>
         <p style={textStyle}>
           HéphIAstos collecte et traite les données personnelles de ses utilisateurs conformément à la Loi fédérale suisse sur la protection des données (LPD) et au Règlement général sur la protection des données (RGPD) pour les utilisateurs résidant dans l'Union européenne.
@@ -175,7 +134,6 @@ export default function Conditions() {
           L'utilisateur dispose d'un droit d'accès, de rectification, de suppression et de portabilité de ses données, qu'il peut exercer en contactant HéphIAstos à l'adresse : contact@hephiastos.store
         </p>
 
-        {/* ARTICLE 7 */}
         <h2 style={sectionTitleStyle}>Article 7 — Intelligence artificielle</h2>
         <p style={textStyle}>
           Les histoires générées sur HéphIAstos sont produites par un système d'intelligence artificielle. HéphIAstos ne garantit pas l'exactitude, la cohérence ou l'originalité absolue des contenus générés.
@@ -187,7 +145,6 @@ export default function Conditions() {
           HéphIAstos s'engage à mettre en œuvre les mesures raisonnables pour éviter la génération de contenus problématiques, sans pouvoir en garantir l'absence totale.
         </p>
 
-        {/* ARTICLE 8 */}
         <h2 style={sectionTitleStyle}>Article 8 — Limitation de responsabilité</h2>
         <p style={textStyle}>
           HéphIAstos met tout en œuvre pour assurer la disponibilité et la qualité de la plateforme, sans pouvoir garantir un service ininterrompu. La plateforme peut être temporairement inaccessible pour maintenance ou en cas de force majeure.
@@ -196,7 +153,6 @@ export default function Conditions() {
           HéphIAstos ne saurait être tenu responsable des dommages directs ou indirects résultant de l'utilisation ou de l'impossibilité d'utiliser la plateforme, ni du contenu des histoires générées par l'intelligence artificielle.
         </p>
 
-        {/* ARTICLE 9 */}
         <h2 style={sectionTitleStyle}>Article 9 — Modification des conditions</h2>
         <p style={textStyle}>
           HéphIAstos se réserve le droit de modifier les présentes conditions générales à tout moment. Les utilisateurs seront informés de toute modification significative par email ou notification sur la plateforme.
@@ -205,13 +161,11 @@ export default function Conditions() {
           La poursuite de l'utilisation de la plateforme après notification des modifications vaut acceptation des nouvelles conditions.
         </p>
 
-        {/* ARTICLE 10 */}
         <h2 style={sectionTitleStyle}>Article 10 — Droit applicable et juridiction</h2>
         <p style={textStyle}>
           Les présentes conditions générales sont soumises au droit suisse. Tout litige relatif à leur interprétation ou à leur exécution sera soumis à la juridiction exclusive des tribunaux compétents du canton de domicile de HéphIAstos, sous réserve des dispositions impératives applicables au consommateur.
         </p>
 
-        {/* CONTACT */}
         <div style={{
           marginTop: '60px', padding: '24px',
           border: '1px solid rgba(201,146,42,0.2)',

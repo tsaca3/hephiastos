@@ -2,26 +2,27 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import Navbar from '@/app/components/Navbar'
 
 export default function Home() {
-const [user, setUser] = useState<any>(null)
-const [credits, setCredits] = useState<number>(0)
-const [pseudo, setPseudo] = useState<string>('')
-const router = useRouter()
+  const [user, setUser] = useState<any>(null)
+  const [credits, setCredits] = useState<number>(0)
+  const [pseudo, setPseudo] = useState<string>('')
+  const router = useRouter()
 
-useEffect(() => {
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    if (!session) { router.push('/auth'); return }
-    setUser(session.user)
-    supabase.from('profiles').select('credits, username').eq('id', session.user.id).single()
-      .then(({ data }) => {
-        if (data) {
-          setCredits(data.credits)
-          setPseudo(data.username || session.user.email)
-        }
-      })
-  })
-}, [])
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) { router.push('/auth'); return }
+      setUser(session.user)
+      supabase.from('profiles').select('credits, username').eq('id', session.user.id).single()
+        .then(({ data }) => {
+          if (data) {
+            setCredits(data.credits)
+            setPseudo(data.username || session.user.email)
+          }
+        })
+    })
+  }, [])
 
   const logout = async () => {
     await supabase.auth.signOut()
@@ -32,61 +33,8 @@ useEffect(() => {
 
   return (
     <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
-      
-      {/* NAV BANDEAU ORANGE FEU */}
-      <nav style={{
-        padding: '0 40px', height: '66px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: 'linear-gradient(to top, #ff6600, #ffaa33)',
-        boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
-        position: 'sticky', top: 0, zIndex: 10
-      }}>
-        {/* LOGO */}
-        <img src="logo_icon.png" alt="HéphIAstos" style={{ height: '58px', cursor: 'pointer' }} onClick={() => router.push('/')} />
-        
-        {/* MENUS */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '56px' }}>
-          <span onClick={() => router.push('/catalogue')} style={{
-            fontFamily: 'Cinzel, serif', fontSize: '1rem',
-            textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
-          }}>Les Trames</span>
-          <span onClick={() => router.push('/credits')} style={{
-            fontFamily: 'Cinzel, serif', fontSize: '1rem',
-            textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
-          }}>Forge de Crédits</span>
-          <span onClick={() => router.push('/compte')} style={{
-            fontFamily: 'Cinzel, serif', fontSize: '1rem',
-            textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
-          }}>Mon Compte</span>
-          <span onClick={() => router.push('/forge')} style={{
-           fontFamily: 'Cinzel, serif', fontSize: '1rem',
-            textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
-          }}>Ma Forge</span>
-          <span onClick={() => router.push('/conditions')} style={{
-            fontFamily: 'Cinzel, serif', fontSize: '1rem',
-            textTransform: 'uppercase', color: '#000', cursor: 'pointer', fontWeight: 700
-          }}>Conditions Générales</span>
-{/* PASTILLE CRÉDITS — noir, chiffre bleu + diamant, sans le mot "crédits" */}
-          <span style={{
-  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-  background: '#000', borderRadius: '999px',
-  padding: '9px 20px',          // ← corrigé (était '92x 32px')
-  fontFamily: 'Cinzel, serif', fontSize: '1.2rem',
-  fontWeight: 700, color: '#4db8ff',
-  boxShadow: '0 0 20px rgba(77,184,255,0.3)',
-  minWidth: '80px', height: '40px'   // taille minimale garantie
-}}>
-  {credits} <img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} />
-</span>
 
-          <button onClick={logout} style={{
-            background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(0,0,0,0.3)',
-            color: '#000', padding: '6px 14px', fontFamily: 'Cinzel, serif',
-            fontSize: '0.6rem', letterSpacing: '2px', textTransform: 'uppercase',
-            cursor: 'pointer', fontWeight: 700
-          }}>Déconnexion</button>
-        </div>
-      </nav>
+      <Navbar credits={credits} onLogout={logout} activePage="home" />
 
       {/* HERO */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 66px)', padding: '40px' }}>
