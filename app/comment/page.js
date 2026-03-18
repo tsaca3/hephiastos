@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
-import Navbar from '@/app/components/Navbar'
+import Navbar, { Footer } from '@/app/components/Navbar'
 
 export default function Comment() {
   const [user, setUser] = useState(null)
@@ -50,11 +50,11 @@ export default function Comment() {
   if (!user) return null
 
   return (
-    <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
+    <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif', display: 'flex', flexDirection: 'column' }}>
 
       <Navbar credits={credits} onLogout={logout} activePage="comment" />
 
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '60px 40px' }}>
+      <div style={{ flex: 1, maxWidth: '1100px', width: '100%', margin: '0 auto', padding: '60px 40px' }}>
 
         {/* HERO */}
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
@@ -310,6 +310,8 @@ export default function Comment() {
         </div>
 
       </div>
+
+      <Footer />
     </div>
   )
 }
