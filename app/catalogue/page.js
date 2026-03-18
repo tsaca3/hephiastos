@@ -84,10 +84,7 @@ export default function Catalogue() {
       const res = await fetch('/api/deduct-credit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: session.user.id,
-          amount: popup.credits
-        })
+        body: JSON.stringify({ userId: session.user.id, amount: popup.credits })
       })
 
       if (!res.ok) {
@@ -121,7 +118,7 @@ export default function Catalogue() {
   if (!user) return null
 
   return (
-    <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
+    <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif', display: 'flex', flexDirection: 'column' }}>
 
       <Navbar credits={credits} onLogout={logout} activePage="catalogue" />
 
@@ -141,8 +138,7 @@ export default function Catalogue() {
       {popup && (
         <div style={{
           position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 50
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50
         }}>
           <div style={{
             background: '#0d0800', border: '1px solid rgba(201,146,42,0.35)',
@@ -184,9 +180,7 @@ export default function Catalogue() {
                   <p style={{
                     fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
                     letterSpacing: '1px', color: '#e8445a', marginTop: '8px'
-                  }}>
-                    Crédits insuffisants !
-                  </p>
+                  }}>Crédits insuffisants !</p>
                 )}
               </div>
             ) : (
@@ -201,9 +195,9 @@ export default function Catalogue() {
 
             <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
               <button onClick={() => setPopup(null)} style={{
-                padding: '12px 32px',
-                background: 'transparent', border: '1px solid rgba(201,146,42,0.3)',
-                color: '#7a6a52', fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
+                padding: '12px 32px', background: 'transparent',
+                border: '1px solid rgba(201,146,42,0.3)', color: '#7a6a52',
+                fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
                 letterSpacing: '2px', textTransform: 'uppercase', cursor: 'pointer'
               }}>Non</button>
               <button
@@ -211,9 +205,7 @@ export default function Catalogue() {
                 disabled={loading === popup.id || credits < popup.credits}
                 style={{
                   padding: '12px 32px',
-                  background: credits < popup.credits
-                    ? 'rgba(100,100,100,0.2)'
-                    : 'linear-gradient(135deg, #cc4400, #ff6b1a)',
+                  background: credits < popup.credits ? 'rgba(100,100,100,0.2)' : 'linear-gradient(135deg, #cc4400, #ff6b1a)',
                   border: 'none', color: credits < popup.credits ? '#555' : '#000',
                   fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
                   letterSpacing: '2px', textTransform: 'uppercase',
@@ -228,7 +220,8 @@ export default function Catalogue() {
         </div>
       )}
 
-      <div style={{ padding: '20px 20px' }}>
+      {/* CONTENU — flex: 1 pour pousser le footer vers le bas */}
+      <div style={{ flex: 1, padding: '20px 20px' }}>
 
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
@@ -244,10 +237,7 @@ export default function Catalogue() {
           textAlign: 'center', marginBottom: '30px'
         }}>Choisissez votre aventure</p>
 
-        <div style={{
-          display: 'flex', flexWrap: 'wrap',
-          gap: '24px', justifyContent: 'flex-start'
-        }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', justifyContent: 'flex-start' }}>
           {trames.map(trame => {
             const dejaAjoutee = forgeIds.includes(trame.id)
             const nonDisponible = !trame.disponible
@@ -257,18 +247,14 @@ export default function Catalogue() {
                 onMouseEnter={() => setHover(trame.id)}
                 onMouseLeave={() => setHover(null)}
                 style={{
-                  width: '280px', minWidth: '280px',
-                  background: '#0d0800',
+                  width: '280px', minWidth: '280px', background: '#0d0800',
                   border: hover === trame.id && !nonDisponible
-                    ? '1px solid rgba(255,107,26,0.6)'
-                    : '1px solid rgba(201,146,42,0.2)',
+                    ? '1px solid rgba(255,107,26,0.6)' : '1px solid rgba(201,146,42,0.2)',
                   transition: 'all 0.3s ease',
                   boxShadow: hover === trame.id && !nonDisponible
-                    ? '0 0 30px rgba(255,107,26,0.2)'
-                    : '0 0 10px rgba(0,0,0,0.5)',
+                    ? '0 0 30px rgba(255,107,26,0.2)' : '0 0 10px rgba(0,0,0,0.5)',
                   transform: hover === trame.id && !nonDisponible ? 'translateY(-4px)' : 'translateY(0)',
-                  position: 'relative',
-                  opacity: nonDisponible ? 0.7 : 1
+                  position: 'relative', opacity: nonDisponible ? 0.7 : 1
                 }}
               >
                 {nonDisponible && (
@@ -290,8 +276,7 @@ export default function Catalogue() {
                 )}
 
                 <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden' }}>
-                  <img
-                    src={trame.image} alt={trame.titre}
+                  <img src={trame.image} alt={trame.titre}
                     style={{
                       width: '100%', height: '100%', objectFit: 'cover',
                       transition: 'transform 0.3s ease',

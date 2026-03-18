@@ -97,7 +97,7 @@ export default function Compte() {
   if (!user) return null
 
   return (
-    <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
+    <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif', display: 'flex', flexDirection: 'column' }}>
 
       <Navbar credits={credits} onLogout={logout} activePage="compte" />
 
@@ -161,7 +161,8 @@ export default function Compte() {
         </div>
       )}
 
-      <div style={{ padding: '60px 40px' }}>
+      {/* CONTENU */}
+      <div style={{ flex: 1, padding: '60px 40px' }}>
 
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
@@ -181,7 +182,6 @@ export default function Compte() {
           display: 'grid', gridTemplateColumns: '1fr 1fr',
           gap: '32px', alignItems: 'start'
         }}>
-
           <div>
             <div style={sectionStyle}>
               <h2 style={sectionTitleStyle}>Informations personnelles</h2>
