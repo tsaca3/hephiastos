@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import jsPDF from 'jspdf'
-import Navbar from '@/app/components/Navbar'
+import Navbar, { Footer } from '@/app/components/Navbar'
 
 export default function Forge() {
   const [user, setUser] = useState(null)
@@ -49,9 +49,7 @@ export default function Forge() {
     setTimeout(() => setMessage(null), 3000)
   }
 
-  const handleForger = (trame) => {
-    setPopup(trame)
-  }
+  const handleForger = (trame) => { setPopup(trame) }
 
   const confirmerForge = async () => {
     if (!popup) return
@@ -143,7 +141,6 @@ export default function Forge() {
 
       <Navbar credits={credits} onLogout={logout} activePage="forge" />
 
-      {/* MESSAGE FEEDBACK */}
       {message && (
         <div style={{
           position: 'fixed', top: '80px', right: '40px',
@@ -157,7 +154,6 @@ export default function Forge() {
         </div>
       )}
 
-      {/* POPUP CONFIRMATION FORGE */}
       {popup && (
         <div style={{
           position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)',
@@ -225,7 +221,6 @@ export default function Forge() {
         </div>
       )}
 
-      {/* CONTENU */}
       <div style={{ padding: '60px 40px' }}>
 
         <h1 style={{
@@ -242,7 +237,6 @@ export default function Forge() {
           textAlign: 'center', marginBottom: '60px'
         }}>Forge de {pseudo}</p>
 
-        {/* SECTION 1 : MES TRAMES */}
         <div style={{
           borderBottom: '1px solid rgba(201,146,42,0.2)',
           paddingBottom: '60px', marginBottom: '60px'
@@ -282,9 +276,7 @@ export default function Forge() {
                   onMouseLeave={() => setHover(null)}
                   style={{
                     width: '280px', background: '#0d0800',
-                    border: hover === trame.id
-                      ? '1px solid rgba(255,107,26,0.6)'
-                      : '1px solid rgba(201,146,42,0.2)',
+                    border: hover === trame.id ? '1px solid rgba(255,107,26,0.6)' : '1px solid rgba(201,146,42,0.2)',
                     transition: 'all 0.3s ease',
                     boxShadow: hover === trame.id ? '0 0 30px rgba(255,107,26,0.2)' : 'none',
                     transform: hover === trame.id ? 'translateY(-4px)' : 'translateY(0)'
@@ -303,14 +295,10 @@ export default function Forge() {
                       }}>Ajoutée le {formatDate(trame.added_at)}</p>
                     </div>
                     {trame.image && (
-                      <img
-                        src={trame.image}
-                        alt={trame.trame_titre}
+                      <img src={trame.image} alt={trame.trame_titre}
                         style={{
-                          width: '80px', height: '80px',
-                          objectFit: 'cover',
-                          border: '1px solid rgba(201,146,42,0.3)',
-                          flexShrink: 0
+                          width: '80px', height: '80px', objectFit: 'cover',
+                          border: '1px solid rgba(201,146,42,0.3)', flexShrink: 0
                         }}
                       />
                     )}
@@ -328,19 +316,15 @@ export default function Forge() {
                     }}>
                       1 <img src="/diamond.png" alt="crédit" style={{ height: '14px', objectFit: 'contain' }} />
                     </span>
-                    <button
-                      onClick={() => handleForger(trame)}
-                      style={{
-                        padding: '8px 20px',
-                        background: hover === trame.id
-                          ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
-                          : 'transparent',
-                        border: '1px solid rgba(201,146,42,0.3)',
-                        color: hover === trame.id ? '#000' : '#c9922a',
-                        fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
-                        letterSpacing: '2px', textTransform: 'uppercase',
-                        cursor: 'pointer', fontWeight: 700, transition: 'all 0.3s ease'
-                      }}>
+                    <button onClick={() => handleForger(trame)} style={{
+                      padding: '8px 20px',
+                      background: hover === trame.id ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'transparent',
+                      border: '1px solid rgba(201,146,42,0.3)',
+                      color: hover === trame.id ? '#000' : '#c9922a',
+                      fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
+                      letterSpacing: '2px', textTransform: 'uppercase',
+                      cursor: 'pointer', fontWeight: 700, transition: 'all 0.3s ease'
+                    }}>
                       ⚒ Forger
                     </button>
                   </div>
@@ -350,7 +334,6 @@ export default function Forge() {
           )}
         </div>
 
-        {/* SECTION 2 : MES HISTOIRES */}
         <div>
           <h2 style={{
             fontFamily: 'Cinzel, serif', fontSize: '1.1rem', letterSpacing: '3px',
@@ -380,12 +363,9 @@ export default function Forge() {
                   onMouseLeave={() => setHover(null)}
                   style={{
                     background: '#0d0800',
-                    border: hover === `story-${story.id}`
-                      ? '1px solid rgba(255,107,26,0.4)'
-                      : '1px solid rgba(201,146,42,0.15)',
+                    border: hover === `story-${story.id}` ? '1px solid rgba(255,107,26,0.4)' : '1px solid rgba(201,146,42,0.15)',
                     padding: '20px 24px',
-                    display: 'flex', alignItems: 'center',
-                    justifyContent: 'space-between',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     transition: 'all 0.3s ease'
                   }}
                 >
@@ -418,9 +398,7 @@ export default function Forge() {
                     onClick={() => telechargerPDF(story)}
                     style={{
                       padding: '10px 24px',
-                      background: hover === `story-${story.id}`
-                        ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
-                        : 'transparent',
+                      background: hover === `story-${story.id}` ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'transparent',
                       border: '1px solid rgba(201,146,42,0.3)',
                       color: hover === `story-${story.id}` ? '#000' : '#c9922a',
                       fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
@@ -436,6 +414,8 @@ export default function Forge() {
           )}
         </div>
       </div>
+
+      <Footer />
     </div>
   )
 }

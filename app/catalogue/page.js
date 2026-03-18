@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
-import Navbar from '@/app/components/Navbar'
+import Navbar, { Footer } from '@/app/components/Navbar'
 
 const TRAMES_FILES = [
   '/trames/trame-1.json',
@@ -125,7 +125,6 @@ export default function Catalogue() {
 
       <Navbar credits={credits} onLogout={logout} activePage="catalogue" />
 
-      {/* MESSAGE FEEDBACK */}
       {message && (
         <div style={{
           position: 'fixed', top: '80px', right: '40px',
@@ -139,7 +138,6 @@ export default function Catalogue() {
         </div>
       )}
 
-      {/* POPUP CONFIRMATION */}
       {popup && (
         <div style={{
           position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)',
@@ -230,7 +228,6 @@ export default function Catalogue() {
         </div>
       )}
 
-      {/* CONTENU */}
       <div style={{ padding: '20px 20px' }}>
 
         <h1 style={{
@@ -247,12 +244,9 @@ export default function Catalogue() {
           textAlign: 'center', marginBottom: '30px'
         }}>Choisissez votre aventure</p>
 
-        {/* GRILLE */}
         <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '24px',
-          justifyContent: 'flex-start'
+          display: 'flex', flexWrap: 'wrap',
+          gap: '24px', justifyContent: 'flex-start'
         }}>
           {trames.map(trame => {
             const dejaAjoutee = forgeIds.includes(trame.id)
@@ -263,8 +257,7 @@ export default function Catalogue() {
                 onMouseEnter={() => setHover(trame.id)}
                 onMouseLeave={() => setHover(null)}
                 style={{
-                  width: '280px',
-                  minWidth: '280px',
+                  width: '280px', minWidth: '280px',
                   background: '#0d0800',
                   border: hover === trame.id && !nonDisponible
                     ? '1px solid rgba(255,107,26,0.6)'
@@ -278,33 +271,27 @@ export default function Catalogue() {
                   opacity: nonDisponible ? 0.7 : 1
                 }}
               >
-                {/* BADGE BIENTÔT DISPONIBLE */}
                 {nonDisponible && (
                   <div style={{
                     position: 'absolute', top: '12px', right: '12px', zIndex: 2,
                     background: 'rgba(0,0,0,0.85)', border: '1px solid rgba(201,146,42,0.4)',
-                    padding: '4px 10px',
-                    fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
+                    padding: '4px 10px', fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
                     letterSpacing: '1px', textTransform: 'uppercase', color: '#e8b84b'
                   }}>✦ Bientôt disponible</div>
                 )}
 
-                {/* BADGE DÉJÀ DANS LA FORGE */}
                 {dejaAjoutee && !nonDisponible && (
                   <div style={{
                     position: 'absolute', top: '12px', right: '12px', zIndex: 2,
                     background: 'rgba(0,0,0,0.85)', border: '1px solid rgba(255,107,26,0.4)',
-                    padding: '4px 10px',
-                    fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
+                    padding: '4px 10px', fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
                     letterSpacing: '1px', textTransform: 'uppercase', color: '#ff6b1a'
                   }}>⚒ Dans votre forge</div>
                 )}
 
-                {/* IMAGE CARRÉE */}
                 <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden' }}>
                   <img
-                    src={trame.image}
-                    alt={trame.titre}
+                    src={trame.image} alt={trame.titre}
                     style={{
                       width: '100%', height: '100%', objectFit: 'cover',
                       transition: 'transform 0.3s ease',
@@ -314,9 +301,7 @@ export default function Catalogue() {
                   />
                 </div>
 
-                {/* INFOS */}
                 <div style={{ padding: '20px', textAlign: 'center' }}>
-
                   <span style={{
                     fontFamily: 'Cinzel, serif', fontSize: '0.75rem', letterSpacing: '2px',
                     textTransform: 'uppercase', color: '#ff6b1a',
@@ -353,10 +338,7 @@ export default function Catalogue() {
                       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
                     }}>
                       {trame.credits === 0 ? 'Gratuite' : (
-                        <>
-                          {trame.credits}
-                          <img src="/diamond.png" alt="crédits" style={{ height: '22px', width: '22px', objectFit: 'contain' }} />
-                        </>
+                        <>{trame.credits}<img src="/diamond.png" alt="crédits" style={{ height: '22px', width: '22px', objectFit: 'contain' }} /></>
                       )}
                     </span>
                   </div>
@@ -366,11 +348,8 @@ export default function Catalogue() {
                     disabled={dejaAjoutee || nonDisponible}
                     style={{
                       width: '100%', padding: '12px',
-                      background: dejaAjoutee || nonDisponible
-                        ? 'transparent'
-                        : hover === trame.id
-                          ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
-                          : 'transparent',
+                      background: dejaAjoutee || nonDisponible ? 'transparent'
+                        : hover === trame.id ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'transparent',
                       border: `1px solid ${dejaAjoutee || nonDisponible ? 'rgba(100,100,100,0.3)' : 'rgba(201,146,42,0.3)'}`,
                       color: dejaAjoutee || nonDisponible ? '#555' : hover === trame.id ? '#000' : '#c9922a',
                       fontFamily: 'Cinzel, serif', fontSize: '0.85rem',
@@ -383,13 +362,14 @@ export default function Catalogue() {
                   >
                     {dejaAjoutee ? '⚒ Dans la forge' : nonDisponible ? '✦ Bientôt disponible' : '⚒ Ajouter à ma forge'}
                   </button>
-
                 </div>
               </div>
             )
           })}
         </div>
       </div>
+
+      <Footer />
     </div>
   )
 }

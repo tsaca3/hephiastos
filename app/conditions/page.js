@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
-import Navbar from '@/app/components/Navbar'
+import Navbar, { Footer } from '@/app/components/Navbar'
 
 export default function Conditions() {
   const [user, setUser] = useState(null)
@@ -42,7 +42,6 @@ export default function Conditions() {
 
       <Navbar credits={credits} onLogout={logout} activePage="conditions" />
 
-      {/* CONTENU */}
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '60px 40px' }}>
 
         <h1 style={{
@@ -188,6 +187,8 @@ export default function Conditions() {
         </p>
 
       </div>
+
+      <Footer />
     </div>
   )
 }

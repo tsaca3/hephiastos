@@ -2,7 +2,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import Navbar from '@/app/components/Navbar'
+import Navbar, { Footer } from '@/app/components/Navbar'
 
 const PACKS = [
   { id: 'price_1T8jf6Czapu2pX6hOplp2eN4', credits: 10, price: '5', pricePerCredit: '0.50', image: '/packs/pack-10.png', nom: 'Pack 10 crédits de forge' },
@@ -55,10 +55,8 @@ function CreditsContent() {
 
       <Navbar credits={userCredits} onLogout={logout} activePage="credits" />
 
-      {/* CONTENU */}
       <div style={{ padding: '60px 80px' }}>
 
-        {/* MESSAGES */}
         {searchParams.get('success') && (
           <div style={{
             background: 'rgba(126,200,126,0.1)', border: '1px solid rgba(126,200,126,0.3)',
@@ -90,7 +88,6 @@ function CreditsContent() {
           </div>
         )}
 
-        {/* TITRE */}
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
           fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
@@ -105,7 +102,6 @@ function CreditsContent() {
           textAlign: 'center', marginBottom: '40px'
         }}>Echanger vos piécettes en Crédits de forge - Choisissez votre pack</p>
 
-        {/* CASE À COCHER */}
         <div style={{
           maxWidth: '1200px', margin: '0 auto 40px',
           padding: '20px 24px',
@@ -139,7 +135,6 @@ function CreditsContent() {
           </label>
         </div>
 
-        {/* GRILLE PACKS */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(4, 1fr)',
@@ -167,8 +162,7 @@ function CreditsContent() {
             >
               <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden' }}>
                 <img
-                  src={pack.image}
-                  alt={pack.nom}
+                  src={pack.image} alt={pack.nom}
                   style={{
                     width: '100%', height: '100%', objectFit: 'cover',
                     transition: 'transform 0.3s ease',
@@ -214,11 +208,8 @@ function CreditsContent() {
                   disabled={loading === pack.id || !accepted}
                   style={{
                     width: '100%', padding: '12px',
-                    background: !accepted
-                      ? 'transparent'
-                      : hover === pack.id
-                        ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
-                        : 'transparent',
+                    background: !accepted ? 'transparent'
+                      : hover === pack.id ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'transparent',
                     border: '1px solid rgba(201,146,42,0.3)',
                     color: !accepted ? '#555' : hover === pack.id ? '#000' : '#c9922a',
                     fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
@@ -243,6 +234,8 @@ function CreditsContent() {
         </p>
 
       </div>
+
+      <Footer />
     </div>
   )
 }

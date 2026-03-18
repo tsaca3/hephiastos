@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
-import Navbar from '@/app/components/Navbar'
+import Navbar, { Footer } from '@/app/components/Navbar'
 
 export default function Compte() {
   const [user, setUser] = useState(null)
@@ -101,7 +101,6 @@ export default function Compte() {
 
       <Navbar credits={credits} onLogout={logout} activePage="compte" />
 
-      {/* MESSAGE FEEDBACK */}
       {message && (
         <div style={{
           position: 'fixed', top: '80px', right: '40px',
@@ -115,7 +114,6 @@ export default function Compte() {
         </div>
       )}
 
-      {/* POPUP SUPPRESSION */}
       {popupSupprimer && (
         <div style={{
           position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)',
@@ -163,7 +161,6 @@ export default function Compte() {
         </div>
       )}
 
-      {/* CONTENU */}
       <div style={{ padding: '60px 40px' }}>
 
         <h1 style={{
@@ -180,15 +177,11 @@ export default function Compte() {
           textAlign: 'center', marginBottom: '60px'
         }}>Forgeron de légende</p>
 
-        {/* MOSAÏQUE 2 COLONNES */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '32px',
-          alignItems: 'start'
+          display: 'grid', gridTemplateColumns: '1fr 1fr',
+          gap: '32px', alignItems: 'start'
         }}>
 
-          {/* COLONNE GAUCHE */}
           <div>
             <div style={sectionStyle}>
               <h2 style={sectionTitleStyle}>Informations personnelles</h2>
@@ -200,16 +193,8 @@ export default function Compte() {
               <p style={{ ...valueStyle, marginBottom: '0' }}>{dateInscription}</p>
             </div>
 
-            <div style={{
-              ...sectionStyle,
-              border: '1px solid rgba(232,68,90,0.2)',
-              marginBottom: '0'
-            }}>
-              <h2 style={{
-                ...sectionTitleStyle,
-                color: '#e8445a',
-                borderBottom: '1px solid rgba(232,68,90,0.15)'
-              }}>Zone de danger</h2>
+            <div style={{ ...sectionStyle, border: '1px solid rgba(232,68,90,0.2)', marginBottom: '0' }}>
+              <h2 style={{ ...sectionTitleStyle, color: '#e8445a', borderBottom: '1px solid rgba(232,68,90,0.15)' }}>Zone de danger</h2>
               <p style={{
                 fontFamily: 'Crimson Text, serif', fontSize: '1rem',
                 color: '#7a6a52', fontStyle: 'italic', marginBottom: '20px'
@@ -222,9 +207,7 @@ export default function Compte() {
                 onMouseLeave={() => setHover(null)}
                 style={{
                   padding: '12px 32px',
-                  background: hover === 'supprimer'
-                    ? 'linear-gradient(135deg, #8b0000, #e8445a)'
-                    : 'transparent',
+                  background: hover === 'supprimer' ? 'linear-gradient(135deg, #8b0000, #e8445a)' : 'transparent',
                   border: '1px solid rgba(232,68,90,0.3)',
                   color: hover === 'supprimer' ? '#fff' : '#e8445a',
                   fontFamily: 'Cinzel, serif', fontSize: '0.8rem',
@@ -236,7 +219,6 @@ export default function Compte() {
             </div>
           </div>
 
-          {/* COLONNE DROITE */}
           <div>
             <div style={sectionStyle}>
               <h2 style={sectionTitleStyle}>Sécurité</h2>
@@ -252,9 +234,7 @@ export default function Compte() {
                 onMouseLeave={() => setHover(null)}
                 style={{
                   padding: '12px 32px',
-                  background: hover === 'reset'
-                    ? 'linear-gradient(135deg, #cc4400, #ff6b1a)'
-                    : 'transparent',
+                  background: hover === 'reset' ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'transparent',
                   border: '1px solid rgba(201,146,42,0.3)',
                   color: hover === 'reset' ? '#000' : '#c9922a',
                   fontFamily: 'Cinzel, serif', fontSize: '0.8rem',
@@ -294,6 +274,8 @@ export default function Compte() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   )
 }
