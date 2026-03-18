@@ -37,7 +37,7 @@ export default function Home() {
       <Navbar credits={credits} onLogout={logout} activePage="home" />
 
       {/* HERO */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 66px)', padding: '40px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 66px)', paddingTop: '24px', padding: '24px 40px 40px' }}>
         <img src="/logo.png" alt="HéphIAstos" style={{ width: 'min(360px, 90vw)', marginBottom: '40px', filter: 'drop-shadow(0 0 40px rgba(255,107,26,0.4))' }} />
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
