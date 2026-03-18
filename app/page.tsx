@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
-import Navbar from '@/app/components/Navbar'
+import Navbar, { Footer } from '@/app/components/Navbar'
 
 export default function Home() {
   const [user, setUser] = useState<any>(null)
@@ -59,6 +59,8 @@ export default function Home() {
           boxShadow: '0 4px 20px rgba(255,107,26,0.4)'
         }}>⚒ Choisir une trame</button>
       </div>
+
+      <Footer />
     </div>
   )
 }
