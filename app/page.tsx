@@ -32,12 +32,12 @@ export default function Home() {
   if (!user) return null
 
   return (
-    <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
+    <div style={{ background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
 
       <Navbar credits={credits} onLogout={logout} activePage="home" />
 
       {/* HERO */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', padding: '24px 40px 40px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 40px 40px' }}>
         <img src="/logo.png" alt="HéphIAstos" style={{ width: 'min(360px, 90vw)', marginBottom: '40px', filter: 'drop-shadow(0 0 40px rgba(255,107,26,0.4))' }} />
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
