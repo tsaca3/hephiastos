@@ -101,7 +101,8 @@ export default function Catalogue() {
       user_id: session.user.id,
       trame_id: popup.id,
       trame_titre: popup.titre,
-      pseudo: pseudo
+      pseudo: pseudo,
+      image: popup.image  // ← correction
     })
 
     if (error) {
@@ -220,7 +221,6 @@ export default function Catalogue() {
         </div>
       )}
 
-      {/* CONTENU — flex: 1 pour pousser le footer vers le bas */}
       <div style={{ flex: 1, padding: '20px 20px' }}>
 
         <h1 style={{
