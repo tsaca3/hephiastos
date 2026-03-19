@@ -12,7 +12,7 @@ export function Footer() {
     }}>
 
       {/* INSTAGRAM */}
-      <a href="https://www.instagram.com/hephiastos" target="_blank" rel="noopener noreferrer"
+      <a href="https://www.instagram.com/hephiastos.store" target="_blank" rel="noopener noreferrer"
         style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
           width: '40px', height: '40px', background: 'rgba(0,0,0,0.15)',
           borderRadius: '50%', cursor: 'pointer', transition: 'background 0.3s ease', textDecoration: 'none' }}
@@ -25,7 +25,7 @@ export function Footer() {
       </a>
 
       {/* TIKTOK */}
-      <a href="https://www.tiktok.com/@hephiastos" target="_blank" rel="noopener noreferrer"
+      <a href="https://www.tiktok.com/@hephiastos.store" target="_blank" rel="noopener noreferrer"
         style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
           width: '40px', height: '40px', background: 'rgba(0,0,0,0.15)',
           borderRadius: '50%', cursor: 'pointer', transition: 'background 0.3s ease', textDecoration: 'none' }}
