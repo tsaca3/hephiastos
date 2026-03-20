@@ -51,7 +51,7 @@ export default function AuthPage() {
       await supabase.from('profiles').upsert({
         id: data.user.id,
         username: pseudo.trim(),
-        credits: 100
+        credits: 3
       })
     }
     setSuccess('Compte créé ! Vérifiez votre email pour confirmer votre inscription.')
