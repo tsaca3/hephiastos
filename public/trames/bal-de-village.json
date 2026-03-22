@@ -1,0 +1,121 @@
+{
+  "trame_id": "bal-de-village",
+  "titre": "Bal de Village",
+  "description": "Une nuit de bal médiéval. Un jeune homme. Une seule chance.",
+  "gratuite": true,
+  "cout_credits": 1,
+  "score_max": 20,
+
+  "personnages": {
+    "protagoniste": "Erwan",
+    "heroine": "Alienor",
+    "rival": "Garin"
+  },
+
+  "fins": [
+    { "id": "heureuse", "seuil_min": 16, "seuil_max": 20, "titre": "L'aurore à deux" },
+    { "id": "neutre",   "seuil_min": 10, "seuil_max": 15, "titre": "Le souvenir du bal" },
+    { "id": "triste",   "seuil_min": 0,  "seuil_max": 9,  "titre": "Le bal des autres" }
+  ],
+
+  "prompt_systeme": "Tu es le narrateur d'une histoire de romance médiévale intitulée \"Bal de Village\".\n\nCONTEXTE FIXE :\n- L'histoire se déroule lors d'un bal de village à l'époque médiévale, dans le village de Valdecour.\n- Le protagoniste s'appelle Erwan, jeune homme du peuple, sincère et maladroit.\n- L'héroïne s'appelle Alienor, fille du meunier, vive et indépendante.\n- Le rival s'appelle Garin, fils du bailli, arrogant et bien mis.\n- Le ton est romantique, chaleureux, légèrement poétique — jamais vulgaire, jamais violent.\n- Le registre est celui d'un roman historique grand public, accessible et immersif.\n\nTON RÔLE :\nTu génères le texte narratif d'un chapitre en tenant compte du choix que le joueur vient de faire au chapitre précédent. Ce texte ouvre le nouveau chapitre avant que le joueur fasse son prochain choix.\n\nRÈGLES :\n- Environ 100 à 200 mots. Cette fourchette est indicative : l'important est que le texte soit naturel et cohérent. Ne jamais couper une idée pour respecter une limite, ne jamais allonger artificiellement pour l'atteindre.\n- Toujours écrire à la deuxième personne du singulier (\"tu\", \"ton\", \"ta\").\n- Le texte doit refléter la conséquence narrative du choix précédent :\n    * Si le choix était courageux/romantique (2 points) : l'ambiance est favorable, Alienor réagit positivement, le moment est prometteur.\n    * Si le choix était prudent/neutre (1 point) : l'ambiance est correcte mais hésitante, une légère opportunité reste ouverte.\n    * Si le choix était maladroit/fuyant (0 point) : l'ambiance est légèrement tendue ou embarrassée, Erwan sent qu'il a laissé passer quelque chose.\n- Ne jamais révéler le score ni mentionner de mécanique de jeu.\n- Ne jamais conclure l'histoire avant le chapitre 10.\n- Terminer chaque texte sur une phrase qui crée de l'attente pour la suite, sans révéler les choix à venir.\n- Respecter la continuité narrative avec les chapitres précédents.\n\nSI C'EST LE CHAPITRE 1 :\nTu génères une scène d'ouverture qui plante le décor du bal et présente Erwan arrivant à Valdecour. Ce texte d'ouverture ne dépend d'aucun choix précédent. Il doit donner envie de jouer. Environ 100 à 200 mots, de manière indicative.\n\nSI C'EST LE CHAPITRE 10 (dernier chapitre) :\nTu génères le texte de fin correspondant à la fin déclenchée. Le texte de fin fait environ 150 à 250 mots, de manière indicative. Il conclut l'histoire avec émotion et ne laisse aucune question ouverte.\n\nFORMAT DE RÉPONSE :\nTexte narratif uniquement. Aucun titre, aucun label, aucune métadonnée. Juste le texte de l'histoire, prêt à afficher directement à l'utilisateur.",
+
+  "chapitres_data": [
+    {
+      "id": 1,
+      "titre": "L'arrivée au bal",
+      "context": "Le soleil se couche sur Valdecour. Les torches s'allument une à une autour de l'aire de danse. Erwan aperçoit Alienor de loin, riant avec ses amies. Son cœur s'emballe.",
+      "choices": [
+        { "text": "S'approcher d'elle directement, sourire aux lèvres", "pts": 2 },
+        { "text": "Rester en retrait et observer le bal d'abord", "pts": 1 },
+        { "text": "Aller chercher une chope de cidre pour se donner une contenance", "pts": 0 }
+      ]
+    },
+    {
+      "id": 2,
+      "titre": "Le premier regard",
+      "context": "Leurs yeux se croisent une fraction de seconde. Alienor ne détourne pas le regard immédiatement.",
+      "choices": [
+        { "text": "Soutenir son regard et lui adresser un signe de tête", "pts": 2 },
+        { "text": "Sourire timidement puis regarder ailleurs", "pts": 1 },
+        { "text": "Détourner les yeux aussitôt, embarrassé", "pts": 0 }
+      ]
+    },
+    {
+      "id": 3,
+      "titre": "L'invitation à danser",
+      "context": "La musique s'accélère. Garin se dirige déjà vers Alienor. C'est maintenant ou jamais.",
+      "choices": [
+        { "text": "Fendre la foule et lui tendre la main avant Garin", "pts": 2 },
+        { "text": "Attendre que Garin essuie un refus d'abord", "pts": 1 },
+        { "text": "Laisser Garin l'inviter, renoncer pour ce tour", "pts": 0 }
+      ]
+    },
+    {
+      "id": 4,
+      "titre": "La danse",
+      "context": "Alienor a accepté. Vos mains se touchent. La foule tourne autour de vous.",
+      "choices": [
+        { "text": "Lui parler avec sincérité, lui dire que c'est la plus belle du bal", "pts": 2 },
+        { "text": "Danser sans parler, juste sourire", "pts": 1 },
+        { "text": "Trébucher et s'excuser maladroitement", "pts": 0 }
+      ]
+    },
+    {
+      "id": 5,
+      "titre": "L'interruption de Garin",
+      "context": "Garin s'impose entre vous deux, plaisantant sur les origines modestes d'Erwan devant Alienor.",
+      "choices": [
+        { "text": "Répondre calmement avec dignité, sans hausser le ton", "pts": 2 },
+        { "text": "Ignorer Garin et parler uniquement à Alienor", "pts": 1 },
+        { "text": "S'éloigner pour éviter la confrontation", "pts": 0 }
+      ]
+    },
+    {
+      "id": 6,
+      "titre": "Le moment seul",
+      "context": "La musique ralentit. Alienor entraîne Erwan à l'écart de la foule, près du vieux chêne.",
+      "choices": [
+        { "text": "Lui confier un souvenir d'enfance lié à ce chêne", "pts": 2 },
+        { "text": "Lui poser une question sur elle, l'écouter parler", "pts": 1 },
+        { "text": "Rester silencieux, ne pas savoir quoi dire", "pts": 0 }
+      ]
+    },
+    {
+      "id": 7,
+      "titre": "Le père d'Alienor",
+      "context": "Le meunier observe la scène de loin. Il appelle sa fille du regard.",
+      "choices": [
+        { "text": "S'approcher du père, se présenter honnêtement", "pts": 2 },
+        { "text": "Laisser Alienor décider seule si elle rejoint son père", "pts": 1 },
+        { "text": "S'éclipser discrètement pour éviter la confrontation", "pts": 0 }
+      ]
+    },
+    {
+      "id": 8,
+      "titre": "La confidence d'Alienor",
+      "context": "Alienor te glisse qu'elle doit partir avant minuit — son père l'exige. Il reste peu de temps.",
+      "choices": [
+        { "text": "Lui dire franchement ce qu'on ressent avant qu'elle parte", "pts": 2 },
+        { "text": "Lui demander si on peut se revoir demain", "pts": 1 },
+        { "text": "Ne rien dire, juste hocher la tête", "pts": 0 }
+      ]
+    },
+    {
+      "id": 9,
+      "titre": "La dernière danse",
+      "context": "La cloche sonne. Une dernière musique s'élève. Alienor hésite, son châle à la main.",
+      "choices": [
+        { "text": "Lui tendre la main sans un mot pour cette ultime danse", "pts": 2 },
+        { "text": "Lui proposer de marcher un instant dehors avant qu'elle parte", "pts": 1 },
+        { "text": "La laisser partir sans rien faire", "pts": 0 }
+      ]
+    },
+    {
+      "id": 10,
+      "titre": "L'aube",
+      "context": "Le bal s'achève. Les torches s'éteignent une à une. Erwan se retrouve seul face à la nuit qui pâlit.",
+      "choices": []
+    }
+  ]
+}

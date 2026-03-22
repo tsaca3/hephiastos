@@ -4,6 +4,19 @@ import { supabase } from '@/lib/supabase'
 import { useRouter, useParams } from 'next/navigation'
 import Navbar from '@/app/components/Navbar'
 
+function shuffle(arr) {
+  const a = [...arr]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
+function getFin(fins, score) {
+  return fins?.find(f => score >= f.seuil_min && score <= f.seuil_max) || null
+}
+
 export default function Generer() {
   const [user, setUser] = useState(null)
   const [credits, setCredits] = useState(0)
@@ -16,6 +29,7 @@ export default function Generer() {
   const [score, setScore] = useState(0)
   const [generating, setGenerating] = useState(false)
   const [finished, setFinished] = useState(false)
+  const [finData, setFinData] = useState(null)
   const [hover, setHover] = useState(null)
   const [message, setMessage] = useState(null)
   const [storyId, setStoryId] = useState(null)
@@ -36,7 +50,11 @@ export default function Generer() {
       .then(data => {
         if (data) {
           setTrame(data)
-          setChoices(data.chapitres_data[0].choices)
+          // Shuffle les choix du premier chapitre dès le chargement
+          const firstChoices = data.chapitres_data[0]?.choices || []
+          setChoices(shuffle(firstChoices))
+          // Générer le texte d'ouverture du chapitre 1
+          generateChapter(0, null, 0, 0, data.chapitres_data.length, data.prompt_systeme)
         } else {
           router.push('/forge')
         }
@@ -49,40 +67,61 @@ export default function Generer() {
     setTimeout(() => setMessage(null), 3000)
   }
 
+  const generateChapter = async (chapIdx, choiceText, choicePts, currentScore, totalChapters, promptSysteme) => {
+    setGenerating(true)
+    try {
+      const res = await fetch('/api/generer-chapitre', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chapterIndex: chapIdx,
+          choiceText,
+          choicePts,
+          score: currentScore,
+          totalChapters,
+          promptSysteme
+        })
+      })
+      const data = await res.json()
+      setChapterText(data.text || '')
+      return data.text || ''
+    } catch (e) {
+      showMessage('Erreur lors de la génération.', 'error')
+      return ''
+    } finally {
+      setGenerating(false)
+    }
+  }
+
   const handleChoice = async (choiceIndex) => {
     if (generating) return
     setGenerating(true)
 
-    const choice = trame.chapitres_data[chapterIndex].choices[choiceIndex]
+    const choice = choices[choiceIndex]
     const newScore = score + (choice.pts || 0)
     const newPreviousChoices = [...previousChoices, choice.text]
+    const nextChapterIndex = chapterIndex + 1
+    const isLast = nextChapterIndex === trame.chapitres_data.length
 
     try {
       const { data: { session } } = await supabase.auth.getSession()
 
-      const genRes = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chapterIndex,
-          choiceIndex,
-          previousChoices: newPreviousChoices,
-          score: newScore,
-          trameId: trame.titre,
-          context: trame.chapitres_data[chapterIndex].context,
-          choiceText: choice.text,
-          totalChapters: trame.chapitres_data.length
-        })
-      })
-      const genData = await genRes.json()
-      const text = genData.text || ''
+      // Générer le texte du chapitre suivant (ou de la fin)
+      const text = await generateChapter(
+        nextChapterIndex,
+        choice.text,
+        choice.pts || 0,
+        newScore,
+        trame.chapitres_data.length,
+        trame.prompt_systeme
+      )
 
       const newChapterTexts = [...chapterTexts, text]
-      setChapterText(text)
       setChapterTexts(newChapterTexts)
       setScore(newScore)
       setPreviousChoices(newPreviousChoices)
 
+      // Sauvegarder
       const saveRes = await fetch('/api/save-story', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -90,31 +129,29 @@ export default function Generer() {
           userId: session.user.id,
           trame: trame.titre,
           score: newScore,
-          outcome: '',
+          outcome: isLast ? getFin(trame.fins, newScore)?.titre || '' : '',
           chapters: newPreviousChoices,
           chapterTexts: newChapterTexts,
-          storyId: storyId
+          storyId
         })
       })
       const saveData = await saveRes.json()
+      if (!storyId && saveData.storyId) setStoryId(saveData.storyId)
 
-      if (!storyId && saveData.storyId) {
-        setStoryId(saveData.storyId)
-      }
-
-      const isLast = chapterIndex === trame.chapitres_data.length - 1
       if (isLast) {
+        setFinData(getFin(trame.fins, newScore))
         setFinished(true)
       } else {
-        setChapterIndex(prev => prev + 1)
-        setChoices(trame.chapitres_data[chapterIndex + 1].choices)
+        setChapterIndex(nextChapterIndex)
+        // Shuffle les choix du prochain chapitre
+        const nextChoices = trame.chapitres_data[nextChapterIndex]?.choices || []
+        setChoices(shuffle(nextChoices))
       }
 
     } catch (e) {
       showMessage('Erreur lors de la génération.', 'error')
+      setGenerating(false)
     }
-
-    setGenerating(false)
   }
 
   const logout = async () => {
@@ -145,10 +182,9 @@ export default function Generer() {
         </div>
       )}
 
-      {/* CONTENU */}
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 40px' }}>
 
-        {/* TITRE TRAME */}
+        {/* TITRE */}
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
           fontSize: 'clamp(1.5rem, 3vw, 2.2rem)',
@@ -171,16 +207,10 @@ export default function Generer() {
                 width: isCurrent ? '20px' : '12px',
                 height: isCurrent ? '20px' : '12px',
                 borderRadius: '50%',
-                background: isDone || finished
-                  ? '#ff6b1a'
-                  : isCurrent
-                    ? '#e8b84b'
-                    : 'transparent',
+                background: isDone || finished ? '#ff6b1a' : isCurrent ? '#e8b84b' : 'transparent',
                 border: isUpcoming
                   ? '2px solid rgba(201,146,42,0.3)'
-                  : isCurrent
-                    ? '2px solid #e8b84b'
-                    : 'none',
+                  : isCurrent ? '2px solid #e8b84b' : 'none',
                 transition: 'all 0.3s ease',
                 boxShadow: isCurrent ? '0 0 10px rgba(232,184,75,0.5)' : 'none'
               }} />
@@ -208,8 +238,15 @@ export default function Generer() {
             <p style={{ fontSize: '2rem', marginBottom: '16px' }}>⚒</p>
             <h2 style={{
               fontFamily: 'Cinzel Decorative, serif', fontSize: '1.4rem',
-              color: '#e8b84b', marginBottom: '16px'
+              color: '#e8b84b', marginBottom: '8px'
             }}>Histoire forgée !</h2>
+            {finData && (
+              <p style={{
+                fontFamily: 'Cinzel, serif', fontSize: '0.8rem',
+                color: '#ff6b1a', letterSpacing: '2px', textTransform: 'uppercase',
+                marginBottom: '24px'
+              }}>{finData.titre}</p>
+            )}
             <p style={{
               fontFamily: 'Crimson Text, serif', fontSize: '1.15rem',
               color: '#a89880', fontStyle: 'italic', marginBottom: '8px', lineHeight: '1.6'
@@ -230,8 +267,7 @@ export default function Generer() {
                 boxShadow: '0 4px 20px rgba(255,107,26,0.4)'
               }}>⚒ Ma Forge</button>
               <button onClick={() => router.push('/catalogue')} style={{
-                padding: '14px 32px',
-                background: 'transparent',
+                padding: '14px 32px', background: 'transparent',
                 border: '1px solid rgba(201,146,42,0.3)', color: '#c9922a',
                 fontFamily: 'Cinzel, serif', fontSize: '0.8rem',
                 letterSpacing: '3px', textTransform: 'uppercase',
@@ -247,25 +283,26 @@ export default function Generer() {
 
             {/* CONTEXTE */}
             <div style={{
-              background: '#0d0800',
-              border: '1px solid rgba(201,146,42,0.2)',
+              background: '#0d0800', border: '1px solid rgba(201,146,42,0.2)',
               padding: '32px', marginBottom: '24px'
             }}>
               <p style={{
                 fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
                 letterSpacing: '2px', textTransform: 'uppercase',
                 color: '#ff6b1a', marginBottom: '16px'
-              }}>Contexte</p>
+              }}>
+                {trame.chapitres_data[chapterIndex]?.titre || `Chapitre ${chapterIndex + 1}`}
+              </p>
               <p style={{
                 fontFamily: 'Crimson Text, serif', fontSize: '1.2rem',
                 color: '#e8dcc8', lineHeight: '1.8', fontStyle: 'italic'
               }}>
-                {trame.chapitres_data[chapterIndex].context}
+                {trame.chapitres_data[chapterIndex]?.context}
               </p>
             </div>
 
             {/* TEXTE GÉNÉRÉ */}
-            {chapterText && (
+            {chapterText && !generating && (
               <div style={{
                 background: 'rgba(255,107,26,0.03)',
                 border: '1px solid rgba(255,107,26,0.15)',
@@ -275,7 +312,7 @@ export default function Generer() {
                   fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
                   letterSpacing: '2px', textTransform: 'uppercase',
                   color: '#ff6b1a', marginBottom: '16px'
-                }}>Votre histoire</p>
+                }}>L'histoire</p>
                 <p style={{
                   fontFamily: 'Crimson Text, serif', fontSize: '1.2rem',
                   color: '#e8dcc8', lineHeight: '1.8'
@@ -299,7 +336,7 @@ export default function Generer() {
             )}
 
             {/* CHOIX */}
-            {!generating && (
+            {!generating && choices.length > 0 && (
               <div>
                 <p style={{
                   fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
@@ -308,7 +345,6 @@ export default function Generer() {
                 }}>
                   {chapterText ? 'Que faites-vous ensuite ?' : 'Choisissez votre action'}
                 </p>
-
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {choices.map((choice, i) => (
                     <button
@@ -328,10 +364,6 @@ export default function Generer() {
                         lineHeight: '1.6'
                       }}
                     >
-                      <span style={{
-                        fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
-                        letterSpacing: '1px', color: '#ff6b1a', marginRight: '12px'
-                      }}>{String.fromCharCode(65 + i)}.</span>
                       {choice.text}
                     </button>
                   ))}
