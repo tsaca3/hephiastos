@@ -91,37 +91,86 @@ export default function Forge() {
     }).replace(/:/g, '-')
     const filename = `${story.trame}_${pseudo}_${dateStr}_${heureStr}.pdf`
 
-    doc.setFillColor(13, 8, 0)
+    // Fond blanc
+    doc.setFillColor(255, 255, 255)
     doc.rect(0, 0, 210, 297, 'F')
-    doc.setTextColor(232, 184, 75)
-    doc.setFontSize(20)
-    doc.text(story.trame || 'Histoire', 105, 25, { align: 'center' })
-    doc.setTextColor(168, 152, 128)
-    doc.setFontSize(11)
-    doc.text(`Par ${pseudo} — ${dateStr}`, 105, 35, { align: 'center' })
-    doc.setDrawColor(201, 146, 42)
-    doc.line(20, 40, 190, 40)
-    doc.setTextColor(232, 220, 200)
-    doc.setFontSize(11)
-    let y = 55
 
-    if (story.chapter_texts && Array.isArray(story.chapter_texts)) {
-      story.chapter_texts.forEach((text, i) => {
-        if (y > 270) { doc.addPage(); y = 20 }
-        doc.setTextColor(255, 107, 26)
+    // Titre
+    doc.setTextColor(180, 100, 20)
+    doc.setFontSize(22)
+    doc.setFont('helvetica', 'bold')
+    doc.text(story.trame || 'Histoire', 105, 25, { align: 'center' })
+
+    // Sous-titre auteur / date
+    doc.setTextColor(120, 100, 80)
+    doc.setFontSize(11)
+    doc.setFont('helvetica', 'normal')
+    doc.text(`Par ${pseudo} — ${dateStr}`, 105, 35, { align: 'center' })
+
+    // Fin obtenue si disponible
+    if (story.outcome) {
+      doc.setTextColor(200, 80, 20)
+      doc.setFontSize(10)
+      doc.text(`Fin : ${story.outcome}`, 105, 43, { align: 'center' })
+    }
+
+    // Ligne de séparation
+    doc.setDrawColor(180, 130, 50)
+    doc.setLineWidth(0.5)
+    doc.line(20, 48, 190, 48)
+
+    doc.setFontSize(11)
+    let y = 60
+
+    // Uniquement les textes générés — pas les choix, pas les questions
+    const chapterTexts = story.chapter_texts || story.chapterTexts || []
+
+    if (Array.isArray(chapterTexts) && chapterTexts.length > 0) {
+      chapterTexts.forEach((text, i) => {
+        if (!text) return
+
+        // Nouvelle page si besoin
+        if (y > 265) {
+          doc.addPage()
+          doc.setFillColor(255, 255, 255)
+          doc.rect(0, 0, 210, 297, 'F')
+          y = 20
+        }
+
+        // Titre du chapitre
+        doc.setTextColor(200, 80, 20)
         doc.setFontSize(12)
+        doc.setFont('helvetica', 'bold')
         doc.text(`Chapitre ${i + 1}`, 20, y)
+        y += 3
+
+        // Ligne fine sous le titre de chapitre
+        doc.setDrawColor(220, 180, 100)
+        doc.setLineWidth(0.3)
+        doc.line(20, y + 1, 190, y + 1)
         y += 8
-        doc.setTextColor(232, 220, 200)
-        doc.setFontSize(10)
+
+        // Texte narratif uniquement — noir sur blanc
+        doc.setTextColor(30, 20, 10)
+        doc.setFontSize(11)
+        doc.setFont('helvetica', 'normal')
         const lines = doc.splitTextToSize(text, 170)
         lines.forEach((line) => {
-          if (y > 270) { doc.addPage(); y = 20 }
+          if (y > 275) {
+            doc.addPage()
+            doc.setFillColor(255, 255, 255)
+            doc.rect(0, 0, 210, 297, 'F')
+            y = 20
+          }
           doc.text(line, 20, y)
           y += 6
         })
-        y += 8
+        y += 12
       })
+    } else {
+      doc.setTextColor(120, 100, 80)
+      doc.setFontSize(11)
+      doc.text('Aucun texte disponible pour cette histoire.', 20, y)
     }
 
     doc.save(filename)
@@ -186,15 +235,9 @@ export default function Forge() {
                 fontWeight: 700, color: credits >= 1 ? '#7ec87e' : '#e8445a',
                 display: 'inline-flex', alignItems: 'center', gap: '4px'
               }}>
-                {credits} <img src="/diamond.png" alt="crédits" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
+                {credits} <img src="/diamond.png" alt="crédit" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
               </span>
             </p>
-            {credits < 1 && (
-              <p style={{
-                fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
-                color: '#e8445a', textAlign: 'center', marginBottom: '24px'
-              }}>Crédits insuffisants !</p>
-            )}
             <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
               <button onClick={() => setPopup(null)} style={{
                 padding: '12px 32px', background: 'transparent',
@@ -204,24 +247,25 @@ export default function Forge() {
               }}>Annuler</button>
               <button
                 onClick={confirmerForge}
-                disabled={credits < 1 || loading === popup.trame_id}
+                disabled={loading === popup.trame_id}
                 style={{
                   padding: '12px 32px',
-                  background: credits < 1 ? 'rgba(100,100,100,0.2)' : 'linear-gradient(135deg, #cc4400, #ff6b1a)',
-                  border: 'none', color: credits < 1 ? '#555' : '#000',
+                  background: credits >= 1 ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'rgba(100,100,100,0.3)',
+                  border: 'none',
+                  color: credits >= 1 ? '#000' : '#666',
                   fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
                   letterSpacing: '2px', textTransform: 'uppercase',
-                  cursor: credits < 1 ? 'not-allowed' : 'pointer', fontWeight: 700,
-                  boxShadow: credits >= 1 ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
+                  cursor: credits >= 1 ? 'pointer' : 'not-allowed',
+                  fontWeight: 700
                 }}>
-                {loading === popup.trame_id ? '...' : '⚒ Forger'}
+                {loading === popup.trame_id ? '⚒ Forge...' : '⚒ Forger'}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      <div style={{ padding: '60px 40px' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '60px 40px' }}>
 
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
