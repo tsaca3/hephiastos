@@ -100,7 +100,7 @@ IMPORTANT : Ne génère que le texte narratif. Aucun titre, aucun séparateur, a
     }
 
     const message = await client.messages.create({
-      model: 'claude-opus-4-5',
+      model: 'claude-sonnet-4-6',
       max_tokens: 500,
       system: promptSysteme,
       messages: [{ role: 'user', content: userMsg }]
