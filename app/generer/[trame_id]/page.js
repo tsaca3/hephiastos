@@ -325,10 +325,14 @@ export default function Generer() {
                   letterSpacing: '2px', textTransform: 'uppercase',
                   color: '#ff6b1a', marginBottom: '16px'
                 }}>L'histoire</p>
-                <p style={{
-                  fontFamily: 'Crimson Text, serif', fontSize: '1.2rem',
-                  color: '#e8dcc8', lineHeight: '1.8'
-                }}>{chapterText}</p>
+                {chapterText.split('\n\n').filter(p => p.trim()).map((para, i) => (
+                  <p key={i} style={{
+                    fontFamily: 'Crimson Text, serif', fontSize: '1.2rem',
+                    color: '#e8dcc8', lineHeight: '1.8',
+                    textAlign: 'justify',
+                    marginBottom: i < chapterText.split('\n\n').length - 1 ? '1em' : '0'
+                  }}>{para.trim()}</p>
+                ))}
               </div>
             )}
 
