@@ -31,7 +31,7 @@ Ne mentionne pas le score. Ne liste pas les choix suivants. Écris uniquement le
 
     const message = await client.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 400,
+      max_tokens: 800,
       messages: [{ role: 'user', content: prompt }]
     })
 
