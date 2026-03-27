@@ -35,6 +35,7 @@ export default function Generer() {
   const [message, setMessage] = useState(null)
   const [storyId, setStoryId] = useState(null)
   const trameRef = useRef(null)
+  const chapterTextsRef = useRef([])
   const router = useRouter()
   const params = useParams()
   const trameId = params.trame_id
@@ -55,8 +56,14 @@ export default function Generer() {
         setTrame(data)
         const firstChoices = data.chapitres_data[0]?.choices || []
         setChoices(shuffle(firstChoices))
-        // Générer le texte d'ouverture du chapitre 1
+        // Générer le texte d'ouverture du chapitre 1 et le stocker immédiatement
         generateChapter(0, null, 0, 0, data.chapitres_data.length, data.prompt_systeme)
+          .then(text => {
+            if (text) {
+              chapterTextsRef.current = [text]
+              setChapterTexts([text])
+            }
+          })
       })
       .catch(() => router.push('/forge'))
   }, [])
@@ -99,18 +106,12 @@ export default function Generer() {
     if (!currentTrame) return
 
     const choice = choices[choiceIndex]
-    // Sécurité : points toujours entre 0 et 2
     const pts = Math.min(2, Math.max(0, choice.pts || 0))
     const newScore = score + pts
     const newPreviousChoices = [...previousChoices, choice.text]
 
-    // Index du prochain chapitre à générer
     const nextChapterIndex = chapterIndex + 1
     const totalChapters = currentTrame.chapitres_data.length
-
-    // Le dernier chapitre à jouer est index totalChapters - 1
-    // Après ce choix, on génère le texte de clôture (index totalChapters - 1 = ch.10 = index 9)
-    // isLast = on vient de faire le dernier choix (chapitre 9, index 8)
     const isLast = chapterIndex === totalChapters - 2
 
     setGenerating(true)
@@ -118,8 +119,6 @@ export default function Generer() {
     try {
       const { data: { session } } = await supabase.auth.getSession()
 
-      // Générer le texte : si isLast, on génère le chapitre de clôture (index totalChapters-1)
-      // sinon on génère le chapitre suivant normal
       const targetIndex = isLast ? totalChapters - 1 : nextChapterIndex
       const text = await generateChapter(
         targetIndex,
@@ -130,12 +129,13 @@ export default function Generer() {
         currentTrame.prompt_systeme
       )
 
-      const newChapterTexts = [...chapterTexts, text]
+      // Utiliser la ref pour avoir le vrai tableau à jour (évite les closures périmées)
+      const newChapterTexts = [...chapterTextsRef.current, text]
+      chapterTextsRef.current = newChapterTexts
       setChapterTexts(newChapterTexts)
       setScore(newScore)
       setPreviousChoices(newPreviousChoices)
 
-      // Sauvegarder
       const fin = isLast ? getFin(currentTrame.fins, newScore) : null
       const saveRes = await fetch('/api/save-story', {
         method: 'POST',
@@ -259,10 +259,13 @@ export default function Generer() {
                 marginBottom: '24px'
               }}>{finData.titre}</p>
             )}
-            <p style={{
-              fontFamily: 'Crimson Text, serif', fontSize: '1.15rem',
-              color: '#a89880', fontStyle: 'italic', marginBottom: '8px', lineHeight: '1.6'
-            }}>{chapterText}</p>
+            {chapterText.split('\n\n').filter(p => p.trim()).map((para, i, arr) => (
+              <p key={i} style={{
+                fontFamily: 'Crimson Text, serif', fontSize: '1.15rem',
+                color: '#a89880', lineHeight: '1.8', textAlign: 'justify',
+                marginBottom: i < arr.length - 1 ? '1em' : '24px'
+              }}>{para.trim()}</p>
+            ))}
             <p style={{
               fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
               color: '#7a6a52', letterSpacing: '2px', textTransform: 'uppercase',
@@ -292,8 +295,6 @@ export default function Generer() {
         {/* CHAPITRE EN COURS */}
         {!finished && (
           <div>
-
-            {/* CONTEXTE */}
             <div style={{
               background: '#0d0800', border: '1px solid rgba(201,146,42,0.2)',
               padding: '32px', marginBottom: '24px'
@@ -313,7 +314,6 @@ export default function Generer() {
               </p>
             </div>
 
-            {/* TEXTE GÉNÉRÉ */}
             {chapterText && !generating && (
               <div style={{
                 background: 'rgba(255,107,26,0.03)',
@@ -325,18 +325,17 @@ export default function Generer() {
                   letterSpacing: '2px', textTransform: 'uppercase',
                   color: '#ff6b1a', marginBottom: '16px'
                 }}>L'histoire</p>
-                {chapterText.split('\n\n').filter(p => p.trim()).map((para, i) => (
+                {chapterText.split('\n\n').filter(p => p.trim()).map((para, i, arr) => (
                   <p key={i} style={{
                     fontFamily: 'Crimson Text, serif', fontSize: '1.2rem',
                     color: '#e8dcc8', lineHeight: '1.8',
                     textAlign: 'justify',
-                    marginBottom: i < chapterText.split('\n\n').length - 1 ? '1em' : '0'
+                    marginBottom: i < arr.length - 1 ? '1em' : '0'
                   }}>{para.trim()}</p>
                 ))}
               </div>
             )}
 
-            {/* GÉNÉRATION EN COURS */}
             {generating && (
               <div style={{
                 textAlign: 'center', padding: '40px',
@@ -351,7 +350,6 @@ export default function Generer() {
               </div>
             )}
 
-            {/* CHOIX — masqués sur le dernier chapitre (narratif pur) */}
             {!generating && choices.length > 0 && chapterIndex < totalChapters - 1 && (
               <div>
                 <p style={{

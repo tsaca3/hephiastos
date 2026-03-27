@@ -85,8 +85,8 @@ export default function Forge() {
   const telechargerPDF = (story) => {
     const doc = new jsPDF()
     const date = new Date(story.created_at)
-    const dateStr = date.toLocaleDateString('fr-FR').replace(/\//g, '-')
-    const heureStr = date.toLocaleTimeString('fr-FR', {
+    const dateStr = date.toLocaleDateString('fr-FR', { timeZone: 'Europe/Zurich' }).replace(/\//g, '-')
+    const heureStr = date.toLocaleTimeString('fr-FR', { timeZone: 'Europe/Zurich',
       hour: '2-digit', minute: '2-digit', second: '2-digit'
     }).replace(/:/g, '-')
     const filename = `${story.trame}_${pseudo}_${dateStr}_${heureStr}.pdf`
