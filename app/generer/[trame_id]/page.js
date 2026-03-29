@@ -67,7 +67,7 @@ export default function Generer() {
         const draftRes = await fetch(`/api/draft?userId=${session.user.id}&trameId=${trameId}`)
         const draftData = await draftRes.json()
 
-        if (draftData.draft && draftData.draft.chapter_index > 0) {
+        if (draftData.draft && draftData.draft.chapter_texts?.length > 0) {
           // Restaurer l'état depuis le draft
           const draft = draftData.draft
           const restoredTexts = draft.chapter_texts || []
@@ -207,30 +207,27 @@ export default function Generer() {
 
       const fin = isLast ? getFin(currentTrame.fins, newScore) : null
 
-      // Sauvegarder dans stories
-      const saveRes = await fetch('/api/save-story', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: session.user.id,
-          trame: currentTrame.titre,
-          score: newScore,
-          outcome: fin ? fin.titre : '',
-          chapters: newPreviousChoices,
-          chapterTexts: newChapterTexts,
-          storyId
-        })
-      })
-      const saveData = await saveRes.json()
-      if (!storyId && saveData.storyId) setStoryId(saveData.storyId)
-
       if (isLast) {
-        // Histoire terminée → supprimer le draft
+        // Histoire terminée → sauvegarder dans stories + supprimer le draft
+        const saveRes = await fetch('/api/save-story', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: session.user.id,
+            trame: currentTrame.titre,
+            score: newScore,
+            outcome: fin ? fin.titre : '',
+            chapters: newPreviousChoices,
+            chapterTexts: newChapterTexts,
+            storyId: null
+          })
+        })
+        await saveRes.json()
         await deleteDraft(session.user.id)
         setFinData(fin)
         setFinished(true)
       } else {
-        // Mettre à jour le draft
+        // Mettre à jour le draft uniquement
         await saveDraft(session.user.id, currentTrame, nextChapterIndex, newScore, newChapterTexts, newPreviousChoices)
         setChapterIndex(nextChapterIndex)
         const nextChoices = currentTrame.chapitres_data[nextChapterIndex]?.choices || []
