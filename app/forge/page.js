@@ -55,6 +55,23 @@ export default function Forge() {
     if (!popup) return
     setLoading(popup.trame_id)
 
+    const { data: { session } } = await supabase.auth.getSession()
+
+    // Vérifier si un draft existe déjà pour cette trame
+    try {
+      const draftRes = await fetch(`/api/draft?userId=${session.user.id}&trameId=${popup.trame_id}`)
+      const draftData = await draftRes.json()
+
+      if (draftData.draft && draftData.draft.chapter_texts?.length > 0) {
+        // Draft trouvé → reprendre sans débiter
+        setLoading(null)
+        setPopup(null)
+        router.push(`/generer/${popup.trame_id}`)
+        return
+      }
+    } catch { }
+
+    // Pas de draft → vérifier les crédits et débiter
     if (credits < 1) {
       showMessage('Crédits insuffisants — rendez-vous à la Bourse aux Crédits !', 'error')
       setLoading(null)
@@ -62,7 +79,6 @@ export default function Forge() {
       return
     }
 
-    const { data: { session } } = await supabase.auth.getSession()
     const res = await fetch('/api/deduct-credit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
