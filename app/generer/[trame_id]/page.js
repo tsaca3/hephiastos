@@ -34,39 +34,109 @@ export default function Generer() {
   const [hover, setHover] = useState(null)
   const [message, setMessage] = useState(null)
   const [storyId, setStoryId] = useState(null)
+  const [resumed, setResumed] = useState(false)
   const trameRef = useRef(null)
   const chapterTextsRef = useRef([])
+  const userIdRef = useRef(null)
   const router = useRouter()
   const params = useParams()
   const trameId = params.trame_id
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) { router.push('/auth'); return }
       setUser(session.user)
+      userIdRef.current = session.user.id
+
       supabase.from('profiles').select('credits').eq('id', session.user.id).single()
         .then(({ data }) => { if (data) setCredits(data.credits) })
-    })
 
-    fetch(`/trames/${trameId}.json`)
-      .then(r => r.ok ? r.json() : null)
-      .then(data => {
-        if (!data) { router.push('/forge'); return }
-        trameRef.current = data
-        setTrame(data)
-        const firstChoices = data.chapitres_data[0]?.choices || []
-        setChoices(shuffle(firstChoices))
-        // Générer le texte d'ouverture du chapitre 1 et le stocker immédiatement
-        generateChapter(0, null, 0, 0, data.chapitres_data.length, data.prompt_systeme)
-          .then(text => {
-            if (text) {
-              chapterTextsRef.current = [text]
-              setChapterTexts([text])
-            }
-          })
-      })
-      .catch(() => router.push('/forge'))
+      // Charger la trame
+      let trameData = null
+      try {
+        const r = await fetch(`/trames/${trameId}.json`)
+        trameData = r.ok ? await r.json() : null
+      } catch { }
+
+      if (!trameData) { router.push('/forge'); return }
+      trameRef.current = trameData
+      setTrame(trameData)
+
+      // Chercher un draft existant
+      try {
+        const draftRes = await fetch(`/api/draft?userId=${session.user.id}&trameId=${trameId}`)
+        const draftData = await draftRes.json()
+
+        if (draftData.draft && draftData.draft.chapter_index > 0) {
+          // Restaurer l'état depuis le draft
+          const draft = draftData.draft
+          const restoredTexts = draft.chapter_texts || []
+          const restoredChoices = draft.previous_choices || []
+          const restoredScore = draft.score || 0
+          const restoredIndex = draft.chapter_index || 0
+
+          chapterTextsRef.current = restoredTexts
+          setChapterTexts(restoredTexts)
+          setPreviousChoices(restoredChoices)
+          setScore(restoredScore)
+          setChapterIndex(restoredIndex)
+          setChapterText(restoredTexts[restoredTexts.length - 1] || '')
+          setResumed(true)
+
+          // Shuffle les choix du chapitre en cours
+          const currentChoices = trameData.chapitres_data[restoredIndex]?.choices || []
+          setChoices(shuffle(currentChoices))
+
+          // Masquer l'indicateur après 4 secondes
+          setTimeout(() => setResumed(false), 4000)
+          return
+        }
+      } catch { }
+
+      // Pas de draft — démarrer normalement
+      const firstChoices = trameData.chapitres_data[0]?.choices || []
+      setChoices(shuffle(firstChoices))
+      generateChapter(0, null, 0, 0, trameData.chapitres_data.length, trameData.prompt_systeme)
+        .then(text => {
+          if (text) {
+            chapterTextsRef.current = [text]
+            setChapterTexts([text])
+            // Sauvegarder le draft initial
+            saveDraft(session.user.id, trameData, 0, 0, [text], [])
+          }
+        })
+    })
   }, [])
+
+  const saveDraft = async (userId, currentTrame, chapIdx, currentScore, texts, choices) => {
+    try {
+      await fetch('/api/draft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          trameId,
+          trameTitre: currentTrame.titre,
+          chapterIndex: chapIdx,
+          score: currentScore,
+          chapterTexts: texts,
+          previousChoices: choices
+        })
+      })
+    } catch (e) {
+      console.error('Erreur sauvegarde draft:', e)
+    }
+  }
+
+  const deleteDraft = async (userId) => {
+    try {
+      await fetch(`/api/draft?userId=${userId}&trameId=${trameId}`, {
+        method: 'DELETE'
+      })
+    } catch (e) {
+      console.error('Erreur suppression draft:', e)
+    }
+  }
 
   const showMessage = (text, type = 'success') => {
     setMessage({ text, type })
@@ -129,7 +199,6 @@ export default function Generer() {
         currentTrame.prompt_systeme
       )
 
-      // Utiliser la ref pour avoir le vrai tableau à jour (évite les closures périmées)
       const newChapterTexts = [...chapterTextsRef.current, text]
       chapterTextsRef.current = newChapterTexts
       setChapterTexts(newChapterTexts)
@@ -137,6 +206,8 @@ export default function Generer() {
       setPreviousChoices(newPreviousChoices)
 
       const fin = isLast ? getFin(currentTrame.fins, newScore) : null
+
+      // Sauvegarder dans stories
       const saveRes = await fetch('/api/save-story', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -154,9 +225,13 @@ export default function Generer() {
       if (!storyId && saveData.storyId) setStoryId(saveData.storyId)
 
       if (isLast) {
+        // Histoire terminée → supprimer le draft
+        await deleteDraft(session.user.id)
         setFinData(fin)
         setFinished(true)
       } else {
+        // Mettre à jour le draft
+        await saveDraft(session.user.id, currentTrame, nextChapterIndex, newScore, newChapterTexts, newPreviousChoices)
         setChapterIndex(nextChapterIndex)
         const nextChoices = currentTrame.chapitres_data[nextChapterIndex]?.choices || []
         setChoices(shuffle(nextChoices))
@@ -181,6 +256,20 @@ export default function Generer() {
     <div style={{ minHeight: '100vh', background: '#000000', color: '#e8dcc8', fontFamily: 'Crimson Text, serif' }}>
 
       <Navbar credits={credits} onLogout={logout} activePage="forge" />
+
+      {/* INDICATEUR DE REPRISE */}
+      {resumed && (
+        <div style={{
+          position: 'fixed', top: '80px', left: '50%', transform: 'translateX(-50%)',
+          background: 'rgba(232,184,75,0.12)',
+          border: '1px solid rgba(232,184,75,0.4)',
+          padding: '12px 32px', zIndex: 100,
+          fontFamily: 'Cinzel, serif', fontSize: '0.85rem', letterSpacing: '2px',
+          color: '#e8b84b', whiteSpace: 'nowrap'
+        }}>
+          ⚒ Histoire en cours restaurée — Chapitre {chapterIndex + 1} / {totalChapters}
+        </div>
+      )}
 
       {message && (
         <div style={{

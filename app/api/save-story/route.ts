@@ -21,10 +21,21 @@ export async function POST(req: NextRequest) {
 
       if (error) throw error
       return NextResponse.json({ success: true, storyId })
+
     } else {
+      // Récupérer le username depuis profiles
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('id', userId)
+        .single()
+
+      const username = profile?.username || null
+
       // Créer une nouvelle histoire
       const { data, error } = await supabase.from('stories').insert({
         user_id: userId,
+        username,
         trame,
         score,
         outcome,
