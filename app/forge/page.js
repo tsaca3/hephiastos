@@ -67,6 +67,15 @@ export default function Forge() {
     if (!popup) return
     setLoading(popup.trame_id)
 
+    // Si draft détecté → reprendre sans débiter
+    if (hasDraft) {
+      setLoading(null)
+      setPopup(null)
+      router.push(`/generer/${popup.trame_id}`)
+      return
+    }
+
+    // Pas de draft → vérifier les crédits et débiter
     if (credits < 1) {
       showMessage('Crédits insuffisants — rendez-vous à la Bourse aux Crédits !', 'error')
       setLoading(null)
