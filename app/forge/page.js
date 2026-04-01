@@ -330,7 +330,7 @@ export default function Forge() {
         </div>
       )}
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '60px 40px' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 24px' }}>
 
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
@@ -377,7 +377,7 @@ export default function Forge() {
               }}>Découvrir les trames</button>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '24px' }}>
               {trames.map(trame => (
                 <div
                   key={trame.id}
@@ -473,8 +473,8 @@ export default function Forge() {
                   style={{
                     background: '#0d0800',
                     border: hover === `story-${story.id}` ? '1px solid rgba(255,107,26,0.4)' : '1px solid rgba(201,146,42,0.15)',
-                    padding: '20px 24px',
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '16px',
+                    display: 'flex', flexDirection: 'column', gap: '12px',
                     transition: 'all 0.3s ease'
                   }}
                 >
@@ -506,14 +506,13 @@ export default function Forge() {
                   <button
                     onClick={() => telechargerPDF(story)}
                     style={{
-                      padding: '10px 24px',
+                      padding: '8px 16px', width: '100%',
                       background: hover === `story-${story.id}` ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'transparent',
                       border: '1px solid rgba(201,146,42,0.3)',
                       color: hover === `story-${story.id}` ? '#000' : '#c9922a',
-                      fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
+                      fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
                       letterSpacing: '2px', textTransform: 'uppercase',
-                      cursor: 'pointer', fontWeight: 700, transition: 'all 0.3s ease',
-                      whiteSpace: 'nowrap'
+                      cursor: 'pointer', fontWeight: 700, transition: 'all 0.3s ease'
                     }}>
                     ⬇ Télécharger PDF
                   </button>
