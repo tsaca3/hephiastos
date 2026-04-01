@@ -330,7 +330,7 @@ export default function Forge() {
         </div>
       )}
 
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '60px 40px' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '60px 40px' }}>
 
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
@@ -377,14 +377,14 @@ export default function Forge() {
               }}>Découvrir les trames</button>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '24px' }}>
               {trames.map(trame => (
                 <div
                   key={trame.id}
                   onMouseEnter={() => setHover(trame.id)}
                   onMouseLeave={() => setHover(null)}
                   style={{
-                    width: '280px', background: '#0d0800',
+                    background: '#0d0800',
                     border: hover === trame.id ? '1px solid rgba(255,107,26,0.6)' : '1px solid rgba(201,146,42,0.2)',
                     transition: 'all 0.3s ease',
                     boxShadow: hover === trame.id ? '0 0 30px rgba(255,107,26,0.2)' : 'none',
@@ -464,7 +464,7 @@ export default function Forge() {
               }}>Aucune histoire forgée pour le moment — lancez votre première aventure !</p>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '16px' }}>
               {stories.map(story => (
                 <div
                   key={story.id}
