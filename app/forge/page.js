@@ -13,6 +13,7 @@ export default function Forge() {
   const [stories, setStories] = useState([])
   const [hover, setHover] = useState(null)
   const [popup, setPopup] = useState(null)
+  const [hasDraft, setHasDraft] = useState(false)
   const [loading, setLoading] = useState(null)
   const [message, setMessage] = useState(null)
   const router = useRouter()
@@ -49,29 +50,23 @@ export default function Forge() {
     setTimeout(() => setMessage(null), 3000)
   }
 
-  const handleForger = (trame) => { setPopup(trame) }
+  const handleForger = async (trame) => {
+    // Vérifier si un draft existe pour cette trame
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const draftRes = await fetch(`/api/draft?userId=${session.user.id}&trameId=${trame.trame_id}`)
+      const draftData = await draftRes.json()
+      setHasDraft(!!(draftData.draft && draftData.draft.chapter_texts?.length > 0))
+    } catch {
+      setHasDraft(false)
+    }
+    setPopup(trame)
+  }
 
   const confirmerForge = async () => {
     if (!popup) return
     setLoading(popup.trame_id)
 
-    const { data: { session } } = await supabase.auth.getSession()
-
-    // Vérifier si un draft existe déjà pour cette trame
-    try {
-      const draftRes = await fetch(`/api/draft?userId=${session.user.id}&trameId=${popup.trame_id}`)
-      const draftData = await draftRes.json()
-
-      if (draftData.draft && draftData.draft.chapter_texts?.length > 0) {
-        // Draft trouvé → reprendre sans débiter
-        setLoading(null)
-        setPopup(null)
-        router.push(`/generer/${popup.trame_id}`)
-        return
-      }
-    } catch { }
-
-    // Pas de draft → vérifier les crédits et débiter
     if (credits < 1) {
       showMessage('Crédits insuffisants — rendez-vous à la Bourse aux Crédits !', 'error')
       setLoading(null)
@@ -79,6 +74,7 @@ export default function Forge() {
       return
     }
 
+    const { data: { session } } = await supabase.auth.getSession()
     const res = await fetch('/api/deduct-credit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -225,58 +221,102 @@ export default function Forge() {
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50
         }}>
           <div style={{
-            background: '#0d0800', border: '1px solid rgba(201,146,42,0.35)',
+            background: '#0d0800', border: `1px solid ${hasDraft ? 'rgba(232,184,75,0.5)' : 'rgba(201,146,42,0.35)'}`,
             padding: '40px', maxWidth: '460px', width: '90%',
-            boxShadow: '0 0 60px rgba(255,107,26,0.15)'
+            boxShadow: `0 0 60px ${hasDraft ? 'rgba(232,184,75,0.15)' : 'rgba(255,107,26,0.15)'}`
           }}>
             <h2 style={{
               fontFamily: 'Cinzel Decorative, serif', fontSize: '1.35rem',
               color: '#e8b84b', marginBottom: '16px', textAlign: 'center'
             }}>{popup.trame_titre}</h2>
-            <p style={{
-              fontFamily: 'Crimson Text, serif', fontSize: '1.25rem',
-              color: '#a89880', textAlign: 'center', marginBottom: '12px', lineHeight: '1.6'
-            }}>
-              Forger une nouvelle histoire coûte{' '}
-              <span style={{ color: '#4db8ff', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                1 <img src="/diamond.png" alt="crédit" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
-              </span>
-            </p>
-            <p style={{
-              fontFamily: 'Crimson Text, serif', fontSize: '1.25rem',
-              color: '#a89880', textAlign: 'center', marginBottom: '32px', lineHeight: '1.6'
-            }}>
-              Votre solde :{' '}
-              <span style={{
-                fontWeight: 700, color: credits >= 1 ? '#7ec87e' : '#e8445a',
-                display: 'inline-flex', alignItems: 'center', gap: '4px'
-              }}>
-                {credits} <img src="/diamond.png" alt="crédit" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
-              </span>
-            </p>
-            <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-              <button onClick={() => setPopup(null)} style={{
-                padding: '12px 32px', background: 'transparent',
-                border: '1px solid rgba(201,146,42,0.3)', color: '#7a6a52',
-                fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
-                letterSpacing: '2px', textTransform: 'uppercase', cursor: 'pointer'
-              }}>Annuler</button>
-              <button
-                onClick={confirmerForge}
-                disabled={loading === popup.trame_id}
-                style={{
-                  padding: '12px 32px',
-                  background: credits >= 1 ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'rgba(100,100,100,0.3)',
-                  border: 'none',
-                  color: credits >= 1 ? '#000' : '#666',
-                  fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
-                  letterSpacing: '2px', textTransform: 'uppercase',
-                  cursor: credits >= 1 ? 'pointer' : 'not-allowed',
-                  fontWeight: 700
+
+            {hasDraft ? (
+              // Popup reprise
+              <>
+                <p style={{
+                  fontFamily: 'Crimson Text, serif', fontSize: '1.25rem',
+                  color: '#a89880', textAlign: 'center', marginBottom: '12px', lineHeight: '1.6'
                 }}>
-                {loading === popup.trame_id ? '⚒ Forge...' : '⚒ Forger'}
-              </button>
-            </div>
+                  Une histoire est déjà en cours pour cette trame.
+                </p>
+                <p style={{
+                  fontFamily: 'Crimson Text, serif', fontSize: '1.1rem',
+                  color: '#7a6a52', textAlign: 'center', fontStyle: 'italic',
+                  marginBottom: '32px', lineHeight: '1.6'
+                }}>
+                  Reprendre ne coûte aucun crédit supplémentaire.
+                </p>
+                <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+                  <button onClick={() => setPopup(null)} style={{
+                    padding: '12px 32px', background: 'transparent',
+                    border: '1px solid rgba(201,146,42,0.3)', color: '#7a6a52',
+                    fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
+                    letterSpacing: '2px', textTransform: 'uppercase', cursor: 'pointer'
+                  }}>Annuler</button>
+                  <button
+                    onClick={confirmerForge}
+                    disabled={loading === popup.trame_id}
+                    style={{
+                      padding: '12px 32px',
+                      background: 'linear-gradient(135deg, #7a4a00, #e8b84b)',
+                      border: 'none', color: '#000',
+                      fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
+                      letterSpacing: '2px', textTransform: 'uppercase',
+                      cursor: 'pointer', fontWeight: 700
+                    }}>
+                    {loading === popup.trame_id ? '⚒ Chargement...' : '⚒ Reprendre'}
+                  </button>
+                </div>
+              </>
+            ) : (
+              // Popup nouvelle histoire
+              <>
+                <p style={{
+                  fontFamily: 'Crimson Text, serif', fontSize: '1.25rem',
+                  color: '#a89880', textAlign: 'center', marginBottom: '12px', lineHeight: '1.6'
+                }}>
+                  Forger une nouvelle histoire coûte{' '}
+                  <span style={{ color: '#4db8ff', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    1 <img src="/diamond.png" alt="crédit" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
+                  </span>
+                </p>
+                <p style={{
+                  fontFamily: 'Crimson Text, serif', fontSize: '1.25rem',
+                  color: '#a89880', textAlign: 'center', marginBottom: '32px', lineHeight: '1.6'
+                }}>
+                  Votre solde :{' '}
+                  <span style={{
+                    fontWeight: 700, color: credits >= 1 ? '#7ec87e' : '#e8445a',
+                    display: 'inline-flex', alignItems: 'center', gap: '4px'
+                  }}>
+                    {credits} <img src="/diamond.png" alt="crédit" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
+                  </span>
+                </p>
+                <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+                  <button onClick={() => setPopup(null)} style={{
+                    padding: '12px 32px', background: 'transparent',
+                    border: '1px solid rgba(201,146,42,0.3)', color: '#7a6a52',
+                    fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
+                    letterSpacing: '2px', textTransform: 'uppercase', cursor: 'pointer'
+                  }}>Annuler</button>
+                  <button
+                    onClick={confirmerForge}
+                    disabled={loading === popup.trame_id}
+                    style={{
+                      padding: '12px 32px',
+                      background: credits >= 1 ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'rgba(100,100,100,0.3)',
+                      border: 'none',
+                      color: credits >= 1 ? '#000' : '#666',
+                      fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
+                      letterSpacing: '2px', textTransform: 'uppercase',
+                      cursor: credits >= 1 ? 'pointer' : 'not-allowed',
+                      fontWeight: 700
+                    }}>
+                    {loading === popup.trame_id ? '⚒ Forge...' : '⚒ Forger'}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
