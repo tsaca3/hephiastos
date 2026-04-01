@@ -330,7 +330,7 @@ export default function Forge() {
         </div>
       )}
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 24px' }}>
+      <div style={{ maxWidth: '100%', margin: '0', padding: '40px 16px' }}>
 
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
@@ -377,7 +377,7 @@ export default function Forge() {
               }}>Découvrir les trames</button>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
               {trames.map(trame => (
                 <div
                   key={trame.id}
@@ -464,7 +464,7 @@ export default function Forge() {
               }}>Aucune histoire forgée pour le moment — lancez votre première aventure !</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
               {stories.map(story => (
                 <div
                   key={story.id}
