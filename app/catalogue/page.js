@@ -221,7 +221,7 @@ export default function Catalogue() {
         </div>
       )}
 
-      <div style={{ flex: 1, padding: '40px 40px' }}>
+      <div style={{ flex: 1, padding: '40px' }}>
 
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
@@ -237,8 +237,14 @@ export default function Catalogue() {
           textAlign: 'center', marginBottom: '40px'
         }}>Choisissez votre aventure</p>
 
-        {/* Layout horizontal */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '900px', margin: '0 auto' }}>
+        {/* Grille 2 colonnes */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: '20px',
+          maxWidth: '1100px',
+          margin: '0 auto'
+        }}>
           {trames.map(trame => {
             const dejaAjoutee = forgeIds.includes(trame.id)
             const nonDisponible = !trame.disponible
@@ -262,11 +268,10 @@ export default function Catalogue() {
                   opacity: nonDisponible ? 0.7 : 1,
                   overflow: 'hidden',
                   borderRadius: '2px',
-                  minHeight: '180px',
                 }}
               >
-                {/* Image carrée */}
-                <div style={{ position: 'relative', width: '180px', minWidth: '180px', height: '180px', flexShrink: 0 }}>
+                {/* Image carrée — sans aucun bandeau */}
+                <div style={{ width: '160px', minWidth: '160px', height: '160px', flexShrink: 0, overflow: 'hidden' }}>
                   <img
                     src={trame.image}
                     alt={trame.titre}
@@ -278,56 +283,37 @@ export default function Catalogue() {
                       display: 'block',
                     }}
                   />
-                  {/* Badge overlay sur l'image */}
-                  {nonDisponible && (
-                    <div style={{
-                      position: 'absolute', top: 0, left: 0, right: 0,
-                      background: 'rgba(0,0,0,0.7)', padding: '5px 0',
-                      fontFamily: 'Cinzel, serif', fontSize: '0.65rem',
-                      letterSpacing: '1px', textTransform: 'uppercase',
-                      color: '#e8b84b', textAlign: 'center'
-                    }}>✦ Bientôt disponible</div>
-                  )}
-                  {dejaAjoutee && !nonDisponible && (
-                    <div style={{
-                      position: 'absolute', top: 0, left: 0, right: 0,
-                      background: 'rgba(0,0,0,0.7)', padding: '5px 0',
-                      fontFamily: 'Cinzel, serif', fontSize: '0.65rem',
-                      letterSpacing: '1px', textTransform: 'uppercase',
-                      color: '#ff6b1a', textAlign: 'center'
-                    }}>⚒ Dans votre forge</div>
-                  )}
                 </div>
 
                 {/* Contenu */}
-                <div style={{ flex: 1, padding: '16px 22px', display: 'flex', flexDirection: 'column', gap: '8px', overflow: 'hidden' }}>
+                <div style={{ flex: 1, padding: '14px 18px', display: 'flex', flexDirection: 'column', gap: '7px', overflow: 'hidden', minWidth: 0 }}>
 
                   {/* En-tête : titre + genre */}
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>
                     <h2 style={{
-                      fontFamily: 'Cinzel Decorative, serif', fontSize: '1.1rem',
+                      fontFamily: 'Cinzel Decorative, serif', fontSize: '1rem',
                       color: '#e8b84b', margin: 0, lineHeight: '1.3'
                     }}>{trame.titre}</h2>
                     <span style={{
-                      fontFamily: 'Cinzel, serif', fontSize: '0.7rem', letterSpacing: '1.5px',
+                      fontFamily: 'Cinzel, serif', fontSize: '0.65rem', letterSpacing: '1.5px',
                       textTransform: 'uppercase', color: '#ff6b1a',
-                      border: '1px solid rgba(255,107,26,0.4)', padding: '3px 8px',
+                      border: '1px solid rgba(255,107,26,0.4)', padding: '3px 7px',
                       whiteSpace: 'nowrap', flexShrink: 0
                     }}>{trame.genre}</span>
                   </div>
 
-                  {/* Méta : chapitres + durée + fins */}
-                  <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                    <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.72rem', color: '#7a6a52', letterSpacing: '1px' }}>
+                  {/* Méta */}
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                    <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.68rem', color: '#7a6a52', letterSpacing: '1px' }}>
                       ⚒ {trame.chapitres} chapitres
                     </span>
                     {trame.duree && (
-                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.72rem', color: '#7a6a52', letterSpacing: '1px' }}>
+                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.68rem', color: '#7a6a52', letterSpacing: '1px' }}>
                         ✦ {trame.duree}
                       </span>
                     )}
                     {trame.fins && (
-                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.72rem', color: '#7a6a52', letterSpacing: '1px' }}>
+                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.68rem', color: '#7a6a52', letterSpacing: '1px' }}>
                         ✦ {trame.fins} fins possibles
                       </span>
                     )}
@@ -335,20 +321,20 @@ export default function Catalogue() {
 
                   {/* Description */}
                   <p style={{
-                    fontFamily: 'Crimson Text, serif', fontSize: '1.05rem',
-                    color: '#a89880', lineHeight: '1.55', margin: 0, flex: 1,
-                    display: '-webkit-box', WebkitLineClamp: 3,
+                    fontFamily: 'Crimson Text, serif', fontSize: '1rem',
+                    color: '#a89880', lineHeight: '1.5', margin: 0, flex: 1,
+                    display: '-webkit-box', WebkitLineClamp: 2,
                     WebkitBoxOrient: 'vertical', overflow: 'hidden'
                   }}>{trame.description}</p>
 
                   {/* Pills mécaniques */}
                   {trame.mecaniques && trame.mecaniques.length > 0 && (
-                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
                       {trame.mecaniques.map((m, i) => (
                         <span key={i} style={{
-                          fontFamily: 'Cinzel, serif', fontSize: '0.65rem', letterSpacing: '0.5px',
+                          fontFamily: 'Cinzel, serif', fontSize: '0.6rem', letterSpacing: '0.5px',
                           color: '#c9922a', border: '1px solid rgba(201,146,42,0.3)',
-                          padding: '3px 9px', borderRadius: '20px',
+                          padding: '2px 8px', borderRadius: '20px',
                           background: 'rgba(201,146,42,0.05)'
                         }}>{m}</span>
                       ))}
@@ -358,22 +344,22 @@ export default function Catalogue() {
                   {/* Footer : prix + bouton */}
                   <div style={{
                     borderTop: '1px solid rgba(201,146,42,0.15)',
-                    paddingTop: '10px',
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px'
+                    paddingTop: '9px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px'
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{
-                        fontFamily: 'Cinzel, serif', fontSize: '1.3rem', fontWeight: 700,
+                        fontFamily: 'Cinzel, serif', fontSize: '1.1rem', fontWeight: 700,
                         color: trame.credits === 0 ? '#7ec87e' : '#4db8ff',
                         display: 'inline-flex', alignItems: 'center', gap: '5px'
                       }}>
                         {trame.credits === 0 ? 'Gratuite' : (
-                          <>{trame.credits}<img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} /></>
+                          <>{trame.credits}<img src="/diamond.png" alt="crédits" style={{ height: '18px', width: '18px', objectFit: 'contain' }} /></>
                         )}
                       </span>
                       {dejaAjoutee && !nonDisponible && (
-                        <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.65rem', color: '#ff6b1a', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                          · Déjà dans votre forge
+                        <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.6rem', color: '#ff6b1a', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                          · Dans votre forge
                         </span>
                       )}
                     </div>
@@ -382,12 +368,12 @@ export default function Catalogue() {
                       onClick={() => handleAjouter(trame)}
                       disabled={dejaAjoutee || nonDisponible}
                       style={{
-                        padding: '9px 20px',
+                        padding: '7px 14px',
                         background: dejaAjoutee || nonDisponible ? 'transparent'
                           : isHovered ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'transparent',
                         border: `1px solid ${dejaAjoutee || nonDisponible ? 'rgba(100,100,100,0.3)' : 'rgba(201,146,42,0.4)'}`,
                         color: dejaAjoutee || nonDisponible ? '#555' : isHovered ? '#000' : '#c9922a',
-                        fontFamily: 'Cinzel, serif', fontSize: '0.78rem',
+                        fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
                         letterSpacing: '1.5px', textTransform: 'uppercase',
                         cursor: dejaAjoutee || nonDisponible ? 'not-allowed' : 'pointer',
                         fontWeight: 700, transition: 'all 0.3s ease', whiteSpace: 'nowrap',
