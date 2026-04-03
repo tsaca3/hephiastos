@@ -377,7 +377,7 @@ export default function Forge() {
               }}>Découvrir les trames</button>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '16px' }}>
               {trames.map(trame => (
                 <div
                   key={trame.id}
@@ -464,7 +464,7 @@ export default function Forge() {
               }}>Aucune histoire forgée pour le moment — lancez votre première aventure !</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '16px' }}>
               {stories.map(story => (
                 <div
                   key={story.id}
