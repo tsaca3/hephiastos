@@ -102,7 +102,7 @@ export default function Catalogue() {
       trame_id: popup.id,
       trame_titre: popup.titre,
       pseudo: pseudo,
-      image: popup.image  // ← correction
+      image: popup.image
     })
 
     if (error) {
@@ -221,7 +221,7 @@ export default function Catalogue() {
         </div>
       )}
 
-      <div style={{ flex: 1, padding: '20px 20px' }}>
+      <div style={{ flex: 1, padding: '40px 40px' }}>
 
         <h1 style={{
           fontFamily: 'Cinzel Decorative, serif',
@@ -234,119 +234,169 @@ export default function Catalogue() {
         <p style={{
           fontFamily: 'Cinzel, serif', fontSize: '0.9rem', letterSpacing: '3px',
           textTransform: 'uppercase', color: '#7a6a52',
-          textAlign: 'center', marginBottom: '30px'
+          textAlign: 'center', marginBottom: '40px'
         }}>Choisissez votre aventure</p>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', justifyContent: 'flex-start' }}>
+        {/* Layout horizontal */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', maxWidth: '900px', margin: '0 auto' }}>
           {trames.map(trame => {
             const dejaAjoutee = forgeIds.includes(trame.id)
             const nonDisponible = !trame.disponible
+            const isHovered = hover === trame.id && !nonDisponible
+
             return (
               <div
                 key={trame.id}
                 onMouseEnter={() => setHover(trame.id)}
                 onMouseLeave={() => setHover(null)}
                 style={{
-                  width: '280px', minWidth: '280px', background: '#0d0800',
-                  border: hover === trame.id && !nonDisponible
-                    ? '1px solid rgba(255,107,26,0.6)' : '1px solid rgba(201,146,42,0.2)',
+                  display: 'flex',
+                  background: '#0d0800',
+                  border: isHovered
+                    ? '1px solid rgba(255,107,26,0.6)'
+                    : trame.credits > 0
+                      ? '1px solid rgba(201,146,42,0.5)'
+                      : '1px solid rgba(201,146,42,0.2)',
                   transition: 'all 0.3s ease',
-                  boxShadow: hover === trame.id && !nonDisponible
-                    ? '0 0 30px rgba(255,107,26,0.2)' : '0 0 10px rgba(0,0,0,0.5)',
-                  transform: hover === trame.id && !nonDisponible ? 'translateY(-4px)' : 'translateY(0)',
-                  position: 'relative', opacity: nonDisponible ? 0.7 : 1
+                  boxShadow: isHovered ? '0 0 30px rgba(255,107,26,0.2)' : '0 0 10px rgba(0,0,0,0.5)',
+                  opacity: nonDisponible ? 0.7 : 1,
+                  overflow: 'hidden',
+                  borderRadius: '2px',
+                  minHeight: '180px',
                 }}
               >
-                {nonDisponible && (
-                  <div style={{
-                    position: 'absolute', top: '12px', right: '12px', zIndex: 2,
-                    background: 'rgba(0,0,0,0.85)', border: '1px solid rgba(201,146,42,0.4)',
-                    padding: '4px 10px', fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
-                    letterSpacing: '1px', textTransform: 'uppercase', color: '#e8b84b'
-                  }}>✦ Bientôt disponible</div>
-                )}
-
-                {dejaAjoutee && !nonDisponible && (
-                  <div style={{
-                    position: 'absolute', top: '12px', right: '12px', zIndex: 2,
-                    background: 'rgba(0,0,0,0.85)', border: '1px solid rgba(255,107,26,0.4)',
-                    padding: '4px 10px', fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
-                    letterSpacing: '1px', textTransform: 'uppercase', color: '#ff6b1a'
-                  }}>⚒ Dans votre forge</div>
-                )}
-
-                <div style={{ width: '100%', aspectRatio: '1/1', overflow: 'hidden' }}>
-                  <img src={trame.image} alt={trame.titre}
+                {/* Image carrée */}
+                <div style={{ position: 'relative', width: '180px', minWidth: '180px', height: '180px', flexShrink: 0 }}>
+                  <img
+                    src={trame.image}
+                    alt={trame.titre}
                     style={{
                       width: '100%', height: '100%', objectFit: 'cover',
                       transition: 'transform 0.3s ease',
-                      transform: hover === trame.id && !nonDisponible ? 'scale(1.05)' : 'scale(1)',
-                      filter: dejaAjoutee || nonDisponible ? 'brightness(0.5)' : 'brightness(1)'
+                      transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+                      filter: nonDisponible ? 'brightness(0.4)' : dejaAjoutee ? 'brightness(0.6)' : 'brightness(1)',
+                      display: 'block',
                     }}
                   />
+                  {/* Badge overlay sur l'image */}
+                  {nonDisponible && (
+                    <div style={{
+                      position: 'absolute', top: 0, left: 0, right: 0,
+                      background: 'rgba(0,0,0,0.7)', padding: '5px 0',
+                      fontFamily: 'Cinzel, serif', fontSize: '0.65rem',
+                      letterSpacing: '1px', textTransform: 'uppercase',
+                      color: '#e8b84b', textAlign: 'center'
+                    }}>✦ Bientôt disponible</div>
+                  )}
+                  {dejaAjoutee && !nonDisponible && (
+                    <div style={{
+                      position: 'absolute', top: 0, left: 0, right: 0,
+                      background: 'rgba(0,0,0,0.7)', padding: '5px 0',
+                      fontFamily: 'Cinzel, serif', fontSize: '0.65rem',
+                      letterSpacing: '1px', textTransform: 'uppercase',
+                      color: '#ff6b1a', textAlign: 'center'
+                    }}>⚒ Dans votre forge</div>
+                  )}
                 </div>
 
-                <div style={{ padding: '20px', textAlign: 'center' }}>
-                  <span style={{
-                    fontFamily: 'Cinzel, serif', fontSize: '0.75rem', letterSpacing: '2px',
-                    textTransform: 'uppercase', color: '#ff6b1a',
-                    border: '1px solid rgba(255,107,26,0.4)', padding: '3px 8px',
-                    display: 'inline-block', marginBottom: '12px'
-                  }}>{trame.genre}</span>
+                {/* Contenu */}
+                <div style={{ flex: 1, padding: '16px 22px', display: 'flex', flexDirection: 'column', gap: '8px', overflow: 'hidden' }}>
 
-                  <h2 style={{
-                    fontFamily: 'Cinzel Decorative, serif', fontSize: '1.15rem',
-                    color: '#e8b84b', marginBottom: '8px', lineHeight: '1.4'
-                  }}>{trame.titre}</h2>
+                  {/* En-tête : titre + genre */}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
+                    <h2 style={{
+                      fontFamily: 'Cinzel Decorative, serif', fontSize: '1.1rem',
+                      color: '#e8b84b', margin: 0, lineHeight: '1.3'
+                    }}>{trame.titre}</h2>
+                    <span style={{
+                      fontFamily: 'Cinzel, serif', fontSize: '0.7rem', letterSpacing: '1.5px',
+                      textTransform: 'uppercase', color: '#ff6b1a',
+                      border: '1px solid rgba(255,107,26,0.4)', padding: '3px 8px',
+                      whiteSpace: 'nowrap', flexShrink: 0
+                    }}>{trame.genre}</span>
+                  </div>
 
+                  {/* Méta : chapitres + durée + fins */}
+                  <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                    <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.72rem', color: '#7a6a52', letterSpacing: '1px' }}>
+                      ⚒ {trame.chapitres} chapitres
+                    </span>
+                    {trame.duree && (
+                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.72rem', color: '#7a6a52', letterSpacing: '1px' }}>
+                        ✦ {trame.duree}
+                      </span>
+                    )}
+                    {trame.fins && (
+                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.72rem', color: '#7a6a52', letterSpacing: '1px' }}>
+                        ✦ {trame.fins} fins possibles
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Description */}
                   <p style={{
-                    fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
-                    textTransform: 'uppercase', color: '#7a6a52',
-                    letterSpacing: '1px', marginBottom: '12px'
-                  }}>⚒ {trame.chapitres} chapitres</p>
-
-                  <p style={{
-                    fontFamily: 'Crimson Text, serif', fontSize: '1.1rem',
-                    color: '#a89880', lineHeight: '1.6', marginBottom: '16px',
+                    fontFamily: 'Crimson Text, serif', fontSize: '1.05rem',
+                    color: '#a89880', lineHeight: '1.55', margin: 0, flex: 1,
                     display: '-webkit-box', WebkitLineClamp: 3,
                     WebkitBoxOrient: 'vertical', overflow: 'hidden'
                   }}>{trame.description}</p>
 
-                  <div style={{
-                    borderTop: '1px solid rgba(201,146,42,0.2)',
-                    borderBottom: '1px solid rgba(201,146,42,0.2)',
-                    padding: '10px 0', marginBottom: '16px'
-                  }}>
-                    <span style={{
-                      fontFamily: 'Cinzel, serif', fontSize: '1.6rem', fontWeight: 700,
-                      color: trame.credits === 0 ? '#7ec87e' : '#4db8ff',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
-                    }}>
-                      {trame.credits === 0 ? 'Gratuite' : (
-                        <>{trame.credits}<img src="/diamond.png" alt="crédits" style={{ height: '22px', width: '22px', objectFit: 'contain' }} /></>
-                      )}
-                    </span>
-                  </div>
+                  {/* Pills mécaniques */}
+                  {trame.mecaniques && trame.mecaniques.length > 0 && (
+                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                      {trame.mecaniques.map((m, i) => (
+                        <span key={i} style={{
+                          fontFamily: 'Cinzel, serif', fontSize: '0.65rem', letterSpacing: '0.5px',
+                          color: '#c9922a', border: '1px solid rgba(201,146,42,0.3)',
+                          padding: '3px 9px', borderRadius: '20px',
+                          background: 'rgba(201,146,42,0.05)'
+                        }}>{m}</span>
+                      ))}
+                    </div>
+                  )}
 
-                  <button
-                    onClick={() => handleAjouter(trame)}
-                    disabled={dejaAjoutee || nonDisponible}
-                    style={{
-                      width: '100%', padding: '12px',
-                      background: dejaAjoutee || nonDisponible ? 'transparent'
-                        : hover === trame.id ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'transparent',
-                      border: `1px solid ${dejaAjoutee || nonDisponible ? 'rgba(100,100,100,0.3)' : 'rgba(201,146,42,0.3)'}`,
-                      color: dejaAjoutee || nonDisponible ? '#555' : hover === trame.id ? '#000' : '#c9922a',
-                      fontFamily: 'Cinzel, serif', fontSize: '0.85rem',
-                      letterSpacing: '2px', textTransform: 'uppercase',
-                      cursor: dejaAjoutee || nonDisponible ? 'not-allowed' : 'pointer',
-                      fontWeight: 700, transition: 'all 0.3s ease',
-                      boxShadow: hover === trame.id && !dejaAjoutee && !nonDisponible
-                        ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
-                    }}
-                  >
-                    {dejaAjoutee ? '⚒ Dans la forge' : nonDisponible ? '✦ Bientôt disponible' : '⚒ Ajouter à ma forge'}
-                  </button>
+                  {/* Footer : prix + bouton */}
+                  <div style={{
+                    borderTop: '1px solid rgba(201,146,42,0.15)',
+                    paddingTop: '10px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{
+                        fontFamily: 'Cinzel, serif', fontSize: '1.3rem', fontWeight: 700,
+                        color: trame.credits === 0 ? '#7ec87e' : '#4db8ff',
+                        display: 'inline-flex', alignItems: 'center', gap: '5px'
+                      }}>
+                        {trame.credits === 0 ? 'Gratuite' : (
+                          <>{trame.credits}<img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} /></>
+                        )}
+                      </span>
+                      {dejaAjoutee && !nonDisponible && (
+                        <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.65rem', color: '#ff6b1a', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                          · Déjà dans votre forge
+                        </span>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => handleAjouter(trame)}
+                      disabled={dejaAjoutee || nonDisponible}
+                      style={{
+                        padding: '9px 20px',
+                        background: dejaAjoutee || nonDisponible ? 'transparent'
+                          : isHovered ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'transparent',
+                        border: `1px solid ${dejaAjoutee || nonDisponible ? 'rgba(100,100,100,0.3)' : 'rgba(201,146,42,0.4)'}`,
+                        color: dejaAjoutee || nonDisponible ? '#555' : isHovered ? '#000' : '#c9922a',
+                        fontFamily: 'Cinzel, serif', fontSize: '0.78rem',
+                        letterSpacing: '1.5px', textTransform: 'uppercase',
+                        cursor: dejaAjoutee || nonDisponible ? 'not-allowed' : 'pointer',
+                        fontWeight: 700, transition: 'all 0.3s ease', whiteSpace: 'nowrap',
+                        boxShadow: isHovered && !dejaAjoutee && !nonDisponible ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
+                      }}
+                    >
+                      {dejaAjoutee ? '⚒ Dans la forge' : nonDisponible ? '✦ Bientôt disponible' : '⚒ Ajouter à ma forge'}
+                    </button>
+                  </div>
                 </div>
               </div>
             )
