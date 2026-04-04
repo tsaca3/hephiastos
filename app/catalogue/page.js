@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation'
 import Navbar, { Footer } from '@/app/components/Navbar'
 
 const TRAMES_FILES = [
-  '/trames/trame-1.json',
-  '/trames/trame-2.json',
+  '/trames/trame-catalogue-1.json',
+  '/trames/trame-catalogue-2.json',
 ]
 
 export default function Catalogue() {

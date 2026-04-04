@@ -1,0 +1,13 @@
+{
+  "id": "bal-de-village-2",
+  "titre": "Bal de Village 2.0",
+  "description": "Un bal de village en plein air, de nos jours. Une rencontre inattendue. Un secret caché. Une nuit pour tout changer.",
+  "genre": "Romance moderne",
+  "chapitres": 20,
+  "fins": 6,
+  "credits": 3,
+  "disponible": true,
+  "priceId": "price_1T8jf6Czapu2pX6hOplp2eN4",
+  "image": "/trames/images/trame-2.png",
+  "mecaniques": ["20 chapitres", "3 jauges", "6 fins possibles", "Prénoms libres"]
+}

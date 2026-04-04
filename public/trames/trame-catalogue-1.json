@@ -1,0 +1,13 @@
+{
+  "id": "bal-de-village",
+  "titre": "Bal de Village",
+  "description": "Une romance au cœur d'un bal médiéval. Une seule nuit pour conquérir le cœur d'Alienor.",
+  "genre": "Romance médiévale",
+  "chapitres": 10,
+  "fins": 3,
+  "credits": 0,
+  "disponible": true,
+  "priceId": null,
+  "image": "/trames/images/trame-1.jpeg",
+  "mecaniques": ["10 chapitres", "3 fins possibles", "Gratuite"]
+}
