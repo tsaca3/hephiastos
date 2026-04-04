@@ -286,7 +286,7 @@ export default function Catalogue() {
                 </div>
 
                 {/* Contenu */}
-                <div style={{ flex: 1, padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '8px', overflow: 'hidden', minWidth: 0 }}>
+                <div style={{ flex: 1, padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '4px', overflow: 'hidden', minWidth: 0 }}>
 
                   {/* En-tête : titre + genre */}
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>
