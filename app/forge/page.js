@@ -76,7 +76,17 @@ export default function Forge() {
     }
 
     // Pas de draft → vérifier les crédits et débiter
-    if (credits < 1) {
+    // Lire le cout_forge depuis le JSON de la trame
+    let coutForge = 1
+    try {
+      const trameRes = await fetch(`/trames/${popup.trame_id}.json`)
+      if (trameRes.ok) {
+        const trameJson = await trameRes.json()
+        coutForge = trameJson.cout_forge ?? 1
+      }
+    } catch { }
+
+    if (credits < coutForge) {
       showMessage('Crédits insuffisants — rendez-vous à la Bourse aux Crédits !', 'error')
       setLoading(null)
       setPopup(null)
@@ -87,7 +97,7 @@ export default function Forge() {
     const res = await fetch('/api/deduct-credit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: session.user.id, amount: 1 })
+      body: JSON.stringify({ userId: session.user.id, amount: coutForge })
     })
 
     if (!res.ok) {
@@ -97,7 +107,7 @@ export default function Forge() {
       return
     }
 
-    setCredits(prev => prev - 1)
+    setCredits(prev => prev - coutForge)
     setLoading(null)
     setPopup(null)
 
@@ -297,7 +307,7 @@ export default function Forge() {
                 }}>
                   Forger une nouvelle histoire coûte{' '}
                   <span style={{ color: '#4db8ff', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                    1 <img src="/diamond.png" alt="crédit" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
+                    {popup.cout_forge ?? 1} <img src="/diamond.png" alt="crédit" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
                   </span>
                 </p>
                 <p style={{

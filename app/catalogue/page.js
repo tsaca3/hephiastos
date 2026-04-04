@@ -73,8 +73,8 @@ export default function Catalogue() {
 
     const { data: { session } } = await supabase.auth.getSession()
 
-    if (popup.credits > 0) {
-      if (credits < popup.credits) {
+    if (popup.cout_achat > 0) {
+      if (credits < popup.cout_achat) {
         showMessage('Crédits insuffisants — rendez-vous à la Bourse aux Crédits !', 'error')
         setLoading(null)
         setPopup(null)
@@ -84,7 +84,7 @@ export default function Catalogue() {
       const res = await fetch('/api/deduct-credit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: session.user.id, amount: popup.credits })
+        body: JSON.stringify({ userId: session.user.id, amount: popup.cout_achat })
       })
 
       if (!res.ok) {
@@ -94,7 +94,7 @@ export default function Catalogue() {
         return
       }
 
-      setCredits(prev => prev - popup.credits)
+      setCredits(prev => prev - popup.cout_achat)
     }
 
     const { error } = await supabase.from('forge').insert({
@@ -102,7 +102,8 @@ export default function Catalogue() {
       trame_id: popup.id,
       trame_titre: popup.titre,
       pseudo: pseudo,
-      image: popup.image
+      image: popup.image,
+      cout_forge: popup.cout_forge ?? 1
     })
 
     if (error) {
@@ -151,7 +152,7 @@ export default function Catalogue() {
               color: '#e8b84b', marginBottom: '16px', textAlign: 'center'
             }}>{popup.titre}</h2>
 
-            {popup.credits > 0 ? (
+            {popup.cout_achat > 0 ? (
               <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                 <p style={{
                   fontFamily: 'Crimson Text, serif', fontSize: '1.25rem',
@@ -159,7 +160,7 @@ export default function Catalogue() {
                 }}>
                   Cette trame coûte{' '}
                   <span style={{ color: '#4db8ff', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                    {popup.credits}
+                    {popup.cout_achat}
                     <img src="/diamond.png" alt="crédits" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
                   </span>
                 </p>
@@ -170,14 +171,14 @@ export default function Catalogue() {
                   Votre solde :{' '}
                   <span style={{
                     fontWeight: 700,
-                    color: credits >= popup.credits ? '#7ec87e' : '#e8445a',
+                    color: credits >= popup.cout_achat ? '#7ec87e' : '#e8445a',
                     display: 'inline-flex', alignItems: 'center', gap: '4px'
                   }}>
                     {credits}
                     <img src="/diamond.png" alt="crédits" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
                   </span>
                 </p>
-                {credits < popup.credits && (
+                {credits < popup.cout_achat && (
                   <p style={{
                     fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
                     letterSpacing: '1px', color: '#e8445a', marginTop: '8px'
@@ -203,16 +204,16 @@ export default function Catalogue() {
               }}>Non</button>
               <button
                 onClick={confirmerAjout}
-                disabled={loading === popup.id || credits < popup.credits}
+                disabled={loading === popup.id || credits < popup.cout_achat}
                 style={{
                   padding: '12px 32px',
-                  background: credits < popup.credits ? 'rgba(100,100,100,0.2)' : 'linear-gradient(135deg, #cc4400, #ff6b1a)',
-                  border: 'none', color: credits < popup.credits ? '#555' : '#000',
+                  background: credits < popup.cout_achat ? 'rgba(100,100,100,0.2)' : 'linear-gradient(135deg, #cc4400, #ff6b1a)',
+                  border: 'none', color: credits < popup.cout_achat ? '#555' : '#000',
                   fontFamily: 'Cinzel, serif', fontSize: '0.9rem',
                   letterSpacing: '2px', textTransform: 'uppercase',
-                  cursor: credits < popup.credits ? 'not-allowed' : 'pointer',
+                  cursor: credits < popup.cout_achat ? 'not-allowed' : 'pointer',
                   fontWeight: 700,
-                  boxShadow: credits >= popup.credits ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
+                  boxShadow: credits >= popup.cout_achat ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
                 }}>
                 {loading === popup.id ? '...' : 'Oui'}
               </button>
@@ -258,7 +259,7 @@ export default function Catalogue() {
                   background: '#0d0800',
                   border: isHovered
                     ? '1px solid rgba(255,107,26,0.6)'
-                    : trame.credits > 0
+                    : trame.cout_achat > 0
                       ? '1px solid rgba(201,146,42,0.5)'
                       : '1px solid rgba(201,146,42,0.2)',
                   transition: 'all 0.3s ease',
@@ -349,11 +350,11 @@ export default function Catalogue() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{
                         fontFamily: 'Cinzel, serif', fontSize: '1.2rem', fontWeight: 700,
-                        color: trame.credits === 0 ? '#7ec87e' : '#4db8ff',
+                        color: trame.cout_achat === 0 ? '#7ec87e' : '#4db8ff',
                         display: 'inline-flex', alignItems: 'center', gap: '5px'
                       }}>
-                        {trame.credits === 0 ? 'Gratuite' : (
-                          <>{trame.credits}<img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} /></>
+                        {trame.cout_achat === 0 ? 'Gratuite' : (
+                          <>{trame.cout_achat}<img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} /></>
                         )}
                       </span>
                       {dejaAjoutee && !nonDisponible && (
