@@ -302,28 +302,11 @@ export default function Catalogue() {
                     }}>{trame.genre}</span>
                   </div>
 
-                  {/* Méta */}
-                  <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-                    <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.72rem', color: '#7a6a52', letterSpacing: '1px' }}>
-                      ⚒ {trame.chapitres} chapitres
-                    </span>
-                    {trame.duree && (
-                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.72rem', color: '#7a6a52', letterSpacing: '1px' }}>
-                        ✦ {trame.duree}
-                      </span>
-                    )}
-                    {trame.fins && (
-                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.72rem', color: '#7a6a52', letterSpacing: '1px' }}>
-                        ✦ {trame.fins} fins possibles
-                      </span>
-                    )}
-                  </div>
-
                   {/* Description */}
                   <p style={{
                     fontFamily: 'Crimson Text, serif', fontSize: '1.05rem',
                     color: '#a89880', lineHeight: '1.5', margin: 0, flex: 1,
-                    display: '-webkit-box', WebkitLineClamp: 2,
+                    display: '-webkit-box', WebkitLineClamp: 3,
                     WebkitBoxOrient: 'vertical', overflow: 'hidden'
                   }}>{trame.description}</p>
 
@@ -341,46 +324,56 @@ export default function Catalogue() {
                     </div>
                   )}
 
-                  {/* Footer : prix + bouton */}
+                  {/* Footer : coûts + bouton */}
                   <div style={{
                     borderTop: '1px solid rgba(201,146,42,0.15)',
-                    paddingTop: '10px',
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px'
+                    paddingTop: '8px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px'
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {/* Coûts */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                       <span style={{
-                        fontFamily: 'Cinzel, serif', fontSize: '1.2rem', fontWeight: 700,
-                        color: trame.cout_achat === 0 ? '#7ec87e' : '#4db8ff',
-                        display: 'inline-flex', alignItems: 'center', gap: '5px'
+                        fontFamily: 'Cinzel, serif', fontSize: '0.65rem',
+                        color: '#5a4a32', letterSpacing: '0.5px'
                       }}>
-                        {trame.cout_achat === 0 ? 'Gratuite' : (
-                          <>{trame.cout_achat}<img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} /></>
+                        Accès :{' '}
+                        <span style={{ color: trame.cout_achat === 0 ? '#7ec87e' : '#4db8ff', fontWeight: 700 }}>
+                          {trame.cout_achat === 0 ? 'Gratuit' : (
+                            <>{trame.cout_achat} <img src="/diamond.png" alt="crédits" style={{ height: '10px', width: '10px', objectFit: 'contain', display: 'inline' }} /></>
+                          )}
+                        </span>
+                        {dejaAjoutee && !nonDisponible && (
+                          <span style={{ color: '#ff6b1a', marginLeft: '6px' }}>· Dans votre forge</span>
                         )}
                       </span>
-                      {dejaAjoutee && !nonDisponible && (
-                        <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.62rem', color: '#ff6b1a', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                          · Dans votre forge
+                      <span style={{
+                        fontFamily: 'Cinzel, serif', fontSize: '0.65rem',
+                        color: '#5a4a32', letterSpacing: '0.5px'
+                      }}>
+                        Par histoire :{' '}
+                        <span style={{ color: '#4db8ff', fontWeight: 700 }}>
+                          {trame.cout_forge ?? 1} <img src="/diamond.png" alt="crédit" style={{ height: '10px', width: '10px', objectFit: 'contain', display: 'inline' }} />
                         </span>
-                      )}
+                      </span>
                     </div>
 
                     <button
                       onClick={() => handleAjouter(trame)}
                       disabled={dejaAjoutee || nonDisponible}
                       style={{
-                        padding: '8px 16px',
+                        padding: '7px 14px',
                         background: dejaAjoutee || nonDisponible ? 'transparent'
                           : isHovered ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'transparent',
                         border: `1px solid ${dejaAjoutee || nonDisponible ? 'rgba(100,100,100,0.3)' : 'rgba(201,146,42,0.4)'}`,
                         color: dejaAjoutee || nonDisponible ? '#555' : isHovered ? '#000' : '#c9922a',
-                        fontFamily: 'Cinzel, serif', fontSize: '0.75rem',
+                        fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
                         letterSpacing: '1.5px', textTransform: 'uppercase',
                         cursor: dejaAjoutee || nonDisponible ? 'not-allowed' : 'pointer',
                         fontWeight: 700, transition: 'all 0.3s ease', whiteSpace: 'nowrap',
                         boxShadow: isHovered && !dejaAjoutee && !nonDisponible ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
                       }}
                     >
-                      {dejaAjoutee ? '⚒ Dans la forge' : nonDisponible ? '✦ Bientôt disponible' : '⚒ Ajouter à ma forge'}
+                      {dejaAjoutee ? '⚒ Dans la forge' : nonDisponible ? '✦ Bientôt' : '⚒ Ajouter'}
                     </button>
                   </div>
                 </div>
