@@ -1,0 +1,313 @@
+{
+  "trame_id": "bal-de-village-2",
+  "titre": "Bal de Village 2.0",
+  "description": "Un bal de village en plein air, de nos jours. Une rencontre inattendue. Une nuit pour tout changer.",
+  "gratuite": false,
+  "cout_credits": 3,
+  "nb_chapitres": 20,
+  "prenoms_libres": true,
+
+  "personnages_fixes": {
+    "rival": "Sasha",
+    "ami": "Léo"
+  },
+
+  "jauges": {
+    "desir": { "label": "Désir", "emoji": "💛", "max": 20 },
+    "confiance": { "label": "Confiance", "emoji": "🤍", "max": 20 },
+    "mystere": { "label": "Mystère", "emoji": "🖤", "max": 20 }
+  },
+
+  "professions_parent": [
+    "chanteur·se mondialement connu·e",
+    "acteur·rice de renommée internationale",
+    "personnalité politique nationale très médiatisée",
+    "grand·e chef·fe cuisinier·e aux multiples étoiles et émissions TV",
+    "champion·ne olympique dans son sport"
+  ],
+
+  "fins": [
+    {
+      "id": "union_des_ames",
+      "titre": "L'union des âmes",
+      "emoji": "💛",
+      "condition": "desir >= 14 ET confiance >= 14",
+      "priorite": 1
+    },
+    {
+      "id": "coup_de_foudre_libre",
+      "titre": "Le coup de foudre libre",
+      "emoji": "💛",
+      "condition": "desir >= 14 ET mystere >= 14 ET confiance < 14",
+      "priorite": 2
+    },
+    {
+      "id": "ami_precieux",
+      "titre": "L'ami précieux",
+      "emoji": "🤍",
+      "condition": "confiance >= 14 ET desir < 14",
+      "priorite": 3
+    },
+    {
+      "id": "enigme_non_resolue",
+      "titre": "L'énigme non résolue",
+      "emoji": "🤍",
+      "condition": "mystere >= 14 ET confiance < 14 ET desir < 14",
+      "priorite": 4
+    },
+    {
+      "id": "malentendu",
+      "titre": "Le malentendu",
+      "emoji": "🖤",
+      "condition": "desir >= 14 ET confiance < 7",
+      "priorite": 5
+    },
+    {
+      "id": "trop_tard",
+      "titre": "Trop tard",
+      "emoji": "🖤",
+      "condition": "fallback",
+      "priorite": 6
+    }
+  ],
+
+  "prompt_systeme": "Tu es le narrateur d'une histoire de romance contemporaine intitulée \"Bal de Village 2.0\".\n\nCONTEXTE FIXE :\n- L'histoire se déroule lors d'un bal de village en plein air, de nos jours, en été. Sono, DJ local, guirlandes lumineuses dans les platanes, buvette associative, pelouse, nuit chaude.\n- Le protagoniste s'appelle [PRENOM_PROTAGONISTE].\n- Le personnage à séduire s'appelle [PRENOM_CIBLE]. Il/elle cache un secret : il/elle est la fille/le fils d'une célébrité et fuit la ville pour passer une nuit anonyme. Ce secret n'est révélé qu'au chapitre 20.\n- Sasha est un·e rival·e séduisant·e et insistant·e qui tente de s'interposer.\n- Léo est l'ami·e complice de [PRENOM_PROTAGONISTE], bienveillant·e et observateur·rice.\n- Le ton est moderne, romantique, immersif — ni vulgaire ni naïf. Registre grand public contemporain.\n\nIMPORTANT SUR LE GENRE :\n- Tu ne connais pas le genre des personnages. N'utilise jamais de pronoms genrés (il/elle, son/sa, le/la) pour désigner [PRENOM_PROTAGONISTE] ou [PRENOM_CIBLE].\n- Utilise uniquement leurs prénoms ou des formulations neutres.\n- Exemple correct : \"[PRENOM_CIBLE] sourit et détourne les yeux.\"\n- Exemple incorrect : \"Elle sourit et détourna les yeux.\"\n\nTON RÔLE :\nTu génères le texte narratif d'un chapitre en tenant compte du choix que le joueur vient de faire au chapitre précédent, ainsi que l'état des 3 jauges.\n\nRÈGLES :\n- Environ 100 à 200 mots. Cette fourchette est indicative : l'important est que le texte soit naturel et cohérent. Ne jamais couper une idée, ne jamais allonger artificiellement.\n- Toujours écrire à la deuxième personne du singulier (\"tu\", \"ton\", \"ta\").\n- Le texte doit refléter subtilement l'état des jauges :\n    * Désir élevé : tension physique, regards, proximité\n    * Confiance élevée : chaleur, complicité, moments de vérité\n    * Mystère élevé : ambiguïté, questions sans réponse, fascination distante\n- Ne jamais révéler les scores ni mentionner les jauges.\n- Ne jamais conclure l'histoire avant le chapitre 20.\n- Ne jamais révéler le secret de [PRENOM_CIBLE] avant le chapitre 20.\n- Terminer chaque texte sur une phrase qui crée de l'attente, sans révéler les choix à venir.\n- Aucun Markdown, aucun titre, aucune liste de choix dans le texte généré.\n\nSI C'EST LE CHAPITRE 1 :\nTu génères une scène d'ouverture qui plante le décor du bal en plein air et présente [PRENOM_PROTAGONISTE] arrivant sur les lieux. [PRENOM_CIBLE] apparaît dans la foule. Environ 100 à 200 mots, de manière indicative.\n\nSI C'EST LE CHAPITRE 20 (dernier chapitre) :\nLe secret est révélé : [PRENOM_CIBLE] est la fille/le fils de [PROFESSION_PARENT] (invente un nom fictif et des détails crédibles pour ce parent célèbre — n'utilise jamais le nom d'une personne réelle). La fin générée dépend de la fin déclenchée. Environ 200 à 300 mots, de manière indicative. Conclure avec émotion sans laisser de question ouverte.\n\nFORMAT DE RÉPONSE :\nTexte narratif uniquement. Aucun titre, aucun label, aucune métadonnée. Juste le texte.",
+
+  "chapitres_data": [
+    {
+      "id": 1,
+      "titre": "L'arrivée",
+      "acte": 1,
+      "context": "Le bal de village bat son plein. La sono résonne sous les platanes, les guirlandes dessinent des arabesques dorées dans la nuit tiède. Tu arrives sur la pelouse et, dans la foule, quelqu'un attire immédiatement ton regard.",
+      "jauges_ciblees": ["desir"],
+      "choices": [
+        { "text": "Tu t'approches directement, porté·e par une impulsion que tu ne t'expliques pas", "pts_desir": 2, "pts_confiance": 0, "pts_mystere": 0 },
+        { "text": "Tu restes en retrait, observant la scène depuis la buvette", "pts_desir": 0, "pts_confiance": 0, "pts_mystere": 1 },
+        { "text": "Tu demandes à Léo qui est cette personne avant de faire quoi que ce soit", "pts_desir": 1, "pts_confiance": 0, "pts_mystere": 0 }
+      ]
+    },
+    {
+      "id": 2,
+      "titre": "Le premier contact",
+      "acte": 1,
+      "context": "Vos regards se croisent. Une fraction de seconde, puis [PRENOM_CIBLE] détourne les yeux avec un demi-sourire. C'est maintenant ou jamais.",
+      "jauges_ciblees": ["desir", "mystere"],
+      "choices": [
+        { "text": "Tu soutiens le regard jusqu'à ce que [PRENOM_CIBLE] le brise à nouveau", "pts_desir": 2, "pts_confiance": 0, "pts_mystere": 1 },
+        { "text": "Tu souris et regardes ailleurs, laissant la tension monter", "pts_desir": 1, "pts_confiance": 0, "pts_mystere": 2 },
+        { "text": "Tu t'approches et te présentes simplement", "pts_desir": 1, "pts_confiance": 1, "pts_mystere": 0 }
+      ]
+    },
+    {
+      "id": 3,
+      "titre": "La conversation",
+      "acte": 1,
+      "context": "Vous parlez pour la première fois. La musique est trop forte pour se comprendre facilement — vous vous penchez l'un vers l'autre. [PRENOM_CIBLE] est plus intéressant·e que prévu.",
+      "jauges_ciblees": ["confiance"],
+      "choices": [
+        { "text": "Tu poses des questions sur sa vie, tu écoutes vraiment", "pts_desir": 0, "pts_confiance": 2, "pts_mystere": 0 },
+        { "text": "Tu parles de toi avec humour et légèreté", "pts_desir": 1, "pts_confiance": 1, "pts_mystere": 0 },
+        { "text": "Tu restes vague sur toi-même, laissant [PRENOM_CIBLE] curieux·se", "pts_desir": 0, "pts_confiance": 0, "pts_mystere": 2 }
+      ]
+    },
+    {
+      "id": 4,
+      "titre": "Sasha entre en scène",
+      "acte": 1,
+      "context": "Sasha surgit, séduisant·e et à l'aise, et s'impose dans la conversation. En quelques secondes, Sasha monopolise l'attention de [PRENOM_CIBLE]. Comment réagis-tu ?",
+      "jauges_ciblees": ["desir", "mystere"],
+      "choices": [
+        { "text": "Tu reprends naturellement ta place dans la conversation sans t'énerver", "pts_desir": 2, "pts_confiance": 0, "pts_mystere": 0 },
+        { "text": "Tu t'éclipses discrètement, laissant Sasha jouer son jeu", "pts_desir": 0, "pts_confiance": 0, "pts_mystere": 2 },
+        { "text": "Tu lances une remarque qui fait rire [PRENOM_CIBLE] et coupe Sasha dans son élan", "pts_desir": 1, "pts_confiance": 0, "pts_mystere": 1 }
+      ]
+    },
+    {
+      "id": 5,
+      "titre": "Le premier indice",
+      "acte": 1,
+      "context": "[PRENOM_CIBLE] reçoit un appel et s'éloigne de quelques pas, le dos tourné. Tu remarques qu'il/elle raccroche vite, l'air agacé·e, et jette un coup d'œil autour comme si quelqu'un pouvait le/la reconnaître.",
+      "jauges_ciblees": ["confiance"],
+      "choices": [
+        { "text": "Tu fais semblant de n'avoir rien remarqué quand [PRENOM_CIBLE] revient", "pts_desir": 0, "pts_confiance": 1, "pts_mystere": 1 },
+        { "text": "Tu lui demandes doucement si tout va bien", "pts_desir": 0, "pts_confiance": 2, "pts_mystere": 0 },
+        { "text": "Tu lui lances un regard entendu qui dit que tu as remarqué", "pts_desir": 1, "pts_confiance": 0, "pts_mystere": 1 }
+      ]
+    },
+    {
+      "id": 6,
+      "titre": "La danse",
+      "acte": 2,
+      "context": "Le DJ enchaîne sur un morceau plus lent. Autour de vous, des couples se forment sur la piste improvisée. [PRENOM_CIBLE] te regarde.",
+      "jauges_ciblees": ["desir"],
+      "choices": [
+        { "text": "Tu tends la main sans un mot", "pts_desir": 2, "pts_confiance": 0, "pts_mystere": 1 },
+        { "text": "Tu proposes d'aller chercher deux verres plutôt que de danser", "pts_desir": 0, "pts_confiance": 1, "pts_mystere": 0 },
+        { "text": "Tu danses seul·e à côté, en laissant [PRENOM_CIBLE] décider", "pts_desir": 1, "pts_confiance": 0, "pts_mystere": 1 }
+      ]
+    },
+    {
+      "id": 7,
+      "titre": "Les confidences",
+      "acte": 2,
+      "context": "Vous vous retrouvez assis à l'écart de la foule, sur un muret. Le bruit du bal vous parvient en sourdine. [PRENOM_CIBLE] commence à parler de lui/elle — prudemment, par fragments.",
+      "jauges_ciblees": ["confiance"],
+      "choices": [
+        { "text": "Tu écoutes sans interrompre, en hochant la tête", "pts_desir": 0, "pts_confiance": 2, "pts_mystere": 0 },
+        { "text": "Tu partages quelque chose de personnel en retour", "pts_desir": 0, "pts_confiance": 2, "pts_mystere": 0 },
+        { "text": "Tu poses une question qui va un peu plus loin que ce que [PRENOM_CIBLE] a dit", "pts_desir": 1, "pts_confiance": 1, "pts_mystere": 1 }
+      ]
+    },
+    {
+      "id": 8,
+      "titre": "Léo te conseille",
+      "acte": 2,
+      "context": "Léo te tire par le bras pendant que [PRENOM_CIBLE] est aux toilettes. \"Je sais pas qui c'est, mais il/elle te regarde différemment depuis tout à l'heure. Fais attention à toi.\" Que fais-tu de ce conseil ?",
+      "jauges_ciblees": ["mystere"],
+      "choices": [
+        { "text": "Tu remercies Léo et décides de rester prudent·e", "pts_desir": 0, "pts_confiance": 0, "pts_mystere": 2 },
+        { "text": "Tu ignores Léo — tu te fais ton propre avis", "pts_desir": 1, "pts_confiance": 0, "pts_mystere": 0 },
+        { "text": "Tu demandes à Léo de se renseigner discrètement sur [PRENOM_CIBLE]", "pts_desir": 0, "pts_confiance": 0, "pts_mystere": 1 }
+      ]
+    },
+    {
+      "id": 9,
+      "titre": "Le mensonge",
+      "acte": 2,
+      "context": "[PRENOM_CIBLE] te dit qu'il/elle vient \"du coin, un petit village à côté\". Mais quelque chose dans sa façon de dire ça sonne faux. Trop préparé. Trop lisse.",
+      "jauges_ciblees": ["confiance", "mystere"],
+      "choices": [
+        { "text": "Tu acquiesces sans relever — tout le monde a le droit à ses secrets", "pts_desir": 0, "pts_confiance": 1, "pts_mystere": 1 },
+        { "text": "Tu souris et dis \"Je te crois.\" d'un ton qui dit le contraire", "pts_desir": 1, "pts_confiance": 0, "pts_mystere": 2 },
+        { "text": "Tu poses une question précise pour voir si [PRENOM_CIBLE] tient son histoire", "pts_desir": 0, "pts_confiance": 1, "pts_mystere": 1 }
+      ]
+    },
+    {
+      "id": 10,
+      "titre": "Sasha revient",
+      "acte": 2,
+      "context": "Sasha réapparaît avec deux verres et une anecdote que tout le monde écoute. [PRENOM_CIBLE] rit poliment. Tu sens que Sasha joue un jeu — mais lequel exactement ?",
+      "jauges_ciblees": ["desir", "confiance"],
+      "choices": [
+        { "text": "Tu rejoins le groupe et tu existes — présence calme, regard posé sur [PRENOM_CIBLE]", "pts_desir": 2, "pts_confiance": 0, "pts_mystere": 0 },
+        { "text": "Tu proposes à [PRENOM_CIBLE] de vous éloigner sous prétexte de lui montrer quelque chose", "pts_desir": 1, "pts_confiance": 1, "pts_mystere": 0 },
+        { "text": "Tu observes depuis la distance pour voir comment [PRENOM_CIBLE] se comporte avec Sasha", "pts_desir": 0, "pts_confiance": 0, "pts_mystere": 2 }
+      ]
+    },
+    {
+      "id": 11,
+      "titre": "Sous les étoiles",
+      "acte": 3,
+      "context": "Vous vous éloignez du bal, vers le bord de la pelouse où il n'y a plus que l'herbe et le ciel. La musique est lointaine. Vous êtes seul·e·s pour de vrai.",
+      "jauges_ciblees": ["desir", "confiance"],
+      "choices": [
+        { "text": "Tu te rapproches physiquement, presque sans y penser", "pts_desir": 2, "pts_confiance": 0, "pts_mystere": 0 },
+        { "text": "Tu t'allonges dans l'herbe et invites [PRENOM_CIBLE] à faire pareil", "pts_desir": 1, "pts_confiance": 1, "pts_mystere": 0 },
+        { "text": "Tu gardes une distance confortable et laisses la conversation venir", "pts_desir": 0, "pts_confiance": 2, "pts_mystere": 0 }
+      ]
+    },
+    {
+      "id": 12,
+      "titre": "La photo",
+      "acte": 3,
+      "context": "Un groupe de fêtards veut faire une photo souvenir et vous inclut dedans. [PRENOM_CIBLE] se raidit imperceptiblement et se place instinctivement derrière toi.",
+      "jauges_ciblees": ["mystere"],
+      "choices": [
+        { "text": "Tu te places naturellement devant pour lui faire écran sans en faire un plat", "pts_desir": 1, "pts_confiance": 1, "pts_mystere": 0 },
+        { "text": "Tu proposes qu'on ne prenne que toi en photo à la place", "pts_desir": 0, "pts_confiance": 0, "pts_mystere": 2 },
+        { "text": "Tu observes la réaction de [PRENOM_CIBLE] sans intervenir — tu veux comprendre", "pts_desir": 0, "pts_confiance": 0, "pts_mystere": 2 }
+      ]
+    },
+    {
+      "id": 13,
+      "titre": "La question directe",
+      "acte": 3,
+      "context": "Il y a trop de petits détails qui ne collent pas. Tu décides de poser la question — pas brutalement, mais clairement.",
+      "jauges_ciblees": ["confiance", "mystere"],
+      "choices": [
+        { "text": "\"Est-ce que tu me dis vraiment qui tu es ?\"", "pts_desir": 0, "pts_confiance": 2, "pts_mystere": 0 },
+        { "text": "\"J'ai l'impression que tu joues un rôle ce soir. Et je trouve ça fascinant.\"", "pts_desir": 1, "pts_confiance": 0, "pts_mystere": 2 },
+        { "text": "Tu laisses tomber la question et changes de sujet — pas encore", "pts_desir": 0, "pts_confiance": 1, "pts_mystere": 1 }
+      ]
+    },
+    {
+      "id": 14,
+      "titre": "Sasha sème le doute",
+      "acte": 3,
+      "context": "Sasha te prend à part et prétend reconnaître [PRENOM_CIBLE]. \"Je suis sûr·e de l'avoir déjà vu·e quelque part. Dans un magazine ou à la télé.\" Est-ce que Sasha dit vrai ou cherche juste à te déstabiliser ?",
+      "jauges_ciblees": ["desir", "mystere"],
+      "choices": [
+        { "text": "Tu ignores Sasha et retournes vers [PRENOM_CIBLE] — ça ne change rien pour toi", "pts_desir": 2, "pts_confiance": 0, "pts_mystere": 0 },
+        { "text": "Tu joues le jeu de Sasha pour voir comment [PRENOM_CIBLE] réagit si tu mentionnes ça", "pts_desir": 0, "pts_confiance": 0, "pts_mystere": 2 },
+        { "text": "Tu demandes directement à [PRENOM_CIBLE] si Sasha le/la connaît", "pts_desir": 0, "pts_confiance": 1, "pts_mystere": 1 }
+      ]
+    },
+    {
+      "id": 15,
+      "titre": "Le point de bascule",
+      "acte": 3,
+      "context": "[PRENOM_CIBLE] regarde l'heure pour la deuxième fois en cinq minutes. Tu sens que la soirée pourrait se terminer là, maintenant, si tu ne fais rien.",
+      "jauges_ciblees": ["confiance", "desir"],
+      "choices": [
+        { "text": "Tu prends la main de [PRENOM_CIBLE] doucement et tu dis \"Reste encore un peu.\"", "pts_desir": 2, "pts_confiance": 1, "pts_mystere": 0 },
+        { "text": "Tu proposes d'aller marcher — juste quelques minutes hors du bal", "pts_desir": 1, "pts_confiance": 1, "pts_mystere": 0 },
+        { "text": "Tu ne dis rien — si [PRENOM_CIBLE] veut partir, c'est son choix", "pts_desir": 0, "pts_confiance": 0, "pts_mystere": 2 }
+      ]
+    },
+    {
+      "id": 16,
+      "titre": "Les fissures",
+      "acte": 4,
+      "context": "Dans la conversation, [PRENOM_CIBLE] laisse échapper le nom d'un endroit — un quartier chic d'une grande ville — puis se reprend trop vite. Les pièces du puzzle commencent à s'assembler.",
+      "jauges_ciblees": ["mystere", "confiance"],
+      "choices": [
+        { "text": "Tu fais comme si tu n'avais pas entendu — tu lui laisses le contrôle", "pts_desir": 0, "pts_confiance": 1, "pts_mystere": 1 },
+        { "text": "Tu relèves avec légèreté : \"Je croyais que tu venais du coin ?\"", "pts_desir": 0, "pts_confiance": 1, "pts_mystere": 2 },
+        { "text": "Tu souris sans rien dire — votre regard dit tout", "pts_desir": 1, "pts_confiance": 0, "pts_mystere": 2 }
+      ]
+    },
+    {
+      "id": 17,
+      "titre": "La dernière danse",
+      "acte": 4,
+      "context": "Le DJ annonce le dernier morceau de la soirée. La foule pousse un cri. Les lumières changent. C'est le moment.",
+      "jauges_ciblees": ["desir"],
+      "choices": [
+        { "text": "Tu entraînes [PRENOM_CIBLE] sur la piste sans demander la permission", "pts_desir": 2, "pts_confiance": 0, "pts_mystere": 0 },
+        { "text": "Tu tends la main à [PRENOM_CIBLE] en disant \"Une dernière ?\"", "pts_desir": 2, "pts_confiance": 1, "pts_mystere": 0 },
+        { "text": "Tu restes là où tu es et tu regardes [PRENOM_CIBLE] danser", "pts_desir": 1, "pts_confiance": 0, "pts_mystere": 1 }
+      ]
+    },
+    {
+      "id": 18,
+      "titre": "Sasha s'en va",
+      "acte": 4,
+      "context": "Sasha vous observe depuis l'autre bout de la pelouse, puis hausse les épaules et disparaît dans la foule. Pour la première fois de la soirée, vous êtes vraiment seul·e·s.",
+      "jauges_ciblees": ["desir", "confiance"],
+      "choices": [
+        { "text": "Tu souffles : \"Enfin.\" en souriant", "pts_desir": 1, "pts_confiance": 1, "pts_mystere": 0 },
+        { "text": "Tu profites du moment pour te rapprocher encore de [PRENOM_CIBLE]", "pts_desir": 2, "pts_confiance": 0, "pts_mystere": 0 },
+        { "text": "Tu ne dis rien — le silence entre vous est suffisant", "pts_desir": 1, "pts_confiance": 1, "pts_mystere": 1 }
+      ]
+    },
+    {
+      "id": 19,
+      "titre": "L'aveu à moitié",
+      "acte": 4,
+      "context": "[PRENOM_CIBLE] commence une phrase : \"Il faut que je te dise quelque chose sur moi...\" Puis il/elle s'arrête. Quelque chose l'en empêche encore.",
+      "jauges_ciblees": ["confiance", "mystere"],
+      "choices": [
+        { "text": "\"Prends ton temps. Je suis là.\"", "pts_desir": 0, "pts_confiance": 2, "pts_mystere": 0 },
+        { "text": "\"Tu n'as pas à me dire quoi que ce soit ce soir.\"", "pts_desir": 0, "pts_confiance": 1, "pts_mystere": 1 },
+        { "text": "Tu attends en silence, sans presser [PRENOM_CIBLE]", "pts_desir": 1, "pts_confiance": 1, "pts_mystere": 1 }
+      ]
+    },
+    {
+      "id": 20,
+      "titre": "La vérité",
+      "acte": 4,
+      "context": "Le bal se termine. Les lumières baissent. [PRENOM_CIBLE] te prend à part et te dit enfin qui il/elle est vraiment.",
+      "choices": []
+    }
+  ]
+}

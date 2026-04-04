@@ -67,7 +67,7 @@ export default function Forge() {
     if (!popup) return
     setLoading(popup.trame_id)
 
-    // Si draft détecté → reprendre sans débiter
+    // Si draft détecté → reprendre sans débiter (toujours vers /generer)
     if (hasDraft) {
       setLoading(null)
       setPopup(null)
@@ -100,6 +100,17 @@ export default function Forge() {
     setCredits(prev => prev - 1)
     setLoading(null)
     setPopup(null)
+
+    // Vérifier si la trame nécessite des prénoms libres
+    try {
+      const trameRes = await fetch(`/trames/${popup.trame_id}.json`)
+      const trameData = trameRes.ok ? await trameRes.json() : null
+      if (trameData?.prenoms_libres) {
+        router.push(`/generer/${popup.trame_id}/demarrer`)
+        return
+      }
+    } catch { }
+
     router.push(`/generer/${popup.trame_id}`)
   }
 
