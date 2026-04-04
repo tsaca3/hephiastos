@@ -306,7 +306,7 @@ export default function Catalogue() {
                   <p style={{
                     fontFamily: 'Crimson Text, serif', fontSize: '1.05rem',
                     color: '#a89880', lineHeight: '1.5', margin: 0, flex: 1,
-                    display: '-webkit-box', WebkitLineClamp: 3,
+                    display: '-webkit-box', WebkitLineClamp: 4,
                     WebkitBoxOrient: 'vertical', overflow: 'hidden'
                   }}>{trame.description}</p>
 
@@ -330,12 +330,9 @@ export default function Catalogue() {
                     paddingTop: '8px',
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px'
                   }}>
-                    {/* Coûts */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      <span style={{
-                        fontFamily: 'Cinzel, serif', fontSize: '0.65rem',
-                        color: '#5a4a32', letterSpacing: '0.5px'
-                      }}>
+                    {/* Coûts côte à côte */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.65rem', color: '#5a4a32', letterSpacing: '0.5px' }}>
                         Accès :{' '}
                         <span style={{ color: trame.cout_achat === 0 ? '#7ec87e' : '#4db8ff', fontWeight: 700 }}>
                           {trame.cout_achat === 0 ? 'Gratuit' : (
@@ -343,14 +340,12 @@ export default function Catalogue() {
                           )}
                         </span>
                         {dejaAjoutee && !nonDisponible && (
-                          <span style={{ color: '#ff6b1a', marginLeft: '6px' }}>· Dans votre forge</span>
+                          <span style={{ color: '#ff6b1a', marginLeft: '4px' }}>· Forge</span>
                         )}
                       </span>
-                      <span style={{
-                        fontFamily: 'Cinzel, serif', fontSize: '0.65rem',
-                        color: '#5a4a32', letterSpacing: '0.5px'
-                      }}>
-                        Par histoire :{' '}
+                      <span style={{ color: '#3a2a10', fontSize: '0.6rem' }}>|</span>
+                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.65rem', color: '#5a4a32', letterSpacing: '0.5px' }}>
+                        Histoire :{' '}
                         <span style={{ color: '#4db8ff', fontWeight: 700 }}>
                           {trame.cout_forge ?? 1} <img src="/diamond.png" alt="crédit" style={{ height: '10px', width: '10px', objectFit: 'contain', display: 'inline' }} />
                         </span>
