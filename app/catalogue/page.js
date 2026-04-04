@@ -306,7 +306,7 @@ export default function Catalogue() {
                   <p style={{
                     fontFamily: 'Crimson Text, serif', fontSize: '1.05rem',
                     color: '#a89880', lineHeight: '1.5', margin: 0, flex: 1,
-                    display: '-webkit-box', WebkitLineClamp: 4,
+                    display: '-webkit-box', WebkitLineClamp: 5,
                     WebkitBoxOrient: 'vertical', overflow: 'hidden'
                   }}>{trame.description}</p>
 
@@ -327,27 +327,27 @@ export default function Catalogue() {
                   {/* Footer : coûts + bouton */}
                   <div style={{
                     borderTop: '1px solid rgba(201,146,42,0.15)',
-                    paddingTop: '8px',
+                    paddingTop: '6px',
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px'
                   }}>
-                    {/* Coûts côte à côte */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.65rem', color: '#5a4a32', letterSpacing: '0.5px' }}>
+                    {/* Coûts côte à côte - même taille que l'ancien prix */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '1rem', color: '#5a4a32' }}>
                         Accès :{' '}
                         <span style={{ color: trame.cout_achat === 0 ? '#7ec87e' : '#4db8ff', fontWeight: 700 }}>
                           {trame.cout_achat === 0 ? 'Gratuit' : (
-                            <>{trame.cout_achat} <img src="/diamond.png" alt="crédits" style={{ height: '10px', width: '10px', objectFit: 'contain', display: 'inline' }} /></>
+                            <>{trame.cout_achat} <img src="/diamond.png" alt="crédits" style={{ height: '13px', width: '13px', objectFit: 'contain', display: 'inline', verticalAlign: 'middle' }} /></>
                           )}
                         </span>
                         {dejaAjoutee && !nonDisponible && (
-                          <span style={{ color: '#ff6b1a', marginLeft: '4px' }}>· Forge</span>
+                          <span style={{ color: '#ff6b1a', marginLeft: '4px', fontSize: '0.75rem' }}>· Forge</span>
                         )}
                       </span>
-                      <span style={{ color: '#3a2a10', fontSize: '0.6rem' }}>|</span>
-                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '0.65rem', color: '#5a4a32', letterSpacing: '0.5px' }}>
+                      <span style={{ color: '#3a2a10' }}>|</span>
+                      <span style={{ fontFamily: 'Cinzel, serif', fontSize: '1rem', color: '#5a4a32' }}>
                         Histoire :{' '}
                         <span style={{ color: '#4db8ff', fontWeight: 700 }}>
-                          {trame.cout_forge ?? 1} <img src="/diamond.png" alt="crédit" style={{ height: '10px', width: '10px', objectFit: 'contain', display: 'inline' }} />
+                          {trame.cout_forge ?? 1} <img src="/diamond.png" alt="crédit" style={{ height: '13px', width: '13px', objectFit: 'contain', display: 'inline', verticalAlign: 'middle' }} />
                         </span>
                       </span>
                     </div>
@@ -361,14 +361,14 @@ export default function Catalogue() {
                           : isHovered ? 'linear-gradient(135deg, #cc4400, #ff6b1a)' : 'transparent',
                         border: `1px solid ${dejaAjoutee || nonDisponible ? 'rgba(100,100,100,0.3)' : 'rgba(201,146,42,0.4)'}`,
                         color: dejaAjoutee || nonDisponible ? '#555' : isHovered ? '#000' : '#c9922a',
-                        fontFamily: 'Cinzel, serif', fontSize: '0.7rem',
+                        fontFamily: 'Cinzel, serif', fontSize: '0.72rem',
                         letterSpacing: '1.5px', textTransform: 'uppercase',
                         cursor: dejaAjoutee || nonDisponible ? 'not-allowed' : 'pointer',
                         fontWeight: 700, transition: 'all 0.3s ease', whiteSpace: 'nowrap',
                         boxShadow: isHovered && !dejaAjoutee && !nonDisponible ? '0 4px 20px rgba(255,107,26,0.4)' : 'none'
                       }}
                     >
-                      {dejaAjoutee ? '⚒ Dans la forge' : nonDisponible ? '✦ Bientôt' : '⚒ Ajouter'}
+                      {dejaAjoutee ? '⚒ Dans la forge' : nonDisponible ? '✦ Bientôt' : '⚒ Ajouter à la forge'}
                     </button>
                   </div>
                 </div>
