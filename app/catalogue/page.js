@@ -306,13 +306,13 @@ export default function Catalogue() {
                   <p style={{
                     fontFamily: 'Crimson Text, serif', fontSize: '1.05rem',
                     color: '#a89880', lineHeight: '1.5', margin: 0, flex: 1,
-                    display: '-webkit-box', WebkitLineClamp: 5,
+                    display: '-webkit-box', WebkitLineClamp: 6,
                     WebkitBoxOrient: 'vertical', overflow: 'hidden'
                   }}>{trame.description}</p>
 
                   {/* Pills mécaniques */}
                   {trame.mecaniques && trame.mecaniques.length > 0 && (
-                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '4px' }}>
                       {trame.mecaniques.map((m, i) => (
                         <span key={i} style={{
                           fontFamily: 'Cinzel, serif', fontSize: '0.62rem', letterSpacing: '0.5px',
@@ -327,25 +327,21 @@ export default function Catalogue() {
                   {/* Footer : coûts + bouton */}
                   <div style={{
                     borderTop: '1px solid rgba(201,146,42,0.15)',
-                    paddingTop: '6px',
+                    paddingTop: '6px', marginTop: '4px',
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px'
                   }}>
-                    {/* Coûts côte à côte - même taille que l'ancien prix */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                       <span style={{ fontFamily: 'Cinzel, serif', fontSize: '1rem', color: '#5a4a32' }}>
-                        Accès :{' '}
+                        Prix de la trame :{' '}
                         <span style={{ color: trame.cout_achat === 0 ? '#7ec87e' : '#4db8ff', fontWeight: 700 }}>
                           {trame.cout_achat === 0 ? 'Gratuit' : (
                             <>{trame.cout_achat} <img src="/diamond.png" alt="crédits" style={{ height: '13px', width: '13px', objectFit: 'contain', display: 'inline', verticalAlign: 'middle' }} /></>
                           )}
                         </span>
-                        {dejaAjoutee && !nonDisponible && (
-                          <span style={{ color: '#ff6b1a', marginLeft: '4px', fontSize: '0.75rem' }}>· Forge</span>
-                        )}
                       </span>
                       <span style={{ color: '#3a2a10' }}>|</span>
                       <span style={{ fontFamily: 'Cinzel, serif', fontSize: '1rem', color: '#5a4a32' }}>
-                        Histoire :{' '}
+                        Coût de forge d'une histoire :{' '}
                         <span style={{ color: '#4db8ff', fontWeight: 700 }}>
                           {trame.cout_forge ?? 1} <img src="/diamond.png" alt="crédit" style={{ height: '13px', width: '13px', objectFit: 'contain', display: 'inline', verticalAlign: 'middle' }} />
                         </span>
