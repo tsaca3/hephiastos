@@ -411,35 +411,6 @@ export default function Generer() {
           textAlign: 'center', marginBottom: '40px'
         }}>{trame.titre}</h1>
 
-        {/* JAUGES (uniquement pour les trames à 3 jauges) */}
-        {isTriJauges && !finished && (
-          <div style={{
-            display: 'flex', gap: '16px', justifyContent: 'center',
-            marginBottom: '32px', flexWrap: 'wrap'
-          }}>
-            {[
-              { label: 'Désir', emoji: '💛', value: scoreDesir },
-              { label: 'Confiance', emoji: '🤍', value: scoreConfiance },
-              { label: 'Mystère', emoji: '🖤', value: scoreMystere }
-            ].map(j => (
-              <div key={j.label} style={{
-                background: '#0d0800', border: '1px solid rgba(201,146,42,0.2)',
-                padding: '12px 20px', textAlign: 'center', minWidth: '100px'
-              }}>
-                <p style={{
-                  fontFamily: 'Cinzel, serif', fontSize: '0.6rem',
-                  letterSpacing: '2px', textTransform: 'uppercase',
-                  color: '#7a6a52', marginBottom: '6px'
-                }}>{j.emoji} {j.label}</p>
-                <p style={{
-                  fontFamily: 'Cinzel Decorative, serif', fontSize: '1.3rem',
-                  color: '#e8b84b'
-                }}>{j.value}<span style={{ fontSize: '0.7rem', color: '#5a4a32' }}>/20</span></p>
-              </div>
-            ))}
-          </div>
-        )}
-
         {/* PROGRESSION */}
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -491,6 +462,36 @@ export default function Generer() {
                 color: '#ff6b1a', letterSpacing: '2px', textTransform: 'uppercase',
                 marginBottom: '24px'
               }}>{finData.emoji} {finData.titre}</p>
+            )}
+
+            {/* JAUGES RÉVÉLÉES À LA FIN */}
+            {isTriJauges && (
+              <div style={{
+                display: 'flex', gap: '12px', justifyContent: 'center',
+                marginBottom: '28px', flexWrap: 'wrap'
+              }}>
+                {[
+                  { label: 'Désir', emoji: '💛', value: scoreDesir },
+                  { label: 'Confiance', emoji: '🤍', value: scoreConfiance },
+                  { label: 'Mystère', emoji: '🖤', value: scoreMystere }
+                ].map(j => (
+                  <div key={j.label} style={{
+                    background: 'rgba(201,146,42,0.05)',
+                    border: '1px solid rgba(201,146,42,0.25)',
+                    padding: '10px 20px', textAlign: 'center', minWidth: '90px'
+                  }}>
+                    <p style={{
+                      fontFamily: 'Cinzel, serif', fontSize: '0.6rem',
+                      letterSpacing: '2px', textTransform: 'uppercase',
+                      color: '#7a6a52', marginBottom: '4px'
+                    }}>{j.emoji} {j.label}</p>
+                    <p style={{
+                      fontFamily: 'Cinzel Decorative, serif', fontSize: '1.2rem',
+                      color: '#e8b84b'
+                    }}>{j.value}<span style={{ fontSize: '0.65rem', color: '#5a4a32' }}>/20</span></p>
+                  </div>
+                ))}
+              </div>
             )}
             {chapterText.split('\n\n').filter(p => p.trim()).map((para, i, arr) => (
               <p key={i} style={{
