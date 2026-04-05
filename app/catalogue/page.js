@@ -101,7 +101,7 @@ export default function Catalogue() {
       user_id: session.user.id,
       trame_id: popup.id,
       trame_titre: popup.titre,
-      pseudo: pseudo,
+      username: pseudo,
       image: popup.image,
       cout_forge: popup.cout_forge ?? 1
     })
