@@ -315,9 +315,9 @@ export default function Catalogue() {
                     <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '4px' }}>
                       {trame.mecaniques.map((m, i) => (
                         <span key={i} style={{
-                          fontFamily: 'Cinzel, serif', fontSize: '0.62rem', letterSpacing: '0.5px',
+                          fontFamily: 'Cinzel, serif', fontSize: '0.75rem', letterSpacing: '0.5px',
                           color: '#c9922a', border: '1px solid rgba(201,146,42,0.3)',
-                          padding: '2px 9px', borderRadius: '20px',
+                          padding: '3px 12px', borderRadius: '20px',
                           background: 'rgba(201,146,42,0.05)'
                         }}>{m}</span>
                       ))}
