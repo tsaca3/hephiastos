@@ -54,7 +54,7 @@ export default function Comment() {
 
       <Navbar credits={credits} onLogout={logout} activePage="comment" />
 
-      <div style={{ flex: 1, maxWidth: '1400px', width: '100%', margin: '0 auto', padding: '60px 20px' }}>
+      <div style={{ flex: 1, maxWidth: '1600px', width: '100%', margin: '0 auto', padding: '60px 16px' }}>
 
         {/* HERO */}
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
