@@ -1,5 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 
 export function Footer() {
   return (
@@ -7,7 +8,7 @@ export function Footer() {
       background: 'linear-gradient(to top, #ff6600, #ffaa33)',
       padding: '16px 40px',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      gap: '32px',
+      gap: '32px', flexWrap: 'wrap',
       boxShadow: '0 -2px 20px rgba(255,107,26,0.3)'
     }}>
 
@@ -74,45 +75,184 @@ export function Footer() {
 
 export default function Navbar({ credits, onLogout, activePage }) {
   const router = useRouter()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
+  // Fermer le menu si on clique en dehors
+  useEffect(() => {
+    if (!menuOpen) return
+    const close = () => setMenuOpen(false)
+    document.addEventListener('click', close)
+    return () => document.removeEventListener('click', close)
+  }, [menuOpen])
 
   const menuStyle = (page) => ({
-    fontFamily: 'Cinzel, serif', fontSize: '1rem', letterSpacing: '2px',
+    fontFamily: 'Cinzel, serif',
+    fontSize: isMobile ? '1rem' : '1rem',
+    letterSpacing: '2px',
     textTransform: 'uppercase',
     color: activePage === page ? '#555555' : '#000',
-    cursor: 'pointer', fontWeight: 700
+    cursor: 'pointer',
+    fontWeight: 700,
+    padding: isMobile ? '14px 0' : '0',
+    borderBottom: isMobile ? '1px solid rgba(0,0,0,0.1)' : 'none',
+    display: 'block',
+    width: '100%',
   })
 
+  const navItems = [
+    { label: 'Comment ça marche ?', page: 'comment', path: '/comment' },
+    { label: 'Les Trames', page: 'catalogue', path: '/catalogue' },
+    { label: 'La Bourse aux Crédits', page: 'credits', path: '/credits' },
+    { label: 'Mon Compte', page: 'compte', path: '/compte' },
+    { label: 'Ma Forge', page: 'forge', path: '/forge' },
+    { label: 'Conditions Générales', page: 'conditions', path: '/conditions' },
+  ]
+
   return (
-    <nav style={{
-      padding: '0 40px', height: '66px',
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      background: 'linear-gradient(to top, #ff6600, #ffaa33)',
-      boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
-      position: 'sticky', top: 0, zIndex: 10
-    }}>
-      <img src="/logo_icon.png" alt="HéphIAstos" style={{ height: '58px', cursor: 'pointer' }} onClick={() => router.push('/')} />
-      <div style={{ display: 'flex', alignItems: 'center', gap: '56px' }}>
-        <span onClick={() => router.push('/comment')} style={menuStyle('comment')}>Comment ça marche ?</span>
-        <span onClick={() => router.push('/catalogue')} style={menuStyle('catalogue')}>Les Trames</span>
-        <span onClick={() => router.push('/credits')} style={menuStyle('credits')}>La Bourse aux Crédits</span>
-        <span onClick={() => router.push('/compte')} style={menuStyle('compte')}>Mon Compte</span>
-        <span onClick={() => router.push('/forge')} style={menuStyle('forge')}>Ma Forge</span>
-        <span onClick={() => router.push('/conditions')} style={menuStyle('conditions')}>Conditions Générales</span>
-        <span style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-          background: '#000', borderRadius: '999px', padding: '9px 20px',
-          fontFamily: 'Cinzel, serif', fontSize: '1.2rem', fontWeight: 700, color: '#4db8ff',
-          boxShadow: '0 0 20px rgba(77,184,255,0.3)', minWidth: '80px', height: '40px'
-        }}>
-          {credits} <img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} />
-        </span>
-        <button onClick={onLogout} style={{
-          background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(0,0,0,0.3)',
-          color: '#000', padding: '6px 14px', fontFamily: 'Cinzel, serif',
-          fontSize: '0.6rem', letterSpacing: '2px', textTransform: 'uppercase',
-          cursor: 'pointer', fontWeight: 700
-        }}>Déconnexion</button>
-      </div>
-    </nav>
+    <>
+      <style>{`
+        @keyframes slideDown {
+          from { opacity: 0; transform: translateY(-8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      <nav style={{
+        padding: isMobile ? '0 16px' : '0 40px',
+        height: '66px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        background: 'linear-gradient(to top, #ff6600, #ffaa33)',
+        boxShadow: '0 2px 20px rgba(255,107,26,0.5)',
+        position: 'sticky', top: 0, zIndex: 100,
+      }}>
+
+        {/* LOGO */}
+        <img
+          src="/logo_icon.png"
+          alt="HéphIAstos"
+          style={{ height: '58px', cursor: 'pointer', flexShrink: 0 }}
+          onClick={() => router.push('/')}
+        />
+
+        {/* DESKTOP : liens normaux */}
+        {!isMobile && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '56px' }}>
+            {navItems.map(item => (
+              <span key={item.page} onClick={() => router.push(item.path)} style={menuStyle(item.page)}>
+                {item.label}
+              </span>
+            ))}
+            {/* Crédits */}
+            <span style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+              background: '#000', borderRadius: '999px', padding: '9px 20px',
+              fontFamily: 'Cinzel, serif', fontSize: '1.2rem', fontWeight: 700, color: '#4db8ff',
+              boxShadow: '0 0 20px rgba(77,184,255,0.3)', minWidth: '80px', height: '40px'
+            }}>
+              {credits} <img src="/diamond.png" alt="crédits" style={{ height: '20px', width: '20px', objectFit: 'contain' }} />
+            </span>
+            <button onClick={onLogout} style={{
+              background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(0,0,0,0.3)',
+              color: '#000', padding: '6px 14px', fontFamily: 'Cinzel, serif',
+              fontSize: '0.6rem', letterSpacing: '2px', textTransform: 'uppercase',
+              cursor: 'pointer', fontWeight: 700
+            }}>Déconnexion</button>
+          </div>
+        )}
+
+        {/* MOBILE : crédits + burger */}
+        {isMobile && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {/* Compteur crédits compact */}
+            <span style={{
+              display: 'flex', alignItems: 'center', gap: '5px',
+              background: '#000', borderRadius: '999px', padding: '6px 14px',
+              fontFamily: 'Cinzel, serif', fontSize: '1rem', fontWeight: 700, color: '#4db8ff',
+              boxShadow: '0 0 12px rgba(77,184,255,0.3)',
+            }}>
+              {credits} <img src="/diamond.png" alt="crédits" style={{ height: '18px', width: '18px', objectFit: 'contain' }} />
+            </span>
+
+            {/* Bouton hamburger */}
+            <button
+              onClick={(e) => { e.stopPropagation(); setMenuOpen(o => !o) }}
+              style={{
+                background: 'rgba(0,0,0,0.15)', border: 'none',
+                borderRadius: '8px', width: '42px', height: '42px',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                gap: '5px', cursor: 'pointer', padding: '0', flexShrink: 0,
+              }}
+              aria-label="Menu"
+            >
+              <span style={{
+                display: 'block', width: '22px', height: '2px', background: '#000',
+                borderRadius: '2px',
+                transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none',
+                transition: 'transform 0.25s ease',
+              }} />
+              <span style={{
+                display: 'block', width: '22px', height: '2px', background: '#000',
+                borderRadius: '2px',
+                opacity: menuOpen ? 0 : 1,
+                transition: 'opacity 0.2s ease',
+              }} />
+              <span style={{
+                display: 'block', width: '22px', height: '2px', background: '#000',
+                borderRadius: '2px',
+                transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none',
+                transition: 'transform 0.25s ease',
+              }} />
+            </button>
+          </div>
+        )}
+      </nav>
+
+      {/* MENU DÉROULANT MOBILE */}
+      {isMobile && menuOpen && (
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: 'fixed', top: '66px', left: 0, right: 0,
+            background: 'linear-gradient(to bottom, #ffaa33, #ff6600)',
+            boxShadow: '0 8px 32px rgba(255,107,26,0.5)',
+            zIndex: 99,
+            padding: '8px 24px 16px',
+            animation: 'slideDown 0.2s ease',
+          }}
+        >
+          {navItems.map(item => (
+            <span
+              key={item.page}
+              onClick={() => { router.push(item.path); setMenuOpen(false) }}
+              style={menuStyle(item.page)}
+            >
+              {item.label}
+            </span>
+          ))}
+
+          {/* Déconnexion dans le menu mobile */}
+          <button
+            onClick={() => { onLogout(); setMenuOpen(false) }}
+            style={{
+              marginTop: '12px',
+              background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(0,0,0,0.3)',
+              color: '#000', padding: '10px 20px', fontFamily: 'Cinzel, serif',
+              fontSize: '0.75rem', letterSpacing: '2px', textTransform: 'uppercase',
+              cursor: 'pointer', fontWeight: 700, width: '100%', borderRadius: '4px',
+            }}
+          >
+            Déconnexion
+          </button>
+        </div>
+      )}
+    </>
   )
 }
